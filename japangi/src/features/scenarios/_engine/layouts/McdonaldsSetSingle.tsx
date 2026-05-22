@@ -104,6 +104,7 @@ export function McdonaldsSetSingle({
           grid-template-columns: 1fr 1fr;
           gap: 14px;
           padding: 0 20px;
+          align-items: stretch;
         `}
       >
         {/* Card 1: 세트 선택 (CORRECT) */}
@@ -114,13 +115,12 @@ export function McdonaldsSetSingle({
               border: 1.5px solid #d1d6db;
               border-radius: 14px;
               padding: 16px;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 14px;
+              display: grid;
+              grid-template-rows: 1fr auto auto;
+              row-gap: 12px;
               cursor: pointer;
-              min-height: 280px;
+              height: 280px;
+              text-align: center;
 
               &:active {
                 background: #f9f9f9;
@@ -149,10 +149,17 @@ export function McdonaldsSetSingle({
               font-size: 18px;
               font-weight: 700;
               color: #191f28;
-              text-align: center;
             `}
           >
             세트 선택
+          </span>
+          <span
+            css={css`
+              font-size: 13px;
+              color: #8b95a1;
+            `}
+          >
+            세트 메뉴로 주문
           </span>
         </button>
 
@@ -164,13 +171,12 @@ export function McdonaldsSetSingle({
               border: 1.5px solid #d1d6db;
               border-radius: 14px;
               padding: 16px;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 14px;
+              display: grid;
+              grid-template-rows: 1fr auto auto;
+              row-gap: 12px;
               cursor: pointer;
-              min-height: 280px;
+              height: 280px;
+              text-align: center;
 
               &:active {
                 background: #f9f9f9;
@@ -180,20 +186,22 @@ export function McdonaldsSetSingle({
           ]}
           onClick={() => onChoice("single")}
         >
-          <span
+          <div
             css={css`
-              font-size: 96px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 56px;
               line-height: 1;
             `}
           >
-            🍔
-          </span>
+            <span>🍔</span>
+          </div>
           <span
             css={css`
               font-size: 18px;
               font-weight: 700;
               color: #191f28;
-              text-align: center;
             `}
           >
             단품 선택
@@ -202,10 +210,9 @@ export function McdonaldsSetSingle({
             css={css`
               font-size: 13px;
               color: #8b95a1;
-              text-align: center;
             `}
           >
-            ₩5,500 &nbsp;525 Kcal
+            ₩5,500 · 525 Kcal
           </span>
         </button>
       </div>

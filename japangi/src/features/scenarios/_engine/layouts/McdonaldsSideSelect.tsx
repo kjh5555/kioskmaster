@@ -310,13 +310,14 @@ export function McdonaldsSideSelect({
                 background: #ffffff;
                 border: 1px solid #e5e8eb;
                 border-radius: 12px;
-                padding: 12px;
-                display: flex;
-                flex-direction: column;
+                padding: 12px 8px;
+                display: grid;
+                grid-template-rows: 52px auto auto;
+                row-gap: 6px;
                 align-items: center;
-                gap: 6px;
+                justify-items: center;
                 cursor: pointer;
-                min-height: 140px;
+                height: 170px;
                 text-align: center;
                 position: relative;
 
@@ -330,7 +331,7 @@ export function McdonaldsSideSelect({
           >
             <div
               css={css`
-                font-size: 52px;
+                font-size: 48px;
                 line-height: 1;
               `}
             >
@@ -341,7 +342,8 @@ export function McdonaldsSideSelect({
                 font-size: 13px;
                 font-weight: 700;
                 color: #191f28;
-                line-height: 1.3;
+                line-height: 1.25;
+                word-break: keep-all;
               `}
             >
               후렌치 후라이 라지
@@ -364,13 +366,14 @@ export function McdonaldsSideSelect({
                 background: #ffffff;
                 border: 1px solid #e5e8eb;
                 border-radius: 12px;
-                padding: 12px;
-                display: flex;
-                flex-direction: column;
+                padding: 12px 8px;
+                display: grid;
+                grid-template-rows: 52px auto auto;
+                row-gap: 6px;
                 align-items: center;
-                gap: 6px;
+                justify-items: center;
                 cursor: pointer;
-                min-height: 140px;
+                height: 170px;
                 text-align: center;
                 position: relative;
 
@@ -386,13 +389,13 @@ export function McdonaldsSideSelect({
             <span
               css={css`
                 position: absolute;
-                top: 8px;
-                left: 8px;
+                top: 6px;
+                left: 6px;
                 background: #ffc72c;
                 color: #191f28;
-                font-size: 10px;
+                font-size: 9px;
                 font-weight: 700;
-                padding: 2px 8px;
+                padding: 1px 6px;
                 border-radius: 999px;
                 line-height: 1.4;
               `}
@@ -401,9 +404,8 @@ export function McdonaldsSideSelect({
             </span>
             <div
               css={css`
-                font-size: 52px;
+                font-size: 48px;
                 line-height: 1;
-                margin-top: 18px;
               `}
             >
               🥗
@@ -413,7 +415,8 @@ export function McdonaldsSideSelect({
                 font-size: 13px;
                 font-weight: 700;
                 color: #191f28;
-                line-height: 1.3;
+                line-height: 1.25;
+                word-break: keep-all;
               `}
             >
               코울슬로
@@ -436,13 +439,14 @@ export function McdonaldsSideSelect({
                 background: #ffffff;
                 border: 1px solid #e5e8eb;
                 border-radius: 12px;
-                padding: 12px;
-                display: flex;
-                flex-direction: column;
+                padding: 12px 8px;
+                display: grid;
+                grid-template-rows: 52px auto auto;
+                row-gap: 6px;
                 align-items: center;
-                gap: 6px;
+                justify-items: center;
                 cursor: pointer;
-                min-height: 140px;
+                height: 170px;
                 text-align: center;
 
                 &:active {
@@ -457,7 +461,7 @@ export function McdonaldsSideSelect({
               css={css`
                 display: flex;
                 gap: 2px;
-                font-size: 36px;
+                font-size: 40px;
                 line-height: 1;
               `}
             >
@@ -466,13 +470,14 @@ export function McdonaldsSideSelect({
             </div>
             <span
               css={css`
-                font-size: 13px;
+                font-size: 12px;
                 font-weight: 700;
                 color: #191f28;
-                line-height: 1.3;
+                line-height: 1.2;
+                word-break: keep-all;
               `}
             >
-              후렌치 후라이 + 골든 모짤라 치즈스틱 2조각
+              후렌치+치즈스틱
             </span>
             <span
               css={css`
