@@ -105,37 +105,52 @@ function FastfoodStepPageLoader({
         goal.selections[step.id] != null
           ? { ...step, correctChoiceId: goal.selections[step.id] }
           : { ...step };
-      // Wire branching so 단품 path skips set-size/side/drink and goes straight
-      // to the single confirm screen → cart.
+      // Wire branching so the 단품 path skips set-size/side/drink and
+      // jumps straight to the single confirm screen → cart, and so the
+      // 세트 path explicitly jumps to set-size instead of falling onto
+      // the order-confirm-single step we inject right after.
       if (next.id === "set-or-single") {
-        next.branchTo = { ...next.branchTo, single: "order-confirm-single" };
+        next.branchTo = {
+          ...next.branchTo,
+          set: "set-size",
+          single: "order-confirm-single",
+        };
       }
       return next;
     });
 
-    const hasSingleStep = stepsWithGoal.some(
+    const singleStep = {
+      id: "order-confirm-single",
+      instruction: "단품 주문을 확인해주세요.",
+      helpText: "노란색 '장바구니에 담기' 버튼을 누르면 결제 단계로 넘어가요.",
+      layout: "list" as const,
+      customLayoutId: "mcdonalds-order-confirm-single",
+      choices: [
+        { id: "add-to-cart", label: "장바구니에 담기" },
+        { id: "cancel", label: "취소" },
+        { id: "nutrition", label: "영양정보" },
+        { id: "edit-burger", label: "재료추가/변경" },
+        { id: "qty-minus", label: "수량 줄이기" },
+        { id: "qty-plus", label: "수량 늘리기" },
+      ],
+      correctChoiceId: "add-to-cart",
+      successMessage: "장바구니에 담았어요!",
+      hintMessage: "노란색 '장바구니에 담기' 버튼을 눌러주세요.",
+      branchTo: { "add-to-cart": "post-cart-category" },
+    };
+
+    // Insert order-confirm-single directly after set-or-single so the final
+    // step (pay-confirm) remains the natural last step — otherwise the
+    // "done" tap on pay-confirm would fall through to order-confirm-single
+    // and reopen the single confirm screen instead of completing.
+    const setOrSingleIdx = stepsWithGoal.findIndex(
+      (s) => s.id === "set-or-single",
+    );
+    const alreadyHasSingleStep = stepsWithGoal.some(
       (s) => s.id === "order-confirm-single",
     );
-    if (!hasSingleStep) {
-      stepsWithGoal.push({
-        id: "order-confirm-single",
-        instruction: "단품 주문을 확인해주세요.",
-        helpText: "노란색 '장바구니에 담기' 버튼을 누르면 결제 단계로 넘어가요.",
-        layout: "list",
-        customLayoutId: "mcdonalds-order-confirm-single",
-        choices: [
-          { id: "add-to-cart", label: "장바구니에 담기" },
-          { id: "cancel", label: "취소" },
-          { id: "nutrition", label: "영양정보" },
-          { id: "edit-burger", label: "재료추가/변경" },
-          { id: "qty-minus", label: "수량 줄이기" },
-          { id: "qty-plus", label: "수량 늘리기" },
-        ],
-        correctChoiceId: "add-to-cart",
-        successMessage: "장바구니에 담았어요!",
-        hintMessage: "노란색 '장바구니에 담기' 버튼을 눌러주세요.",
-        branchTo: { "add-to-cart": "post-cart-category" },
-      });
+    if (!alreadyHasSingleStep && setOrSingleIdx >= 0) {
+      stepsWithGoal.splice(setOrSingleIdx + 1, 0, singleStep);
     }
 
     return {
