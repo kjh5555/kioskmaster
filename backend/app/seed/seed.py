@@ -8,6 +8,7 @@ import os
 # Ensure backend/ is on sys.path when run as a module
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
+from sqlalchemy import text
 from sqlmodel import Session, select
 
 from app.db import engine, init_db
@@ -147,6 +148,27 @@ def seed_mcdonalds_menu(session: Session, slug_to_brand: dict[str, Brand]) -> No
                 session.add(item)
 
     session.flush()
+
+    # Belt-and-suspenders: also force image_url updates via raw SQL.
+    # The ORM update path was leaving image_url=NULL on every menu item
+    # even though the data dict carried the URL — probably stale SQLAlchemy
+    # mapper state from the column-add migration mid-process. Re-applying
+    # via UPDATE here makes the result deterministic.
+    conn = session.connection()
+    for cat_slug, items_data in MCDONALDS_CATEGORY_ITEMS.items():
+        for item_data in items_data:
+            url = item_data.get("imageUrl")
+            if url is None:
+                continue
+            conn.execute(
+                text(
+                    "UPDATE menuitem SET image_url = :url "
+                    "WHERE menu_category_id IN ("
+                    "  SELECT id FROM menucategory WHERE brand_id = :brand_id"
+                    ") AND slug = :slug"
+                ),
+                {"url": url, "brand_id": brand.id, "slug": item_data["id"]},
+            )
 
 
 def run_seed() -> None:
