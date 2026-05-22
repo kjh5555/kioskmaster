@@ -1,4 +1,6 @@
+import logging
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -8,10 +10,21 @@ from app.api.categories import router as categories_router
 from app.api.brands import router as brands_router
 from app.api.menus import router as menus_router
 
+logger = logging.getLogger("uvicorn.error")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    # Idempotent seed runs on every boot so new menu items and image_url
+    # values land in prod without needing manual `python -m app.seed.seed`.
+    # Existing rows are updated in place; new rows are inserted.
+    try:
+        from app.seed.seed import run_seed
+
+        run_seed()
+    except Exception as exc:
+        logger.warning("Boot-time seed skipped: %s", exc)
     yield
 
 
