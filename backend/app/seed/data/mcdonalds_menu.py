@@ -1,0 +1,91 @@
+MCDONALDS_CATEGORY_TITLES = {
+    "recommend": "추천메뉴",
+    "lunch": "맥런치",
+    "burger": "버거",
+    "happysnack": "해피스낵",
+    "side": "사이드",
+    "coffee": "커피",
+    "dessert": "디저트",
+    "drink": "음료",
+    "happymeal": "해피밀",
+    "coffee-dessert": "커피&디저트",
+}
+
+# Ordered list of category slugs (preserves display order)
+MCDONALDS_CATEGORY_ORDER = [
+    "recommend",
+    "lunch",
+    "burger",
+    "happysnack",
+    "side",
+    "coffee",
+    "dessert",
+    "drink",
+    "happymeal",
+    "coffee-dessert",
+]
+
+MCDONALDS_CATEGORY_ITEMS = {
+    "recommend": [
+        {"id": "garlic-burger", "name": "창녕 갈릭 버거", "price": "₩6,500", "kcal": "674kcal", "emoji": "🍔", "isNew": True},
+        {"id": "mccrispy-deluxe", "name": "맥크리스피 디럭스 버거", "price": "₩6,500", "kcal": "584kcal", "emoji": "🍔", "isNew": True},
+        {"id": "mccrispy-classic", "name": "맥크리스피 클래식 버거", "price": "₩5,500", "kcal": "584kcal", "emoji": "🍔", "isNew": True},
+        {"id": "mcwings-8", "name": "맥윙 8조각", "price": "₩2,500", "kcal": "245kcal", "emoji": "🍗", "isNew": False},
+        {"id": "ice-cream-latte", "name": "아이스크림 라떼", "price": "₩4,000", "kcal": "239kcal", "emoji": "🥤", "isNew": True},
+        {"id": "chicken-snack-wrap", "name": "치킨 토르티 스낵랩", "price": "₩2,000", "kcal": "264kcal", "emoji": "🌯", "isNew": False},
+        {"id": "coke-7", "name": "세븐 메가존 코카-콜라", "price": "₩1,900", "kcal": "216kcal", "emoji": "🥤", "isNew": False},
+        {"id": "coke-zero-7", "name": "세븐 메가존 코카-콜라 제로", "price": "₩1,900", "kcal": "115kcal", "emoji": "🥤", "isNew": False},
+        {"id": "sprite-7", "name": "세븐 메가존 스프라이트", "price": "₩1,900", "kcal": "230kcal", "emoji": "🥤", "isNew": False},
+        {"id": "iced-americano", "name": "아이스 아메리카노", "price": "₩2,400", "kcal": "10kcal", "emoji": "☕", "isNew": False},
+    ],
+    "lunch": [
+        {"id": "bigmac-lunch", "name": "빅맥 세트", "price": "₩7,500", "kcal": "1200kcal", "emoji": "🍔", "isNew": False},
+        {"id": "doublecheese-lunch", "name": "더블치즈버거 세트", "price": "₩7,200", "kcal": "1100kcal", "emoji": "🍔", "isNew": False},
+        {"id": "mcchicken-lunch", "name": "맥치킨 세트", "price": "₩6,800", "kcal": "1050kcal", "emoji": "🍔", "isNew": False},
+    ],
+    "burger": [
+        {"id": "bigmac", "name": "빅맥", "price": "₩5,500", "kcal": "525kcal", "emoji": "🍔", "isNew": False},
+        {"id": "1955", "name": "1955버거", "price": "₩7,300", "kcal": "620kcal", "emoji": "🍔", "isNew": False},
+        {"id": "doublecheese", "name": "더블치즈버거", "price": "₩5,200", "kcal": "451kcal", "emoji": "🍔", "isNew": False},
+        {"id": "mcchicken", "name": "맥치킨", "price": "₩4,500", "kcal": "411kcal", "emoji": "🍔", "isNew": False},
+        {"id": "fileofish", "name": "필레오피쉬", "price": "₩4,800", "kcal": "337kcal", "emoji": "🍔", "isNew": False},
+        {"id": "shubi", "name": "슈비버거", "price": "₩7,200", "kcal": "612kcal", "emoji": "🍔", "isNew": False},
+    ],
+    "happysnack": [
+        {"id": "nuggets-4", "name": "맥너겟 4조각", "price": "₩2,400", "kcal": "200kcal", "emoji": "🍗", "isNew": False},
+        {"id": "mcwings-2", "name": "맥윙 2조각", "price": "₩1,500", "kcal": "120kcal", "emoji": "🍗", "isNew": False},
+        {"id": "fries-m", "name": "후렌치 후라이 (M)", "price": "₩2,500", "kcal": "320kcal", "emoji": "🍟", "isNew": False},
+        {"id": "snack-wrap", "name": "스낵랩", "price": "₩2,000", "kcal": "264kcal", "emoji": "🌯", "isNew": False},
+    ],
+    "side": [
+        {"id": "fries-l", "name": "후렌치 후라이 (L)", "price": "₩3,200", "kcal": "460kcal", "emoji": "🍟", "isNew": False},
+        {"id": "coleslaw", "name": "코울슬로", "price": "₩1,800", "kcal": "90kcal", "emoji": "🥗", "isNew": False},
+        {"id": "corn", "name": "콘샐러드", "price": "₩1,800", "kcal": "110kcal", "emoji": "🌽", "isNew": False},
+    ],
+    "coffee": [
+        {"id": "americano", "name": "아메리카노", "price": "₩2,400", "kcal": "10kcal", "emoji": "☕", "isNew": False},
+        {"id": "latte", "name": "카페라떼", "price": "₩3,200", "kcal": "130kcal", "emoji": "☕", "isNew": False},
+        {"id": "cappuccino", "name": "카푸치노", "price": "₩3,200", "kcal": "110kcal", "emoji": "☕", "isNew": False},
+        {"id": "mocha", "name": "카페모카", "price": "₩3,500", "kcal": "210kcal", "emoji": "☕", "isNew": False},
+    ],
+    "dessert": [
+        {"id": "mcflurry", "name": "맥플러리 오레오", "price": "₩3,500", "kcal": "400kcal", "emoji": "🍦", "isNew": False},
+        {"id": "applepie", "name": "애플파이", "price": "₩2,000", "kcal": "250kcal", "emoji": "🥧", "isNew": False},
+        {"id": "sundae", "name": "선데이 아이스크림", "price": "₩2,500", "kcal": "220kcal", "emoji": "🍨", "isNew": False},
+    ],
+    "drink": [
+        {"id": "coke", "name": "코카콜라", "price": "₩1,900", "kcal": "200kcal", "emoji": "🥤", "isNew": False},
+        {"id": "fanta", "name": "환타", "price": "₩1,900", "kcal": "220kcal", "emoji": "🥤", "isNew": False},
+        {"id": "minute", "name": "미니츠메이드 사과", "price": "₩2,500", "kcal": "110kcal", "emoji": "🧃", "isNew": False},
+    ],
+    "happymeal": [
+        {"id": "happy-cheese", "name": "치즈버거 해피밀", "price": "₩6,000", "kcal": "600kcal", "emoji": "🎁", "isNew": False},
+        {"id": "happy-nuggets", "name": "맥너겟 해피밀", "price": "₩6,000", "kcal": "550kcal", "emoji": "🎁", "isNew": False},
+    ],
+    "coffee-dessert": [
+        {"id": "americano-cd", "name": "아메리카노", "price": "₩2,400", "kcal": "10kcal", "emoji": "☕", "isNew": False},
+        {"id": "latte-cd", "name": "카페라떼", "price": "₩3,200", "kcal": "130kcal", "emoji": "☕", "isNew": False},
+        {"id": "mcflurry-cd", "name": "맥플러리 오레오", "price": "₩3,500", "kcal": "400kcal", "emoji": "🍦", "isNew": False},
+        {"id": "applepie-cd", "name": "애플파이", "price": "₩2,000", "kcal": "250kcal", "emoji": "🥧", "isNew": False},
+    ],
+}
