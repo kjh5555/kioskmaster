@@ -33,3 +33,13 @@ coverage/
 # Misc
 .cache/
 .parcel-cache/
+
+# OMC internal state
+.omc/
+**/.omc/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
