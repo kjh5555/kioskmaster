@@ -83,13 +83,17 @@ def generate_goal(
         deterministic correctChoiceId values for the fallback.
     """
     if not settings.gemini_api_key:
-        return _make_fallback(menu_by_category, scenario_json)
+        fallback = _make_fallback(menu_by_category, scenario_json)
+        fallback["debug_reason"] = "no_api_key"
+        return fallback
 
     try:
         return _call_gemini(brand_name, menu_by_category)
     except Exception as exc:
         logger.warning("Gemini call failed, using fallback: %s", exc)
-        return _make_fallback(menu_by_category, scenario_json)
+        fallback = _make_fallback(menu_by_category, scenario_json)
+        fallback["debug_reason"] = f"gemini_failed: {type(exc).__name__}: {exc}"
+        return fallback
 
 
 # ---------------------------------------------------------------------------

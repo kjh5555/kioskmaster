@@ -81,4 +81,5 @@ def get_dynamic_goal(slug: str, session: Session = Depends(get_session)):
         goal_summary=result["goal_summary"],
         selections=result["selections"],
         used_gemini=result["used_gemini"],
+        debug_reason=result.get("debug_reason"),
     )
