@@ -26,6 +26,11 @@ interface StepEngineProps {
   onExit: () => void;
 }
 
+function sublabelSuffix(sublabel: string | undefined): string {
+  if (sublabel == null || sublabel.trim() === "") return "";
+  return ` (${sublabel.trim()})`;
+}
+
 // ── Card shared styles ────────────────────────────────────────────────────────
 
 function makeCardBase(theme?: BrandTheme) {
@@ -476,15 +481,59 @@ export function StepEngine({
     </button>
   );
 
+  // Show the correct answer label so elderly users know what to tap.
+  // Skip on the very first "start" step (single big CTA — nothing to choose).
+  const correctChoice = step.choices.find((c) => c.id === step.correctChoiceId);
+  const hideHint = step.layout === "start" || step.choices.length <= 1;
+  const accentColor = theme != null ? theme.primary : adaptive.blue500;
+  const goalHint =
+    correctChoice != null && !hideHint ? (
+      <div
+        css={css`
+          background: ${accentColor}14;
+          border-left: 4px solid ${accentColor};
+          border-radius: 12px;
+          padding: 12px 14px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        `}
+      >
+        <span style={{ fontSize: 22, lineHeight: 1 }}>🎯</span>
+        <span
+          css={css`
+            font-size: var(--font-body);
+            color: ${adaptive.grey900};
+            line-height: 1.4;
+          `}
+        >
+          오늘은{" "}
+          <strong
+            css={css`
+              color: ${accentColor};
+              font-weight: 700;
+            `}
+          >
+            {correctChoice.label.replace(/\n/g, " ")}
+          </strong>
+          {sublabelSuffix(correctChoice.sublabel)} 을(를) 골라주세요
+        </span>
+      </div>
+    ) : null;
+
   if (hasCustomLayout) {
     return (
       <>
         <div
           css={css`
             padding: 8px 0 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
           `}
         >
           {backButton}
+          {goalHint}
         </div>
         {renderLayout()}
         <HelpOverlay helpText={step.helpText} />
@@ -576,6 +625,8 @@ export function StepEngine({
       >
         {step.instruction}
       </p>
+
+      {goalHint}
 
       {/* Choice layout */}
       <div
