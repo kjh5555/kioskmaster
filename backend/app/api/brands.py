@@ -24,6 +24,7 @@ def list_brands(session: Session = Depends(get_session)):
             slug=b.slug,
             name=b.name,
             emoji=b.emoji,
+            image_url=b.image_url,
             category_slug=_category_slug(b, session),
             goal_summary=b.goal_summary,
         )
@@ -40,6 +41,7 @@ def get_brand(slug: str, session: Session = Depends(get_session)):
         slug=brand.slug,
         name=brand.name,
         emoji=brand.emoji,
+        image_url=brand.image_url,
         category_slug=_category_slug(brand, session),
         goal_summary=brand.goal_summary,
         scenario_json=brand.scenario_json,

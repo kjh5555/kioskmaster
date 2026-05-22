@@ -6,6 +6,7 @@ class BrandRead(BaseModel):
     slug: str
     name: str
     emoji: str
+    image_url: Optional[str] = None
     category_slug: str
     goal_summary: str
 
@@ -14,6 +15,7 @@ class BrandDetail(BaseModel):
     slug: str
     name: str
     emoji: str
+    image_url: Optional[str] = None
     category_slug: str
     goal_summary: str
     scenario_json: Optional[Any] = None

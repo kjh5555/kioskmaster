@@ -37,5 +37,5 @@ def get_category(slug: str, session: Session = Depends(get_session)):
         description=cat.description,
         emoji=cat.emoji,
         order=cat.order,
-        brands=[BrandSummary(slug=b.slug, name=b.name, emoji=b.emoji, goal_summary=b.goal_summary) for b in brands],
+        brands=[BrandSummary(slug=b.slug, name=b.name, emoji=b.emoji, image_url=b.image_url, goal_summary=b.goal_summary) for b in brands],
     )

@@ -641,10 +641,14 @@ KFC_SCENARIO = {
 # category_slug -> list of brand dicts
 BRANDS = {
     "fastfood": [
-        {"slug": "mcdonalds", "name": "맥도날드", "emoji": "🍔", "goal_summary": "오늘은 빅맥 세트를 주문해볼게요.", "scenario_json": MCDONALDS_SCENARIO, "order": 0},
-        {"slug": "burgerking", "name": "버거킹", "emoji": "👑", "goal_summary": "오늘은 와퍼 세트를 주문해볼게요.", "scenario_json": BURGERKING_SCENARIO, "order": 1},
-        {"slug": "lotteria", "name": "롯데리아", "emoji": "🥤", "goal_summary": "오늘은 불고기버거 세트를 주문해볼게요.", "scenario_json": LOTTERIA_SCENARIO, "order": 2},
-        {"slug": "kfc", "name": "KFC", "emoji": "🍗", "goal_summary": "오늘은 징거버거 세트를 주문해볼게요.", "scenario_json": KFC_SCENARIO, "order": 3},
+        {"slug": "mcdonalds", "name": "맥도날드", "emoji": "🍔", "goal_summary": "오늘은 빅맥 세트를 주문해볼게요.", "scenario_json": MCDONALDS_SCENARIO, "order": 0,
+         "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/McDonald%27s_Golden_Arches.svg/200px-McDonald%27s_Golden_Arches.svg.png"},
+        {"slug": "burgerking", "name": "버거킹", "emoji": "👑", "goal_summary": "오늘은 와퍼 세트를 주문해볼게요.", "scenario_json": BURGERKING_SCENARIO, "order": 1,
+         "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Burger_King_2020.svg/200px-Burger_King_2020.svg.png"},
+        {"slug": "lotteria", "name": "롯데리아", "emoji": "🥤", "goal_summary": "오늘은 불고기버거 세트를 주문해볼게요.", "scenario_json": LOTTERIA_SCENARIO, "order": 2,
+         "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/d/df/Lotteria_logo.svg/200px-Lotteria_logo.svg.png"},
+        {"slug": "kfc", "name": "KFC", "emoji": "🍗", "goal_summary": "오늘은 징거버거 세트를 주문해볼게요.", "scenario_json": KFC_SCENARIO, "order": 3,
+         "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/b/bf/KFC_logo.svg/200px-KFC_logo.svg.png"},
     ],
     "cafe": [
         {"slug": "starbucks", "name": "스타벅스", "emoji": "☕", "goal_summary": "", "scenario_json": None, "order": 0},

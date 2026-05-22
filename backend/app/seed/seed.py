@@ -53,6 +53,7 @@ def seed_brands(session: Session, slug_to_cat: dict[str, Category]) -> dict[str,
             if existing:
                 existing.name = data["name"]
                 existing.emoji = data["emoji"]
+                existing.image_url = data.get("image_url")
                 existing.goal_summary = data["goal_summary"]
                 existing.scenario_json = data["scenario_json"]
                 existing.order = data["order"]
@@ -64,6 +65,7 @@ def seed_brands(session: Session, slug_to_cat: dict[str, Category]) -> dict[str,
                     slug=data["slug"],
                     name=data["name"],
                     emoji=data["emoji"],
+                    image_url=data.get("image_url"),
                     category_id=cat.id,
                     goal_summary=data["goal_summary"],
                     scenario_json=data["scenario_json"],

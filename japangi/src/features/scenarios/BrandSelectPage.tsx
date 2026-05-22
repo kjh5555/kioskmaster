@@ -98,10 +98,31 @@ export function BrandSelectPage(): React.ReactElement {
               }
             `}
           >
+            {brand.image_url != null && brand.image_url !== "" ? (
+              <img
+                src={brand.image_url}
+                alt={brand.name}
+                loading="lazy"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                  const sib = e.currentTarget
+                    .nextElementSibling as HTMLElement | null;
+                  if (sib !== null) sib.style.display = "inline-block";
+                }}
+                css={css`
+                  width: 72px;
+                  height: 72px;
+                  object-fit: contain;
+                `}
+              />
+            ) : null}
             <span
               css={css`
                 font-size: 64px;
                 line-height: 1;
+                display: ${brand.image_url != null && brand.image_url !== ""
+                  ? "none"
+                  : "inline-block"};
               `}
             >
               {brand.emoji}

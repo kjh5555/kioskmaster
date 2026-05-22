@@ -14,13 +14,16 @@ def init_db():
     # Lightweight column-add migrations for tables that already exist in prod
     # from before a model field was added. Wrapped in try/except because
     # older SQLite versions don't support `ADD COLUMN IF NOT EXISTS`.
+    column_adds = [
+        "ALTER TABLE menuitem ADD COLUMN IF NOT EXISTS image_url VARCHAR",
+        "ALTER TABLE brand ADD COLUMN IF NOT EXISTS image_url VARCHAR",
+    ]
     with engine.begin() as conn:
-        try:
-            conn.execute(
-                text("ALTER TABLE menuitem ADD COLUMN IF NOT EXISTS image_url VARCHAR")
-            )
-        except Exception:
-            pass
+        for stmt in column_adds:
+            try:
+                conn.execute(text(stmt))
+            except Exception:
+                pass
 
 
 def get_session():

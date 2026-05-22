@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -5,6 +7,7 @@ class BrandSummary(BaseModel):
     slug: str
     name: str
     emoji: str
+    image_url: Optional[str] = None
     goal_summary: str
 
 

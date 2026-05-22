@@ -23,6 +23,7 @@ export interface ApiBrandSummary {
   slug: string;
   name: string;
   emoji: string;
+  image_url: string | null;
   goal_summary: string;
 }
 
@@ -41,6 +42,7 @@ export interface ApiBrand {
   slug: string;
   name: string;
   emoji: string;
+  image_url: string | null;
   category_slug: string;
   goal_summary: string;
 }
@@ -50,6 +52,7 @@ export interface ApiBrandDetail {
   slug: string;
   name: string;
   emoji: string;
+  image_url: string | null;
   category_slug: string;
   goal_summary: string;
   scenario_json: unknown;

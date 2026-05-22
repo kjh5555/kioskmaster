@@ -12,6 +12,7 @@ class Brand(SQLModel, table=True):
     slug: str = Field(unique=True, index=True)
     name: str
     emoji: str
+    image_url: Optional[str] = None
     category_id: int = Field(foreign_key="category.id")
     scenario_json: Optional[Any] = Field(default=None, sa_column=Column(JSON))
     goal_summary: str = ""
