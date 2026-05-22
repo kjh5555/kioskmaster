@@ -295,11 +295,12 @@ export function McdonaldsSideSelect({
         <div
           css={css`
             flex: 1;
-            display: flex;
-            flex-direction: row;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+            gap: 8px;
             padding: 12px 16px 12px 8px;
             align-items: stretch;
+            min-width: 0;
           `}
         >
           {/* Card 1: 후렌치 후라이 라지 (CORRECT) */}

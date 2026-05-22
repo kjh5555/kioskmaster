@@ -101,7 +101,7 @@ export function McdonaldsSetSingle({
       <div
         css={css`
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
           gap: 14px;
           padding: 0 20px;
           align-items: stretch;
@@ -114,12 +114,13 @@ export function McdonaldsSetSingle({
               background: #ffffff;
               border: 1.5px solid #d1d6db;
               border-radius: 14px;
-              padding: 16px;
+              padding: 16px 8px;
               display: grid;
               grid-template-rows: 1fr auto auto;
               row-gap: 12px;
               cursor: pointer;
               height: 280px;
+              min-width: 0;
               text-align: center;
 
               &:active {
@@ -135,9 +136,10 @@ export function McdonaldsSetSingle({
               display: flex;
               align-items: center;
               justify-content: center;
-              gap: 4px;
-              font-size: 56px;
+              gap: 2px;
+              font-size: 40px;
               line-height: 1;
+              min-width: 0;
             `}
           >
             <span>🍔</span>
@@ -170,12 +172,13 @@ export function McdonaldsSetSingle({
               background: #ffffff;
               border: 1.5px solid #d1d6db;
               border-radius: 14px;
-              padding: 16px;
+              padding: 16px 8px;
               display: grid;
               grid-template-rows: 1fr auto auto;
               row-gap: 12px;
               cursor: pointer;
               height: 280px;
+              min-width: 0;
               text-align: center;
 
               &:active {
@@ -193,6 +196,7 @@ export function McdonaldsSetSingle({
               justify-content: center;
               font-size: 56px;
               line-height: 1;
+              min-width: 0;
             `}
           >
             <span>🍔</span>
