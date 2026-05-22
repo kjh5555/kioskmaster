@@ -326,6 +326,7 @@ export function StepEngine({
   onExit,
 }: StepEngineProps): React.ReactElement {
   const [stepIndex, setStepIndex] = useState(0);
+  const [history, setHistory] = useState<number[]>([]);
   const [shakingId, setShakingId] = useState<string | null>(null);
   const [locked, setLocked] = useState(false);
 
@@ -336,8 +337,10 @@ export function StepEngine({
   const { openToast } = useToast();
 
   function handleBack(): void {
-    if (stepIndex > 0) {
-      setStepIndex((i) => i - 1);
+    if (history.length > 0) {
+      const prev = history[history.length - 1];
+      setHistory((h) => h.slice(0, -1));
+      setStepIndex(prev);
       setShakingId(null);
     } else {
       onExit();
@@ -383,19 +386,14 @@ export function StepEngine({
   function handleTap(choiceId: string): void {
     if (locked) return;
 
-    // A choice succeeds when it's the goal answer OR it's defined as a branch
-    // (an explicit alternative path like 단품 → order-confirm-single).
-    const branchTargetId = step.branchTo?.[choiceId];
-    const succeeded =
-      choiceId === step.correctChoiceId || branchTargetId !== undefined;
-
-    if (succeeded) {
+    if (choiceId === step.correctChoiceId) {
       setLocked(true);
       sfx.playSuccess();
       confetti.burst();
       showToast(dynamicSuccess);
 
       setTimeout(() => {
+        const branchTargetId = step.branchTo?.[choiceId];
         let nextIndex = stepIndex + 1;
         if (branchTargetId !== undefined) {
           const idx = scenario.steps.findIndex((s) => s.id === branchTargetId);
@@ -404,6 +402,7 @@ export function StepEngine({
         if (nextIndex >= totalSteps) {
           onScenarioComplete();
         } else {
+          setHistory((h) => [...h, stepIndex]);
           setStepIndex(nextIndex);
           setLocked(false);
         }
