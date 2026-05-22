@@ -1,6 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
-import type { CustomLayoutProps } from "./types";
+import { lookupCorrectLabel, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -108,9 +108,13 @@ const DRINKS = [
 ] as const;
 
 export function McdonaldsDrinkSelect({
+  scenario,
   rejectedChoiceId,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
+  const sizeLabel = lookupCorrectLabel(scenario, "set-size") ?? "세트";
+  const sideLabel = lookupCorrectLabel(scenario, "side-select") ?? "사이드";
   return (
     <div
       css={css`
@@ -164,7 +168,7 @@ export function McdonaldsDrinkSelect({
               line-height: 1.2;
             `}
           >
-            빅맥 - 라지세트
+            {burgerLabel} - {sizeLabel}
           </span>
           <span
             css={css`
@@ -258,8 +262,8 @@ export function McdonaldsDrinkSelect({
                 line-height: 1.4;
               `}
             >
-              빅맥
-              <br />- 라지세트
+              {burgerLabel}
+              <br />- {sizeLabel}
             </span>
           </div>
 
@@ -323,7 +327,7 @@ export function McdonaldsDrinkSelect({
                   line-height: 1.3;
                 `}
               >
-                후렌치 후라이 - 라지
+                {sideLabel}
               </span>
             </div>
           </div>

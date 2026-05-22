@@ -1,6 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
-import type { CustomLayoutProps } from "./types";
+import { lookupCorrectLabel, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -20,16 +20,21 @@ function shakeWhen(rejected: string | null, id: string) {
   );
 }
 
-const ITEMS = [
-  { emoji: "🍔", name: "빅맥", kcal: "674 Kcal" },
-  { emoji: "🍟", name: "후렌치 후라이-라지", kcal: "408 Kcal" },
-  { emoji: "🥤", name: "코카콜라-라지", kcal: "198 Kcal" },
-];
-
 export function McdonaldsOrderConfirm({
+  scenario,
   rejectedChoiceId,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
+  const sizeLabel = lookupCorrectLabel(scenario, "set-size") ?? "세트";
+  const sideLabel = lookupCorrectLabel(scenario, "side-select") ?? "사이드";
+  const drinkLabel = lookupCorrectLabel(scenario, "drink-select") ?? "음료";
+
+  const ITEMS = [
+    { emoji: "🍔", name: burgerLabel, kcal: "" },
+    { emoji: "🍟", name: sideLabel, kcal: "" },
+    { emoji: "🥤", name: drinkLabel, kcal: "" },
+  ];
   return (
     <div
       css={css`
@@ -99,7 +104,7 @@ export function McdonaldsOrderConfirm({
             margin-bottom: 4px;
           `}
         >
-          빅맥 - 라지세트
+          {burgerLabel} - {sizeLabel}
         </div>
 
         {/* Price + kcal */}

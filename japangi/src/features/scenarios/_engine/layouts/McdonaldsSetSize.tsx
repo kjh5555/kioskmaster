@@ -1,6 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
-import type { CustomLayoutProps } from "./types";
+import { lookupCorrectLabel, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -21,9 +21,11 @@ function shakeWhen(rejected: string | null, id: string) {
 }
 
 export function McdonaldsSetSize({
+  scenario,
   rejectedChoiceId,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
   return (
     <div
       css={css`
@@ -77,7 +79,7 @@ export function McdonaldsSetSize({
               line-height: 1.2;
             `}
           >
-            빅맥 - 보통 세트
+            {burgerLabel} - 보통 세트
           </span>
           <span
             css={css`
@@ -159,7 +161,7 @@ export function McdonaldsSetSize({
                 line-height: 1.4;
               `}
             >
-              빅맥
+              {burgerLabel}
               <br />
               세트 종류
             </span>
@@ -358,7 +360,7 @@ export function McdonaldsSetSize({
                   color: #191f28;
                 `}
               >
-                빅맥
+                {burgerLabel}
               </span>
               <span
                 css={css`
@@ -455,7 +457,7 @@ export function McdonaldsSetSize({
                   color: #191f28;
                 `}
               >
-                빅맥
+                {burgerLabel}
               </span>
               <span
                 css={css`

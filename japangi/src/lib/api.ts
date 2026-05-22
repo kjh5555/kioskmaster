@@ -65,6 +65,7 @@ export interface ApiDynamicGoal {
   goal_summary: string;
   selections: Record<string, string>;
   used_gemini: boolean;
+  scenario_json: unknown;
 }
 
 // Matches backend MenuCategorySummary schema

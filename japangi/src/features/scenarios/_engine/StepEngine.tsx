@@ -363,9 +363,22 @@ export function StepEngine({
   const totalSteps = scenario.steps.length;
   const progressPct = ((stepIndex + 1) / totalSteps) * 100;
 
+  const correctChoice = step.choices.find((c) => c.id === step.correctChoiceId);
+  const correctLabel =
+    correctChoice != null
+      ? correctChoice.label.replace(/\n/g, " ").trim()
+      : null;
+
   function showToast(message: string): void {
     openToast(message);
   }
+
+  // Dynamic messages based on the actual correct choice's label,
+  // so the toast always matches what the hint banner tells the user.
+  const dynamicSuccess =
+    correctLabel != null ? `잘하셨어요! ${correctLabel} 골랐어요.` : step.successMessage;
+  const dynamicHint =
+    correctLabel != null ? `${correctLabel} 카드를 한 번 눌러주세요.` : step.hintMessage;
 
   function handleTap(choiceId: string): void {
     if (locked) return;
@@ -374,7 +387,7 @@ export function StepEngine({
       setLocked(true);
       sfx.playSuccess();
       confetti.burst();
-      showToast(step.successMessage);
+      showToast(dynamicSuccess);
 
       setTimeout(() => {
         if (stepIndex + 1 >= totalSteps) {
@@ -387,7 +400,7 @@ export function StepEngine({
     } else {
       sfx.playError();
       setShakingId(choiceId);
-      showToast(step.hintMessage);
+      showToast(dynamicHint);
 
       setTimeout(() => {
         setShakingId(null);
@@ -405,6 +418,7 @@ export function StepEngine({
         return (
           <CustomLayout
             step={step}
+            scenario={scenario}
             theme={theme}
             rejectedChoiceId={shakingId}
             onChoice={handleTap}
@@ -482,12 +496,49 @@ export function StepEngine({
   );
 
   // Show the correct answer label so elderly users know what to tap.
-  // Skip on the very first "start" step (single big CTA — nothing to choose).
-  const correctChoice = step.choices.find((c) => c.id === step.correctChoiceId);
-  const hideHint = step.layout === "start" || step.choices.length <= 1;
+  // On the very first start step (single CTA) we show the FULL goal summary
+  // ("오늘은 1955버거 라지세트, 코울슬로, 콜라를 주문할 거예요") instead of
+  // a single-item hint, because there's nothing to choose yet.
   const accentColor = theme != null ? theme.primary : adaptive.blue500;
-  const goalHint =
-    correctChoice != null && !hideHint ? (
+  const isStart = step.layout === "start";
+  const goalHint = (() => {
+    if (isStart) {
+      return (
+        <div
+          css={css`
+            background: ${accentColor}14;
+            border-left: 4px solid ${accentColor};
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+          `}
+        >
+          <span
+            css={css`
+              font-size: 13px;
+              font-weight: 700;
+              color: ${accentColor};
+              letter-spacing: 0.02em;
+            `}
+          >
+            🎯 오늘의 주문 목표
+          </span>
+          <span
+            css={css`
+              font-size: var(--font-body);
+              color: ${adaptive.grey900};
+              line-height: 1.45;
+            `}
+          >
+            {scenario.goalSummary}
+          </span>
+        </div>
+      );
+    }
+    if (correctChoice == null) return null;
+    return (
       <div
         css={css`
           background: ${accentColor}14;
@@ -519,7 +570,8 @@ export function StepEngine({
           {sublabelSuffix(correctChoice.sublabel)} 을(를) 골라주세요
         </span>
       </div>
-    ) : null;
+    );
+  })();
 
   if (hasCustomLayout) {
     return (

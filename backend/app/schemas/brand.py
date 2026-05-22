@@ -27,3 +27,4 @@ class DynamicGoalResponse(BaseModel):
     goal_summary: str
     selections: dict[str, str]
     used_gemini: bool
+    scenario_json: Optional[Any] = None

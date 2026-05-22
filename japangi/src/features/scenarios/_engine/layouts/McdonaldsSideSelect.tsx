@@ -1,6 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
-import type { CustomLayoutProps } from "./types";
+import { lookupCorrectLabel, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -21,9 +21,12 @@ function shakeWhen(rejected: string | null, id: string) {
 }
 
 export function McdonaldsSideSelect({
+  scenario,
   rejectedChoiceId,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
+  const sizeLabel = lookupCorrectLabel(scenario, "set-size") ?? "세트";
   return (
     <div
       css={css`
@@ -77,7 +80,7 @@ export function McdonaldsSideSelect({
               line-height: 1.2;
             `}
           >
-            빅맥 - 라지세트
+            {burgerLabel} - {sizeLabel}
           </span>
           <span
             css={css`
@@ -171,8 +174,8 @@ export function McdonaldsSideSelect({
                 line-height: 1.4;
               `}
             >
-              빅맥
-              <br />- 라지세트
+              {burgerLabel}
+              <br />- {sizeLabel}
             </span>
           </div>
 

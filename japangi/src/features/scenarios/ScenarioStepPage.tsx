@@ -10,11 +10,7 @@ import { ErrorScreen } from "../../components/ErrorScreen";
 import { HelpOverlay } from "../../components/HelpOverlay";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { PracticeBadge } from "../../components/PracticeBadge";
-import {
-  useBrand,
-  useBrandScenario,
-  useDynamicGoal,
-} from "../../hooks/useKioskQueries";
+import { useBrand, useDynamicGoal } from "../../hooks/useKioskQueries";
 import { queryClient } from "../../lib/queryClient";
 import { OnboardingTour } from "./_engine/OnboardingTour";
 import {
@@ -93,17 +89,16 @@ function FastfoodStepPageLoader({
   brandId: string;
 }): React.ReactElement {
   const {
-    data: scenarioData,
-    isLoading: scenarioLoading,
-    error: scenarioError,
-  } = useBrandScenario(brandId);
-  const { data: goal, isLoading: goalLoading } = useDynamicGoal(brandId);
+    data: goal,
+    isLoading: goalLoading,
+    error: goalError,
+  } = useDynamicGoal(brandId);
 
   const scenario = useMemo(() => {
-    const raw = scenarioData?.scenario_json as ScenarioScript | undefined;
+    if (!goal) return undefined;
+    const raw = goal.scenario_json as ScenarioScript | undefined;
     if (raw === undefined || raw === null || !Array.isArray(raw.steps))
       return raw;
-    if (!goal) return raw;
     return {
       ...raw,
       goalSummary: goal.goal_summary,
@@ -116,15 +111,15 @@ function FastfoodStepPageLoader({
           : step,
       ),
     };
-  }, [scenarioData, goal]);
+  }, [goal]);
 
-  if (scenarioLoading || goalLoading) return <LoadingScreen />;
-  if (scenarioError !== null)
+  if (goalLoading) return <LoadingScreen />;
+  if (goalError !== null)
     return (
       <ErrorScreen
         onRetry={() =>
           void queryClient.invalidateQueries({
-            queryKey: ["brand-scenario", brandId],
+            queryKey: ["dynamic-goal", brandId],
           })
         }
       />

@@ -1,6 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
-import type { CustomLayoutProps } from "./types";
+import { lookupCorrectLabel, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -21,9 +21,11 @@ function shakeWhen(rejected: string | null, id: string) {
 }
 
 export function McdonaldsSetSingle({
+  scenario,
   rejectedChoiceId,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
   return (
     <div
       css={css`
@@ -72,7 +74,7 @@ export function McdonaldsSetSingle({
             color: #191f28;
           `}
         >
-          빅맥
+          {burgerLabel}
         </span>
       </div>
 
