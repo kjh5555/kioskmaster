@@ -84,6 +84,13 @@ def seed_mcdonalds_menu(session: Session, slug_to_brand: dict[str, Brand]) -> No
         print("McDonald's brand not found, skipping menu seed")
         return
 
+    # Debug: confirm the data file actually carries imageUrl keys at boot time.
+    sample = next(
+        (it for it in MCDONALDS_CATEGORY_ITEMS.get("burger", []) if it.get("id") == "bigmac"),
+        None,
+    )
+    print(f"[seed] bigmac data sample: {sample}")
+
     for order_idx, cat_slug in enumerate(MCDONALDS_CATEGORY_ORDER):
         title = MCDONALDS_CATEGORY_TITLES[cat_slug]
         items_data = MCDONALDS_CATEGORY_ITEMS.get(cat_slug, [])
