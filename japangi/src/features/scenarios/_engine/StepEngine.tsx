@@ -358,14 +358,22 @@ export function StepEngine({
 
   // When idle hint activates, scroll the pulsing button into view so the user
   // can actually see the signal even if the target sits below the fold.
+  // The pulse animation is the only one in the app using a 1.2s duration, so
+  // we walk the DOM for the first button whose computed animation matches.
   useEffect(() => {
     if (!idleHintActive) return;
     const handle = window.setTimeout(() => {
-      const target = document.querySelector<HTMLElement>(
-        `[class*="${IDLE_PULSE_CLASS_FRAGMENT}"]`,
-      );
-      if (target !== null) {
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
+      const candidates = document.querySelectorAll<HTMLElement>("button");
+      for (const btn of Array.from(candidates)) {
+        const cs = window.getComputedStyle(btn);
+        if (
+          cs.animationName !== "none" &&
+          cs.animationDuration === "1.2s" &&
+          cs.animationIterationCount === "infinite"
+        ) {
+          btn.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
       }
     }, 120);
     return () => window.clearTimeout(handle);
