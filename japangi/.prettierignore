@@ -1,0 +1,4 @@
+dist/
+.granite/
+*.ait
+.omc/

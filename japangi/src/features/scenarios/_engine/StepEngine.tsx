@@ -1,0 +1,595 @@
+import { css, keyframes } from "@emotion/react";
+import { adaptive } from "@toss/tds-colors";
+import { useToast } from "@toss/tds-mobile";
+import { graniteEvent } from "@apps-in-toss/web-framework";
+import { useEffect, useState } from "react";
+
+import { HelpOverlay } from "../../../components/HelpOverlay";
+import { useConfetti } from "../../../hooks/useConfetti";
+import { useSFX } from "../../../hooks/useSFX";
+import { getCustomLayout } from "./layouts/index";
+import type { BrandTheme, Choice, ScenarioScript, Step } from "./types";
+
+// Shake keyframe for wrong-answer feedback
+const shakeKf = keyframes`
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-6px); }
+  40%  { transform: translateX(6px); }
+  60%  { transform: translateX(-4px); }
+  80%  { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+`;
+
+interface StepEngineProps {
+  scenario: ScenarioScript;
+  onScenarioComplete: () => void;
+  onExit: () => void;
+}
+
+// ── Card shared styles ────────────────────────────────────────────────────────
+
+function makeCardBase(theme?: BrandTheme) {
+  const activeColor = theme != null ? theme.primary : adaptive.blue500;
+  return css`
+    background: ${adaptive.greyBackground};
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 20px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      transform 120ms ease,
+      box-shadow 120ms ease;
+    text-align: center;
+    border: none;
+    width: 100%;
+
+    &:active {
+      transform: scale(0.97);
+      box-shadow: 0 0 0 2px ${activeColor};
+      background: ${activeColor}1a;
+    }
+  `;
+}
+
+const cardLabel = css`
+  font-size: var(--font-button);
+  font-weight: 700;
+  color: ${adaptive.grey900};
+  line-height: 1.3;
+  white-space: pre-line;
+`;
+
+const cardSublabel = css`
+  font-size: var(--font-body);
+  color: ${adaptive.grey600};
+`;
+
+// ── Layout renderers ──────────────────────────────────────────────────────────
+
+interface ChoiceCardProps {
+  choice: Choice;
+  shaking: boolean;
+  onTap: (id: string) => void;
+  theme?: BrandTheme;
+}
+
+function ChoiceCard({
+  choice,
+  shaking,
+  onTap,
+  theme,
+}: ChoiceCardProps): React.ReactElement {
+  return (
+    <button
+      css={[
+        makeCardBase(theme),
+        shaking &&
+          css`
+            animation: ${shakeKf} 300ms ease;
+          `,
+      ]}
+      onClick={() => onTap(choice.id)}
+    >
+      {choice.emoji != null && (
+        <span style={{ fontSize: 36, lineHeight: 1 }}>{choice.emoji}</span>
+      )}
+      <span css={cardLabel}>{choice.label}</span>
+      {choice.sublabel != null && (
+        <span css={cardSublabel}>{choice.sublabel}</span>
+      )}
+    </button>
+  );
+}
+
+function StartLayout({
+  step,
+  shakingId,
+  onTap,
+  theme,
+}: {
+  step: Step;
+  shakingId: string | null;
+  onTap: (id: string) => void;
+  theme?: BrandTheme;
+}): React.ReactElement {
+  const bgColor = theme != null ? theme.primary : adaptive.blue500;
+  const textColor = theme != null ? theme.onPrimary : "#fff";
+  const choice = step.choices[0];
+  return (
+    <button
+      css={[
+        css`
+          flex: 1;
+          width: 100%;
+          min-height: 280px;
+          border-radius: 24px;
+          background: ${bgColor};
+          gap: 16px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          user-select: none;
+          border: none;
+          padding: 20px 16px;
+        `,
+        shakingId === choice.id &&
+          css`
+            animation: ${shakeKf} 300ms ease;
+          `,
+      ]}
+      onClick={() => onTap(choice.id)}
+    >
+      {choice.emoji != null && (
+        <span style={{ fontSize: 56, lineHeight: 1 }}>{choice.emoji}</span>
+      )}
+      <span
+        css={css`
+          font-size: var(--font-header);
+          font-weight: 700;
+          color: ${textColor};
+          line-height: 1.4;
+          white-space: pre-line;
+          text-align: center;
+        `}
+      >
+        {choice.label}
+      </span>
+    </button>
+  );
+}
+
+function DuoLayout({
+  step,
+  shakingId,
+  onTap,
+  theme,
+}: {
+  step: Step;
+  shakingId: string | null;
+  onTap: (id: string) => void;
+  theme?: BrandTheme;
+}): React.ReactElement {
+  return (
+    <div
+      css={css`
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        width: 100%;
+      `}
+    >
+      {step.choices.map((choice) => (
+        <ChoiceCard
+          key={choice.id}
+          choice={choice}
+          shaking={shakingId === choice.id}
+          onTap={onTap}
+          theme={theme}
+        />
+      ))}
+    </div>
+  );
+}
+
+function GridLayout({
+  step,
+  shakingId,
+  onTap,
+  theme,
+}: {
+  step: Step;
+  shakingId: string | null;
+  onTap: (id: string) => void;
+  theme?: BrandTheme;
+}): React.ReactElement {
+  return (
+    <div
+      css={css`
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        width: 100%;
+      `}
+    >
+      {step.choices.map((choice) => (
+        <ChoiceCard
+          key={choice.id}
+          choice={choice}
+          shaking={shakingId === choice.id}
+          onTap={onTap}
+          theme={theme}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ListLayout({
+  step,
+  shakingId,
+  onTap,
+  theme,
+}: {
+  step: Step;
+  shakingId: string | null;
+  onTap: (id: string) => void;
+  theme?: BrandTheme;
+}): React.ReactElement {
+  return (
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+      `}
+    >
+      {step.choices.map((choice) => {
+        const activeColor = theme != null ? theme.primary : adaptive.blue500;
+        return (
+          <button
+            key={choice.id}
+            css={[
+              css`
+                background: ${adaptive.greyBackground};
+                border-radius: 20px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+                gap: 16px;
+                padding: 20px 20px;
+                cursor: pointer;
+                user-select: none;
+                transition:
+                  transform 120ms ease,
+                  box-shadow 120ms ease;
+                text-align: left;
+                border: none;
+                width: 100%;
+                min-height: 72px;
+
+                &:active {
+                  transform: scale(0.97);
+                  box-shadow: 0 0 0 2px ${activeColor};
+                  background: ${activeColor}1a;
+                }
+              `,
+              shakingId === choice.id &&
+                css`
+                  animation: ${shakeKf} 300ms ease;
+                `,
+            ]}
+            onClick={() => onTap(choice.id)}
+          >
+            {choice.emoji != null && (
+              <span style={{ fontSize: 32, lineHeight: 1, flexShrink: 0 }}>
+                {choice.emoji}
+              </span>
+            )}
+            <div
+              css={css`
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+              `}
+            >
+              <span css={cardLabel}>{choice.label}</span>
+              {choice.sublabel != null && (
+                <span css={cardSublabel}>{choice.sublabel}</span>
+              )}
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── StepEngine ────────────────────────────────────────────────────────────────
+
+export function StepEngine({
+  scenario,
+  onScenarioComplete,
+  onExit,
+}: StepEngineProps): React.ReactElement {
+  const [stepIndex, setStepIndex] = useState(0);
+  const [shakingId, setShakingId] = useState<string | null>(null);
+  const [locked, setLocked] = useState(false);
+
+  const sfx = useSFX();
+  const confetti = useConfetti();
+  // useToast() is provided by TDSMobileAITProvider (already wrapping the app in main.tsx).
+  // API confirmed from types: openToast(message: string, options?: OpenToastOptions) => void
+  const { openToast } = useToast();
+
+  function handleBack(): void {
+    if (stepIndex > 0) {
+      setStepIndex((i) => i - 1);
+      setShakingId(null);
+    } else {
+      onExit();
+    }
+  }
+
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    try {
+      cleanup = graniteEvent.addEventListener("backEvent", {
+        onEvent: () => {
+          handleBack();
+        },
+      });
+    } catch {
+      // Not running inside Apps in Toss WebView (e.g., plain browser dev).
+    }
+    return cleanup;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepIndex]);
+
+  const step = scenario.steps[stepIndex];
+  const totalSteps = scenario.steps.length;
+  const progressPct = ((stepIndex + 1) / totalSteps) * 100;
+
+  function showToast(message: string): void {
+    openToast(message);
+  }
+
+  function handleTap(choiceId: string): void {
+    if (locked) return;
+
+    if (choiceId === step.correctChoiceId) {
+      setLocked(true);
+      sfx.playSuccess();
+      confetti.burst();
+      showToast(step.successMessage);
+
+      setTimeout(() => {
+        if (stepIndex + 1 >= totalSteps) {
+          onScenarioComplete();
+        } else {
+          setStepIndex((i) => i + 1);
+          setLocked(false);
+        }
+      }, 700);
+    } else {
+      sfx.playError();
+      setShakingId(choiceId);
+      showToast(step.hintMessage);
+
+      setTimeout(() => {
+        setShakingId(null);
+      }, 350);
+    }
+  }
+
+  const theme = scenario.theme;
+  const progressColor = theme != null ? theme.accent : adaptive.blue500;
+
+  function renderLayout(): React.ReactElement {
+    if (step.customLayoutId != null) {
+      const CustomLayout = getCustomLayout(step.customLayoutId);
+      if (CustomLayout != null) {
+        return (
+          <CustomLayout
+            step={step}
+            theme={theme}
+            rejectedChoiceId={shakingId}
+            onChoice={handleTap}
+          />
+        );
+      }
+    }
+
+    switch (step.layout) {
+      case "start":
+        return (
+          <StartLayout
+            step={step}
+            shakingId={shakingId}
+            onTap={handleTap}
+            theme={theme}
+          />
+        );
+      case "duo":
+        return (
+          <DuoLayout
+            step={step}
+            shakingId={shakingId}
+            onTap={handleTap}
+            theme={theme}
+          />
+        );
+      case "grid":
+        return (
+          <GridLayout
+            step={step}
+            shakingId={shakingId}
+            onTap={handleTap}
+            theme={theme}
+          />
+        );
+      case "list":
+        return (
+          <ListLayout
+            step={step}
+            shakingId={shakingId}
+            onTap={handleTap}
+            theme={theme}
+          />
+        );
+    }
+  }
+
+  const hasCustomLayout =
+    step.customLayoutId != null && getCustomLayout(step.customLayoutId) != null;
+
+  const backButton = (
+    <button
+      onClick={handleBack}
+      aria-label="이전 단계로"
+      css={css`
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        height: 40px;
+        padding: 0 12px;
+        background: ${adaptive.greyBackground};
+        border: 1px solid ${adaptive.grey200};
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: var(--font-body);
+        color: ${adaptive.grey900};
+        align-self: flex-start;
+        margin-bottom: 8px;
+      `}
+    >
+      <span style={{ fontSize: 18 }}>←</span>
+      <span>이전</span>
+    </button>
+  );
+
+  if (hasCustomLayout) {
+    return (
+      <>
+        <div
+          css={css`
+            padding: 8px 0 0;
+          `}
+        >
+          {backButton}
+        </div>
+        {renderLayout()}
+        <HelpOverlay helpText={step.helpText} />
+      </>
+    );
+  }
+
+  return (
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        gap: 20px;
+      `}
+    >
+      {backButton}
+
+      {/* Brand banner */}
+      {theme != null && (
+        <div
+          css={css`
+            background: ${theme.primary};
+            color: ${theme.onPrimary};
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            margin-bottom: -4px;
+          `}
+        >
+          {theme.name}
+        </div>
+      )}
+
+      {/* Progress bar */}
+      <div>
+        <div
+          css={css`
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+          `}
+        >
+          <span
+            css={css`
+              font-size: 15px;
+              color: ${adaptive.grey600};
+              font-weight: 600;
+            `}
+          >
+            {stepIndex + 1} / {totalSteps}
+          </span>
+        </div>
+        <div
+          css={css`
+            height: 8px;
+            border-radius: 4px;
+            background: ${adaptive.grey200};
+            overflow: hidden;
+          `}
+        >
+          <div
+            css={css`
+              height: 100%;
+              border-radius: 4px;
+              background: ${progressColor};
+              transition: width 300ms ease;
+            `}
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Step instruction */}
+      <p
+        css={css`
+          margin: 0;
+          font-size: var(--font-button);
+          font-weight: 700;
+          color: ${adaptive.grey900};
+          line-height: 1.4;
+        `}
+      >
+        {step.instruction}
+      </p>
+
+      {/* Choice layout */}
+      <div
+        css={css`
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        `}
+      >
+        {renderLayout()}
+      </div>
+
+      {/* Help button (fixed, per step) */}
+      <HelpOverlay helpText={step.helpText} />
+    </div>
+  );
+}

@@ -1,0 +1,34 @@
+import { McdonaldsCategory } from "./McdonaldsCategory";
+import { McdonaldsDineMode } from "./McdonaldsDineMode";
+import { McdonaldsSetSize } from "./McdonaldsSetSize";
+import { McdonaldsSetSingle } from "./McdonaldsSetSingle";
+import { McdonaldsDrinkSelect } from "./McdonaldsDrinkSelect";
+import { McdonaldsOrderConfirm } from "./McdonaldsOrderConfirm";
+import { McdonaldsSideSelect } from "./McdonaldsSideSelect";
+import { McdonaldsStart } from "./McdonaldsStart";
+import { McdonaldsUpsell } from "./McdonaldsUpsell";
+import { McdonaldsOrderReview } from "./McdonaldsOrderReview";
+import { McdonaldsTableService } from "./McdonaldsTableService";
+import { McdonaldsPayMethod } from "./McdonaldsPayMethod";
+import { McdonaldsPayProcessing } from "./McdonaldsPayProcessing";
+import type { CustomLayoutComponent } from "./types";
+
+export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
+  "mcdonalds-start": McdonaldsStart,
+  "mcdonalds-category": McdonaldsCategory,
+  "mcdonalds-dine-mode": McdonaldsDineMode,
+  "mcdonalds-set-single": McdonaldsSetSingle,
+  "mcdonalds-set-size": McdonaldsSetSize,
+  "mcdonalds-side-select": McdonaldsSideSelect,
+  "mcdonalds-drink-select": McdonaldsDrinkSelect,
+  "mcdonalds-order-confirm": McdonaldsOrderConfirm,
+  "mcdonalds-upsell": McdonaldsUpsell,
+  "mcdonalds-order-review": McdonaldsOrderReview,
+  "mcdonalds-table-service": McdonaldsTableService,
+  "mcdonalds-pay-method": McdonaldsPayMethod,
+  "mcdonalds-pay-processing": McdonaldsPayProcessing,
+};
+
+export function getCustomLayout(id: string): CustomLayoutComponent | undefined {
+  return CUSTOM_LAYOUTS[id];
+}
