@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 import { adaptive } from "@toss/tds-colors";
 import { Paragraph, Top } from "@toss/tds-mobile";
 import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { BackButton } from "../../components/BackButton";
 import { BigButton } from "../../components/BigButton";
@@ -92,7 +92,6 @@ function FastfoodStepPageLoader({
   categoryId: string;
   brandId: string;
 }): React.ReactElement {
-  const navigate = useNavigate();
   const {
     data: scenarioData,
     isLoading: scenarioLoading,
@@ -136,8 +135,7 @@ function FastfoodStepPageLoader({
     scenario === null ||
     !Array.isArray(scenario.steps)
   ) {
-    navigate("/");
-    return <></>;
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -170,8 +168,7 @@ function PlaceholderStepPage({
     );
 
   if (brand === undefined) {
-    navigate("/");
-    return <></>;
+    return <Navigate to="/" replace />;
   }
 
   return (

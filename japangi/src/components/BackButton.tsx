@@ -1,10 +1,17 @@
 import { useNavigate } from "react-router-dom";
 
-export function BackButton(): React.ReactElement {
+interface BackButtonProps {
+  to?: string;
+}
+
+export function BackButton({ to }: BackButtonProps = {}): React.ReactElement {
   const navigate = useNavigate();
 
   function handleClick(): void {
-    // Navigate back; fall back to home if no history entry exists.
+    if (to !== undefined) {
+      navigate(to);
+      return;
+    }
     if (window.history.length > 1) {
       navigate(-1);
     } else {

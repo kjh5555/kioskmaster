@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import { adaptive } from "@toss/tds-colors";
 import { Paragraph, Top } from "@toss/tds-mobile";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { BackButton } from "../../components/BackButton";
 import { ErrorScreen } from "../../components/ErrorScreen";
@@ -27,8 +27,7 @@ export function BrandSelectPage(): React.ReactElement {
     );
 
   if (category === undefined) {
-    navigate("/");
-    return <></>;
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -47,7 +46,7 @@ export function BrandSelectPage(): React.ReactElement {
           padding: 0 4px;
         `}
       >
-        <BackButton />
+        <BackButton to="/" />
       </div>
 
       <Top

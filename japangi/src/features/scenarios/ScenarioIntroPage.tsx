@@ -1,7 +1,7 @@
 import { css } from "@emotion/react";
 import { adaptive } from "@toss/tds-colors";
 import { Top } from "@toss/tds-mobile";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 import { BackButton } from "../../components/BackButton";
 import { BigButton } from "../../components/BigButton";
@@ -30,8 +30,7 @@ export function ScenarioIntroPage(): React.ReactElement {
     );
 
   if (brand === undefined) {
-    navigate("/");
-    return <></>;
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -55,7 +54,7 @@ export function ScenarioIntroPage(): React.ReactElement {
           padding: 0 0;
         `}
       >
-        <BackButton />
+        <BackButton to="/" />
         <PracticeBadge position="static" />
       </div>
 
