@@ -11,6 +11,15 @@ import { PracticeBadge } from "../../components/PracticeBadge";
 import { useBrand } from "../../hooks/useKioskQueries";
 import { queryClient } from "../../lib/queryClient";
 
+// What the user is actually practicing for each category — surfaces in the
+// intro headline ("이번에는 맥도날드 햄버거 주문 키오스크를 연습해볼게요").
+const CATEGORY_ACTION_LABEL: Record<string, string> = {
+  fastfood: "햄버거 주문",
+  cafe: "커피 주문",
+  hospital: "진료 접수",
+  subway: "지하철 표 발매",
+};
+
 export function ScenarioIntroPage(): React.ReactElement {
   const { categoryId = "", brandId = "" } = useParams<{
     categoryId: string;
@@ -62,7 +71,8 @@ export function ScenarioIntroPage(): React.ReactElement {
         upperGap={0}
         title={
           <Top.TitleParagraph>
-            이번에는 {brand.name} {categoryId} 키오스크를 연습해볼게요
+            이번에는 {brand.name} {CATEGORY_ACTION_LABEL[categoryId] ?? "키오스크"}{" "}
+            키오스크를 연습해볼게요
           </Top.TitleParagraph>
         }
         subtitleBottom={
