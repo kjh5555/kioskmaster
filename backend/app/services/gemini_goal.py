@@ -1,9 +1,10 @@
 """
 Gemini-powered dynamic goal generator for kiosk practice sessions.
 
-Given a brand and its menu items, asks Gemini to pick ONE meal combination
-so the "correct answers" change each session. Falls back to deterministic
-defaults if GEMINI_API_KEY is missing or the call fails.
+Given a brand and its scenario, asks Gemini to pick ONE valid choiceId per step
+so the "correct answers" change each session while staying within the choices
+the scenario actually offers. Falls back to deterministic defaults if
+GEMINI_API_KEY is missing or the call fails.
 """
 from __future__ import annotations
 
@@ -16,47 +17,10 @@ from app.config import settings
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
-# Schema used for Gemini's structured JSON output
+# Fallback summary
 # ---------------------------------------------------------------------------
 
-_RESPONSE_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "goalSummary": {"type": "string"},
-        "selections": {
-            "type": "object",
-            "properties": {
-                "dine-mode":      {"type": "string", "enum": ["dine-in", "takeout"]},
-                "category":       {"type": "string"},
-                "set-or-single":  {"type": "string", "enum": ["set", "single"]},
-                "set-size":       {"type": "string", "enum": ["regular", "large"]},
-                "side-select":    {"type": "string"},
-                "drink-select":   {"type": "string"},
-                "table-service":  {"type": "string", "enum": ["table-service", "counter-pickup"]},
-                "pay-method":     {"type": "string", "enum": ["credit-card", "smart-pay", "mobile-voucher"]},
-            },
-            "required": [
-                "dine-mode", "set-or-single", "set-size",
-                "table-service", "pay-method",
-            ],
-        },
-    },
-    "required": ["goalSummary", "selections"],
-}
-
-# ---------------------------------------------------------------------------
-# Fallback defaults (used when Gemini is unavailable)
-# ---------------------------------------------------------------------------
-
-_FALLBACK_SELECTIONS: dict[str, str] = {
-    "dine-mode": "dine-in",
-    "set-or-single": "set",
-    "set-size": "regular",
-    "table-service": "table-service",
-    "pay-method": "credit-card",
-}
-
-_FALLBACK_SUMMARY = "매장에서 세트 메뉴를 주문하고 카드로 결제해 보세요."
+_FALLBACK_SUMMARY = "오늘은 세트 메뉴를 주문하고 카드로 결제해 보세요."
 
 
 # ---------------------------------------------------------------------------
@@ -71,84 +35,147 @@ def generate_goal(
     """
     Return { "goal_summary": str, "selections": dict[str, str], "used_gemini": bool }.
 
-    Parameters
-    ----------
-    brand_name:
-        Human-readable brand name, e.g. "맥도날드".
-    menu_by_category:
-        Mapping of category slug → list of {"slug": ..., "name": ...} dicts.
-        E.g. {"burger": [{"slug": "bigmac", "name": "빅맥"}, ...], "side": [...], "drink": [...]}
-    scenario_json:
-        The brand's full scenario_json stored in DB. Used to extract
-        deterministic correctChoiceId values for the fallback.
+    Selections only contain step ids whose scenario step has more than one
+    choice — otherwise there's nothing to randomize.
     """
+    step_choices = _extract_step_choices(scenario_json)
+
     if not settings.gemini_api_key:
-        fallback = _make_fallback(menu_by_category, scenario_json)
+        fallback = _make_fallback(scenario_json)
         fallback["debug_reason"] = "no_api_key"
         return fallback
 
+    if not step_choices:
+        fallback = _make_fallback(scenario_json)
+        fallback["debug_reason"] = "no_scenario_steps"
+        return fallback
+
     try:
-        return _call_gemini(brand_name, menu_by_category)
+        return _call_gemini(brand_name, menu_by_category, step_choices)
     except Exception as exc:
         logger.warning("Gemini call failed, using fallback: %s", exc)
-        fallback = _make_fallback(menu_by_category, scenario_json)
+        fallback = _make_fallback(scenario_json)
         fallback["debug_reason"] = f"gemini_failed: {type(exc).__name__}: {exc}"
         return fallback
+
+
+# ---------------------------------------------------------------------------
+# Scenario inspection
+# ---------------------------------------------------------------------------
+
+def _extract_step_choices(scenario_json: Optional[Any]) -> dict[str, list[str]]:
+    """Return {step_id: [choiceId, ...]} for every step that has choices."""
+    if not scenario_json or not isinstance(scenario_json, dict):
+        return {}
+
+    out: dict[str, list[str]] = {}
+    for step in scenario_json.get("steps", []):
+        sid = step.get("id")
+        choices = step.get("choices") or []
+        ids = [c.get("id") for c in choices if isinstance(c, dict) and c.get("id")]
+        if sid and ids:
+            out[sid] = ids
+    return out
+
+
+# Choice ids that are navigation/utility rather than real answers — exclude
+# from the randomizable pool so Gemini doesn't pick "cancel" as the goal.
+_UTILITY_CHOICE_IDS = {
+    "cancel", "home", "help", "back",
+    "language", "accessibility", "point-accumulate", "point-qr",
+    "lang-english", "lang-korean",
+    "nutrition", "edit-burger",
+    "edit-fries", "edit-fries-ingredient",
+    "edit-drink", "edit-drink-ingredient",
+    "qty-minus", "qty-plus", "add-more", "cancel-item",
+}
+
+
+def _randomizable_choices(step_choices: dict[str, list[str]]) -> dict[str, list[str]]:
+    """Drop utility/nav choice ids; keep steps that still have ≥2 real options."""
+    result: dict[str, list[str]] = {}
+    for sid, ids in step_choices.items():
+        real = [cid for cid in ids if cid not in _UTILITY_CHOICE_IDS]
+        if len(real) >= 2:
+            result[sid] = real
+    return result
 
 
 # ---------------------------------------------------------------------------
 # Gemini call
 # ---------------------------------------------------------------------------
 
-def _build_prompt(brand_name: str, menu_by_category: dict[str, list[dict[str, str]]]) -> str:
+def _build_prompt(
+    brand_name: str,
+    menu_by_category: dict[str, list[dict[str, str]]],
+    randomizable: dict[str, list[str]],
+) -> str:
     lines: list[str] = [
         "당신은 노인 사용자가 키오스크 연습을 할 때 오늘의 주문 목표를 정해주는 도우미예요.",
-        f"{brand_name} 키오스크에서 다음 메뉴 중 하나를 선택해 한 끼 세트를 골라주세요.",
+        f"{brand_name} 키오스크 연습 시나리오에서 매 세션 다른 주문이 되도록 각 단계마다 하나의 선택지를 골라주세요.",
         "",
+        "## 메뉴 참고",
     ]
 
-    burgers = menu_by_category.get("burger", [])
-    sides   = menu_by_category.get("side", [])
-    drinks  = menu_by_category.get("drink", [])
-
-    if burgers:
-        lines.append("## 버거 메뉴")
-        for item in burgers:
+    for cat_slug, items in menu_by_category.items():
+        if not items:
+            continue
+        lines.append(f"### {cat_slug}")
+        for item in items:
             lines.append(f"- {item['name']} (slug: {item['slug']})")
         lines.append("")
 
-    if sides:
-        lines.append("## 사이드 메뉴")
-        for item in sides:
-            lines.append(f"- {item['name']} (slug: {item['slug']})")
-        lines.append("")
-
-    if drinks:
-        lines.append("## 음료 메뉴")
-        for item in drinks:
-            lines.append(f"- {item['name']} (slug: {item['slug']})")
-        lines.append("")
+    lines.append("## 단계별 선택지 (반드시 이 목록에서만 골라야 함)")
+    for sid, ids in randomizable.items():
+        lines.append(f"- {sid}: {ids}")
 
     lines += [
-        "## 결정해야 할 항목",
-        "- dine-mode: 매장(dine-in) 또는 포장(takeout)",
-        "- category: 버거 slug (위 목록에서 선택)",
-        "- set-or-single: 세트(set) 또는 단품(single)",
-        "- set-size: 기본(regular) 또는 라지(large)",
-        "- side-select: 사이드 slug (위 목록에서 선택, 세트일 때)",
-        "- drink-select: 음료 slug (위 목록에서 선택, 세트일 때)",
-        "- table-service: 테이블서비스(table-service) 또는 카운터수령(counter-pickup)",
-        "- pay-method: 신용카드(credit-card), 삼성페이 등 간편결제(smart-pay), 모바일상품권(mobile-voucher)",
         "",
-        "goalSummary는 노인 사용자에게 오늘의 주문 목표를 친근하게 1~2문장으로 안내해 주세요.",
-        "메뉴 항목이 없는 경우 해당 항목은 selections에서 생략해도 됩니다.",
+        "## 출력 규칙",
+        "- selections의 각 키는 위 단계 id와 정확히 일치해야 합니다.",
+        "- 각 값은 그 단계의 선택지 목록 안의 id 중 하나여야 합니다.",
+        "- 새 slug를 만들거나 임의로 변형하지 마세요.",
+        "- goalSummary는 어르신께 친근하게 1~2문장으로 오늘의 주문 목표를 설명해 주세요.",
+        "  메뉴 이름은 한국어로 자연스럽게 풀어 써주세요.",
     ]
 
     return "\n".join(lines)
 
 
-def _call_gemini(brand_name: str, menu_by_category: dict[str, list[dict[str, str]]]) -> dict[str, Any]:
-    import google.generativeai as genai  # imported lazily to avoid crash if package missing
+def _build_response_schema(randomizable: dict[str, list[str]]) -> dict[str, Any]:
+    """Build a JSON schema that pins each selection to its scenario's choice ids."""
+    properties: dict[str, Any] = {}
+    for sid, ids in randomizable.items():
+        properties[sid] = {"type": "string", "enum": list(ids)}
+
+    return {
+        "type": "object",
+        "properties": {
+            "goalSummary": {"type": "string"},
+            "selections": {
+                "type": "object",
+                "properties": properties,
+                "required": list(properties.keys()),
+            },
+        },
+        "required": ["goalSummary", "selections"],
+    }
+
+
+def _call_gemini(
+    brand_name: str,
+    menu_by_category: dict[str, list[dict[str, str]]],
+    step_choices: dict[str, list[str]],
+) -> dict[str, Any]:
+    import google.generativeai as genai  # imported lazily
+
+    randomizable = _randomizable_choices(step_choices)
+    if not randomizable:
+        return {
+            "goal_summary": _FALLBACK_SUMMARY,
+            "selections": {sid: ids[0] for sid, ids in step_choices.items()},
+            "used_gemini": False,
+        }
 
     genai.configure(api_key=settings.gemini_api_key)
 
@@ -156,17 +183,28 @@ def _call_gemini(brand_name: str, menu_by_category: dict[str, list[dict[str, str
         model_name="gemini-2.5-flash",
         generation_config=genai.types.GenerationConfig(
             response_mime_type="application/json",
-            response_schema=_RESPONSE_SCHEMA,
+            response_schema=_build_response_schema(randomizable),
             temperature=1.0,
         ),
     )
 
-    prompt = _build_prompt(brand_name, menu_by_category)
+    prompt = _build_prompt(brand_name, menu_by_category, randomizable)
     response = model.generate_content(prompt)
     parsed = json.loads(response.text)
 
     goal_summary = parsed.get("goalSummary", _FALLBACK_SUMMARY)
-    selections: dict[str, str] = parsed.get("selections", {})
+    selections_raw: dict[str, str] = parsed.get("selections", {})
+
+    # Validate: any value not in the allowed list is replaced with the first choice.
+    selections: dict[str, str] = {}
+    for sid, allowed in randomizable.items():
+        val = selections_raw.get(sid)
+        selections[sid] = val if val in allowed else allowed[0]
+
+    # Fill in single-choice steps (where there was no randomization to do)
+    for sid, ids in step_choices.items():
+        if sid not in selections and ids:
+            selections[sid] = ids[0]
 
     return {
         "goal_summary": goal_summary,
@@ -179,33 +217,16 @@ def _call_gemini(brand_name: str, menu_by_category: dict[str, list[dict[str, str
 # Fallback builder
 # ---------------------------------------------------------------------------
 
-def _make_fallback(
-    menu_by_category: dict[str, list[dict[str, str]]],
-    scenario_json: Optional[Any],
-) -> dict[str, Any]:
-    selections = dict(_FALLBACK_SELECTIONS)
+def _make_fallback(scenario_json: Optional[Any]) -> dict[str, Any]:
+    """Use the scenario's own correctChoiceId for every step."""
+    selections: dict[str, str] = {}
 
-    # Pull correctChoiceId values from scenario steps when available
     if scenario_json and isinstance(scenario_json, dict):
-        steps = scenario_json.get("steps", [])
-        for step in steps:
-            step_id = step.get("id")
+        for step in scenario_json.get("steps", []):
+            sid = step.get("id")
             correct = step.get("correctChoiceId")
-            if step_id and correct:
-                selections[step_id] = correct
-
-    # Fill in a burger slug if available
-    burgers = menu_by_category.get("burger", [])
-    if burgers and "category" not in selections:
-        selections["category"] = burgers[0]["slug"]
-
-    sides = menu_by_category.get("side", [])
-    if sides and "side-select" not in selections:
-        selections["side-select"] = sides[0]["slug"]
-
-    drinks = menu_by_category.get("drink", [])
-    if drinks and "drink-select" not in selections:
-        selections["drink-select"] = drinks[0]["slug"]
+            if sid and correct:
+                selections[sid] = correct
 
     return {
         "goal_summary": _FALLBACK_SUMMARY,
