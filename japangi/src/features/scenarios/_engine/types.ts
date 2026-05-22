@@ -22,6 +22,13 @@ export interface Step {
   correctChoiceId: string;
   successMessage: string;
   hintMessage: string;
+  /**
+   * Optional branching: when the user picks the correct answer and that
+   * choiceId is a key here, jump to the step with the mapped id instead of
+   * advancing linearly. Used for 세트/단품 fork (set-or-single's "single"
+   * jumps straight to order-confirm-single, skipping set-size/side/drink).
+   */
+  branchTo?: Record<string, string>;
 }
 
 export interface OnboardingStep {

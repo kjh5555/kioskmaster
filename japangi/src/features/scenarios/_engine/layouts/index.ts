@@ -4,6 +4,7 @@ import { McdonaldsSetSize } from "./McdonaldsSetSize";
 import { McdonaldsSetSingle } from "./McdonaldsSetSingle";
 import { McdonaldsDrinkSelect } from "./McdonaldsDrinkSelect";
 import { McdonaldsOrderConfirm } from "./McdonaldsOrderConfirm";
+import { McdonaldsOrderConfirmSingle } from "./McdonaldsOrderConfirmSingle";
 import { McdonaldsSideSelect } from "./McdonaldsSideSelect";
 import { McdonaldsStart } from "./McdonaldsStart";
 import { McdonaldsUpsell } from "./McdonaldsUpsell";
@@ -22,6 +23,7 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "mcdonalds-side-select": McdonaldsSideSelect,
   "mcdonalds-drink-select": McdonaldsDrinkSelect,
   "mcdonalds-order-confirm": McdonaldsOrderConfirm,
+  "mcdonalds-order-confirm-single": McdonaldsOrderConfirmSingle,
   "mcdonalds-upsell": McdonaldsUpsell,
   "mcdonalds-order-review": McdonaldsOrderReview,
   "mcdonalds-table-service": McdonaldsTableService,

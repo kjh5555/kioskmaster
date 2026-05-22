@@ -99,17 +99,52 @@ function FastfoodStepPageLoader({
     const raw = goal.scenario_json as ScenarioScript | undefined;
     if (raw === undefined || raw === null || !Array.isArray(raw.steps))
       return raw;
+
+    const stepsWithGoal = raw.steps.map((step) => {
+      const next =
+        goal.selections[step.id] != null
+          ? { ...step, correctChoiceId: goal.selections[step.id] }
+          : { ...step };
+      // Wire branching so 단품 path skips set-size/side/drink and goes straight
+      // to the single confirm screen → cart.
+      if (next.id === "set-or-single") {
+        next.branchTo = { ...next.branchTo, single: "order-confirm-single" };
+      }
+      return next;
+    });
+
+    const hasSingleStep = stepsWithGoal.some(
+      (s) => s.id === "order-confirm-single",
+    );
+    if (!hasSingleStep) {
+      stepsWithGoal.push({
+        id: "order-confirm-single",
+        instruction: "단품 주문을 확인해주세요.",
+        helpText: "노란색 '장바구니에 담기' 버튼을 누르면 결제 단계로 넘어가요.",
+        layout: "list",
+        customLayoutId: "mcdonalds-order-confirm-single",
+        choices: [
+          { id: "add-to-cart", label: "장바구니에 담기" },
+          { id: "cancel", label: "취소" },
+          { id: "nutrition", label: "영양정보" },
+          { id: "edit-burger", label: "재료추가/변경" },
+          { id: "qty-minus", label: "수량 줄이기" },
+          { id: "qty-plus", label: "수량 늘리기" },
+        ],
+        correctChoiceId: "add-to-cart",
+        successMessage: "장바구니에 담았어요!",
+        hintMessage: "노란색 '장바구니에 담기' 버튼을 눌러주세요.",
+        branchTo: { "add-to-cart": "post-cart-category" },
+      });
+    }
+
     return {
       ...raw,
       goalSummary: goal.goal_summary,
       onboarding: raw.onboarding.map((o, i, arr) =>
         i === arr.length - 1 ? { ...o, body: goal.goal_summary } : o,
       ),
-      steps: raw.steps.map((step) =>
-        goal.selections[step.id] != null
-          ? { ...step, correctChoiceId: goal.selections[step.id] }
-          : step,
-      ),
+      steps: stepsWithGoal,
     };
   }, [goal]);
 

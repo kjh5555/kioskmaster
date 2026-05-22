@@ -383,17 +383,28 @@ export function StepEngine({
   function handleTap(choiceId: string): void {
     if (locked) return;
 
-    if (choiceId === step.correctChoiceId) {
+    // A choice succeeds when it's the goal answer OR it's defined as a branch
+    // (an explicit alternative path like 단품 → order-confirm-single).
+    const branchTargetId = step.branchTo?.[choiceId];
+    const succeeded =
+      choiceId === step.correctChoiceId || branchTargetId !== undefined;
+
+    if (succeeded) {
       setLocked(true);
       sfx.playSuccess();
       confetti.burst();
       showToast(dynamicSuccess);
 
       setTimeout(() => {
-        if (stepIndex + 1 >= totalSteps) {
+        let nextIndex = stepIndex + 1;
+        if (branchTargetId !== undefined) {
+          const idx = scenario.steps.findIndex((s) => s.id === branchTargetId);
+          if (idx >= 0) nextIndex = idx;
+        }
+        if (nextIndex >= totalSteps) {
           onScenarioComplete();
         } else {
-          setStepIndex((i) => i + 1);
+          setStepIndex(nextIndex);
           setLocked(false);
         }
       }, 700);
