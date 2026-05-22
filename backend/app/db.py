@@ -1,4 +1,6 @@
+from sqlalchemy import text
 from sqlmodel import SQLModel, create_engine, Session
+
 from app.config import settings
 
 engine = create_engine(
@@ -9,6 +11,16 @@ engine = create_engine(
 
 def init_db():
     SQLModel.metadata.create_all(engine)
+    # Lightweight column-add migrations for tables that already exist in prod
+    # from before a model field was added. Wrapped in try/except because
+    # older SQLite versions don't support `ADD COLUMN IF NOT EXISTS`.
+    with engine.begin() as conn:
+        try:
+            conn.execute(
+                text("ALTER TABLE menuitem ADD COLUMN IF NOT EXISTS image_url VARCHAR")
+            )
+        except Exception:
+            pass
 
 
 def get_session():

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -7,6 +9,7 @@ class MenuItemRead(BaseModel):
     price: str
     kcal: str
     emoji: str
+    image_url: Optional[str] = None
     is_new: bool
     order: int
 

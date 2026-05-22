@@ -13,6 +13,7 @@ class MenuItem(SQLModel, table=True):
     price: str
     kcal: str
     emoji: str
+    image_url: Optional[str] = None
     is_new: bool = False
     order: int = 0
 

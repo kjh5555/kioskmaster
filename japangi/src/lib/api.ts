@@ -82,6 +82,7 @@ export interface ApiMenuItemRead {
   price: string;
   kcal: string;
   emoji: string;
+  image_url: string | null;
   is_new: boolean;
   order: number;
 }

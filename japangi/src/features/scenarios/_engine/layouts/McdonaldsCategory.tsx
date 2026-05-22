@@ -102,11 +102,32 @@ function MenuItemCard({
           신제품
         </div>
       )}
+      {item.image_url != null && item.image_url !== "" ? (
+        <img
+          src={item.image_url}
+          alt={item.name}
+          loading="lazy"
+          onError={(e) => {
+            // Swap to emoji if the remote image fails.
+            (e.currentTarget as HTMLImageElement).style.display = "none";
+            const fallback = e.currentTarget.nextElementSibling as HTMLElement | null;
+            if (fallback !== null) fallback.style.display = "inline-block";
+          }}
+          style={{
+            width: 60,
+            height: 60,
+            objectFit: "contain",
+            marginTop: item.is_new === true ? 14 : 0,
+          }}
+        />
+      ) : null}
       <span
         style={{
           fontSize: 36,
           lineHeight: 1,
           marginTop: item.is_new === true ? 14 : 0,
+          display:
+            item.image_url != null && item.image_url !== "" ? "none" : "inline-block",
         }}
       >
         {item.emoji}

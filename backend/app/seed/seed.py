@@ -119,6 +119,7 @@ def seed_mcdonalds_menu(session: Session, slug_to_brand: dict[str, Brand]) -> No
                 existing_item.price = item_data["price"]
                 existing_item.kcal = item_data["kcal"]
                 existing_item.emoji = item_data["emoji"]
+                existing_item.image_url = item_data.get("imageUrl")
                 existing_item.is_new = item_data.get("isNew", False)
                 existing_item.order = item_order
                 session.add(existing_item)
@@ -130,6 +131,7 @@ def seed_mcdonalds_menu(session: Session, slug_to_brand: dict[str, Brand]) -> No
                     price=item_data["price"],
                     kcal=item_data["kcal"],
                     emoji=item_data["emoji"],
+                    image_url=item_data.get("imageUrl"),
                     is_new=item_data.get("isNew", False),
                     order=item_order,
                 )
