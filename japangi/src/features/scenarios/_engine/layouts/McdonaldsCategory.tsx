@@ -6,7 +6,11 @@ import {
   useBrandMenus,
 } from "../../../../hooks/useKioskQueries";
 import type { ApiMenuItemRead } from "../../../../lib/api";
-import { idlePulse, type CustomLayoutProps } from "./types";
+import {
+  idlePulse,
+  lookupCorrectLabel,
+  type CustomLayoutProps,
+} from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -204,6 +208,7 @@ function CategoryGridView({
 
 export function McdonaldsCategory({
   step,
+  scenario,
   onChoice,
   rejectedChoiceId,
   idleHintActive,
@@ -221,6 +226,28 @@ export function McdonaldsCategory({
     idleHintActive && isBurgerStep && selectedCategory === "burger"
       ? step.correctChoiceId
       : null;
+
+  // Cart contents shown on the post-cart-category screen. Branches by whether
+  // the user picked 세트 (burger + size + side + drink) or 단품 (just burger).
+  const setOrSingle = scenario.steps.find((s) => s.id === "set-or-single");
+  const isSinglePath = setOrSingle?.correctChoiceId === "single";
+  const cartItems: { emoji: string; label: string }[] = (() => {
+    const burger = lookupCorrectLabel(scenario, "category");
+    if (burger === null) return [];
+    if (isSinglePath) {
+      return [{ emoji: "🍔", label: burger }];
+    }
+    const size = lookupCorrectLabel(scenario, "set-size") ?? "";
+    const side = lookupCorrectLabel(scenario, "side-select");
+    const drink = lookupCorrectLabel(scenario, "drink-select");
+    const items: { emoji: string; label: string }[] = [
+      { emoji: "🍔", label: `${burger}${size ? ` ${size}` : ""}` },
+    ];
+    if (side !== null) items.push({ emoji: "🍟", label: side });
+    if (drink !== null) items.push({ emoji: "🥤", label: drink });
+    return items;
+  })();
+  const cartCount = cartItems.length;
 
   // Prefetch menu category list so sidebar slugs are available
   useBrandMenus("mcdonalds");
@@ -772,7 +799,7 @@ export function McdonaldsCategory({
                 gap: 8px;
               `}
             >
-              {/* Left: bag icon + price (~30%) */}
+              {/* Left: bag icon + items (~30%) */}
               <div
                 css={css`
                   flex: 3;
@@ -780,6 +807,7 @@ export function McdonaldsCategory({
                   flex-direction: row;
                   align-items: center;
                   gap: 6px;
+                  min-width: 0;
                 `}
               >
                 <div
@@ -797,32 +825,62 @@ export function McdonaldsCategory({
                       position: absolute;
                       top: -2px;
                       right: -4px;
-                      width: 14px;
+                      min-width: 14px;
                       height: 14px;
+                      padding: 0 3px;
                       background: #da291c;
                       color: #fff;
                       font-size: 9px;
                       font-weight: 700;
-                      border-radius: 50%;
+                      border-radius: 7px;
                       display: flex;
                       align-items: center;
                       justify-content: center;
                       line-height: 1;
                     `}
                   >
-                    1
+                    {cartCount}
                   </div>
                 </div>
-                <span
+                <div
                   css={css`
-                    font-size: 16px;
-                    font-weight: 800;
-                    color: #191f28;
-                    line-height: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                    min-width: 0;
+                    overflow: hidden;
                   `}
                 >
-                  ₩7,800
-                </span>
+                  <span
+                    css={css`
+                      font-size: 13px;
+                      font-weight: 800;
+                      color: #191f28;
+                      line-height: 1.15;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    `}
+                  >
+                    {cartItems.length > 0
+                      ? cartItems[0].label
+                      : "장바구니가 비었어요"}
+                  </span>
+                  {cartItems.length > 1 && (
+                    <span
+                      css={css`
+                        font-size: 10px;
+                        color: #4e5968;
+                        line-height: 1.2;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                      `}
+                    >
+                      + {cartItems.slice(1).map((it) => it.label).join(", ")}
+                    </span>
+                  )}
+                </div>
               </div>
 
               {/* Center: yellow CTA (~40%) */}
