@@ -589,7 +589,7 @@ export function StepEngine({
       <>
         <div
           css={css`
-            padding: 8px 0 0;
+            padding: 8px 0 30px;
             display: flex;
             flex-direction: column;
             gap: 12px;
