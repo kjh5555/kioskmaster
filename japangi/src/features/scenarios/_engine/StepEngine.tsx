@@ -8,7 +8,7 @@ import { HelpOverlay } from "../../../components/HelpOverlay";
 import { useConfetti } from "../../../hooks/useConfetti";
 import { useSFX } from "../../../hooks/useSFX";
 import { getCustomLayout } from "./layouts/index";
-import { idlePulse } from "./layouts/types";
+import { idlePulse, IDLE_PULSE_CLASS_FRAGMENT } from "./layouts/types";
 import type { BrandTheme, Choice, ScenarioScript, Step } from "./types";
 
 // Shake keyframe for wrong-answer feedback
@@ -355,6 +355,21 @@ export function StepEngine({
     }, IDLE_HINT_DELAY_MS);
     return () => window.clearTimeout(timer);
   }, [stepIndex, shakingId]);
+
+  // When idle hint activates, scroll the pulsing button into view so the user
+  // can actually see the signal even if the target sits below the fold.
+  useEffect(() => {
+    if (!idleHintActive) return;
+    const handle = window.setTimeout(() => {
+      const target = document.querySelector<HTMLElement>(
+        `[class*="${IDLE_PULSE_CLASS_FRAGMENT}"]`,
+      );
+      if (target !== null) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 120);
+    return () => window.clearTimeout(handle);
+  }, [idleHintActive, stepIndex]);
 
   const sfx = useSFX();
   const confetti = useConfetti();

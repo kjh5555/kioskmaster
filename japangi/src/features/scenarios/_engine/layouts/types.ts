@@ -29,16 +29,27 @@ const pulseKf = keyframes`
   100% { box-shadow: 0 0 0 0 rgba(255, 199, 44, 0), 0 0 0 4px rgba(255, 199, 44, 0.85); transform: scale(1); }
 `;
 
+// Shared pulse styles — pre-computed so StepEngine can locate the pulsing
+// element in the DOM by its Emotion-generated class name and scroll it into
+// view when idle hint activates.
+const pulseStyles = css`
+  animation: ${pulseKf} 1.2s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+`;
+
+/**
+ * Class-name fragment that Emotion injects on whichever button is currently
+ * pulsing. Used by StepEngine to find and scroll to the target.
+ */
+export const IDLE_PULSE_CLASS_FRAGMENT = pulseStyles.name;
+
 export function idlePulse(
   active: boolean,
   isTarget: boolean,
 ): SerializedStyles | false {
   if (!active || !isTarget) return false;
-  return css`
-    animation: ${pulseKf} 1.2s ease-in-out infinite;
-    position: relative;
-    z-index: 1;
-  `;
+  return pulseStyles;
 }
 
 /**
