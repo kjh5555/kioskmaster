@@ -19,14 +19,14 @@ export interface CustomLayoutProps {
 export type CustomLayoutComponent = React.FC<CustomLayoutProps>;
 
 /**
- * Soft pulsing glow used to point users at the button they should tap when
- * they've been idle for too long. Tuned to be calm (not jumpy) so elderly
- * users don't feel rushed.
+ * Strong pulsing glow used to point users at the button they should tap when
+ * they've been idle for too long. Tuned to be hard to miss for elderly users
+ * — a thick yellow halo plus a gentle scale heartbeat.
  */
 const pulseKf = keyframes`
-  0%   { box-shadow: 0 0 0 0 rgba(255, 199, 44, 0.55); }
-  60%  { box-shadow: 0 0 0 14px rgba(255, 199, 44, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 199, 44, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(255, 199, 44, 0.95), 0 0 0 4px rgba(255, 199, 44, 0.85); transform: scale(1); }
+  50%  { box-shadow: 0 0 0 18px rgba(255, 199, 44, 0), 0 0 0 4px rgba(255, 199, 44, 0.95); transform: scale(1.04); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 199, 44, 0), 0 0 0 4px rgba(255, 199, 44, 0.85); transform: scale(1); }
 `;
 
 export function idlePulse(
@@ -35,7 +35,9 @@ export function idlePulse(
 ): SerializedStyles | false {
   if (!active || !isTarget) return false;
   return css`
-    animation: ${pulseKf} 1.6s ease-in-out infinite;
+    animation: ${pulseKf} 1.2s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
   `;
 }
 
