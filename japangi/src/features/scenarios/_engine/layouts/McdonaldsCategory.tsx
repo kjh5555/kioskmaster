@@ -1,12 +1,12 @@
 import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
-import type { CustomLayoutProps } from "./types";
 import {
-  MCDONALDS_CATEGORY_ITEMS,
-  MCDONALDS_CATEGORY_TITLES,
-  type MenuItem,
-} from "./mcdonaldsMenu";
+  useBrandMenuCategory,
+  useBrandMenus,
+} from "../../../../hooks/useKioskQueries";
+import type { ApiMenuItemRead } from "../../../../lib/api";
+import type { CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -42,7 +42,7 @@ function MenuItemCard({
   onClick,
   isShaking,
 }: {
-  item: MenuItem;
+  item: ApiMenuItemRead;
   onClick?: () => void;
   isShaking?: boolean;
 }): React.ReactElement {
@@ -78,7 +78,7 @@ function MenuItemCard({
           `,
       ]}
     >
-      {item.isNew === true && (
+      {item.is_new === true && (
         <div
           css={css`
             position: absolute;
@@ -99,7 +99,7 @@ function MenuItemCard({
         style={{
           fontSize: 36,
           lineHeight: 1,
-          marginTop: item.isNew === true ? 14 : 0,
+          marginTop: item.is_new === true ? 14 : 0,
         }}
       >
         {item.emoji}
@@ -130,16 +130,18 @@ function MenuItemCard({
 }
 
 function CategoryGridView({
-  categoryId,
+  categorySlug,
   onItemChoice,
   rejectedChoiceId,
 }: {
-  categoryId: string;
+  categorySlug: string;
   onItemChoice: (itemId: string) => void;
   rejectedChoiceId: string | null;
 }): React.ReactElement {
-  const title = MCDONALDS_CATEGORY_TITLES[categoryId] ?? categoryId;
-  const items = MCDONALDS_CATEGORY_ITEMS[categoryId] ?? [];
+  const { data, isLoading } = useBrandMenuCategory("mcdonalds", categorySlug);
+
+  const title = data?.title ?? categorySlug;
+  const items = data?.items ?? [];
 
   return (
     <div
@@ -159,22 +161,37 @@ function CategoryGridView({
       >
         {title}
       </div>
-      <div
-        css={css`
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 8px;
-        `}
-      >
-        {items.map((item) => (
-          <MenuItemCard
-            key={item.id}
-            item={item}
-            onClick={() => onItemChoice(item.id)}
-            isShaking={rejectedChoiceId === item.id}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 0;
+            color: #888;
+            font-size: 14px;
+          `}
+        >
+          잠시만 기다려주세요…
+        </div>
+      ) : (
+        <div
+          css={css`
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+          `}
+        >
+          {items.map((item) => (
+            <MenuItemCard
+              key={item.slug}
+              item={item}
+              onClick={() => onItemChoice(item.slug)}
+              isShaking={rejectedChoiceId === item.slug}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -186,6 +203,9 @@ export function McdonaldsCategory({
 }: CustomLayoutProps): React.ReactElement {
   const isCartPopulated = step.id === "post-cart-category";
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Prefetch menu category list so sidebar slugs are available
+  useBrandMenus("mcdonalds");
 
   function handleSidebarClick(id: string): void {
     if (id === "home") {
@@ -704,7 +724,7 @@ export function McdonaldsCategory({
         ) : (
           /* ── Category grid view ── */
           <CategoryGridView
-            categoryId={selectedCategory}
+            categorySlug={selectedCategory}
             onItemChoice={onChoice}
             rejectedChoiceId={rejectedChoiceId}
           />

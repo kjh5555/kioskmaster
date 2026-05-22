@@ -5,8 +5,11 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { BackButton } from "../../components/BackButton";
 import { BigButton } from "../../components/BigButton";
+import { ErrorScreen } from "../../components/ErrorScreen";
+import { LoadingScreen } from "../../components/LoadingScreen";
 import { PracticeBadge } from "../../components/PracticeBadge";
-import { getBrand } from "../../data/scenarios";
+import { useBrand } from "../../hooks/useKioskQueries";
+import { queryClient } from "../../lib/queryClient";
 
 export function ScenarioIntroPage(): React.ReactElement {
   const { categoryId = "", brandId = "" } = useParams<{
@@ -14,14 +17,22 @@ export function ScenarioIntroPage(): React.ReactElement {
     brandId: string;
   }>();
   const navigate = useNavigate();
-  const result = getBrand(categoryId, brandId);
+  const { data: brand, isLoading, error } = useBrand(brandId);
 
-  if (result === undefined) {
+  if (isLoading) return <LoadingScreen />;
+  if (error !== null)
+    return (
+      <ErrorScreen
+        onRetry={() =>
+          void queryClient.invalidateQueries({ queryKey: ["brand", brandId] })
+        }
+      />
+    );
+
+  if (brand === undefined) {
     navigate("/");
     return <></>;
   }
-
-  const { category, brand } = result;
 
   return (
     <div
@@ -52,7 +63,7 @@ export function ScenarioIntroPage(): React.ReactElement {
         upperGap={0}
         title={
           <Top.TitleParagraph>
-            이번에는 {brand.name} {category.title} 키오스크를 연습해볼게요
+            이번에는 {brand.name} {categoryId} 키오스크를 연습해볼게요
           </Top.TitleParagraph>
         }
         subtitleBottom={
@@ -78,7 +89,7 @@ export function ScenarioIntroPage(): React.ReactElement {
       </div>
 
       <BigButton
-        onClick={() => navigate(`/scenario/${category.id}/${brand.id}/step`)}
+        onClick={() => navigate(`/scenario/${categoryId}/${brandId}/step`)}
       >
         시작하기
       </BigButton>

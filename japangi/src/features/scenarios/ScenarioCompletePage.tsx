@@ -4,8 +4,11 @@ import { Top } from "@toss/tds-mobile";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BigButton } from "../../components/BigButton";
+import { ErrorScreen } from "../../components/ErrorScreen";
+import { LoadingScreen } from "../../components/LoadingScreen";
 import { PracticeBadge } from "../../components/PracticeBadge";
-import { getBrand } from "../../data/scenarios";
+import { useBrand } from "../../hooks/useKioskQueries";
+import { queryClient } from "../../lib/queryClient";
 
 export function ScenarioCompletePage(): React.ReactElement {
   const { categoryId = "", brandId = "" } = useParams<{
@@ -13,14 +16,22 @@ export function ScenarioCompletePage(): React.ReactElement {
     brandId: string;
   }>();
   const navigate = useNavigate();
-  const result = getBrand(categoryId, brandId);
+  const { data: brand, isLoading, error } = useBrand(brandId);
 
-  if (result === undefined) {
+  if (isLoading) return <LoadingScreen />;
+  if (error !== null)
+    return (
+      <ErrorScreen
+        onRetry={() =>
+          void queryClient.invalidateQueries({ queryKey: ["brand", brandId] })
+        }
+      />
+    );
+
+  if (brand === undefined) {
     navigate("/");
     return <></>;
   }
-
-  const { category, brand } = result;
 
   return (
     <div
@@ -54,7 +65,7 @@ export function ScenarioCompletePage(): React.ReactElement {
               color: ${adaptive.grey700};
             `}
           >
-            {brand.name} {category.title} 끝까지 다 하셨어요.
+            {brand.name} {brand.category_slug} 끝까지 다 하셨어요.
           </Top.SubtitleParagraph>
         }
       />
@@ -78,7 +89,7 @@ export function ScenarioCompletePage(): React.ReactElement {
         `}
       >
         <BigButton
-          onClick={() => navigate(`/scenario/${category.id}/${brand.id}/intro`)}
+          onClick={() => navigate(`/scenario/${categoryId}/${brandId}/intro`)}
         >
           다시 한 번 해볼래요
         </BigButton>

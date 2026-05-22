@@ -21,3 +21,9 @@ class BrandDetail(BaseModel):
 
 class ScenarioOnly(BaseModel):
     scenario_json: Optional[Any] = None
+
+
+class DynamicGoalResponse(BaseModel):
+    goal_summary: str
+    selections: dict[str, str]
+    used_gemini: bool

@@ -4,12 +4,27 @@ import { Paragraph, Top } from "@toss/tds-mobile";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BackButton } from "../../components/BackButton";
-import { getScenario } from "../../data/scenarios";
+import { ErrorScreen } from "../../components/ErrorScreen";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import { useCategory } from "../../hooks/useKioskQueries";
+import { queryClient } from "../../lib/queryClient";
 
 export function BrandSelectPage(): React.ReactElement {
   const { categoryId = "" } = useParams<{ categoryId: string }>();
   const navigate = useNavigate();
-  const category = getScenario(categoryId);
+  const { data: category, isLoading, error } = useCategory(categoryId);
+
+  if (isLoading) return <LoadingScreen />;
+  if (error !== null)
+    return (
+      <ErrorScreen
+        onRetry={() =>
+          void queryClient.invalidateQueries({
+            queryKey: ["category", categoryId],
+          })
+        }
+      />
+    );
 
   if (category === undefined) {
     navigate("/");
@@ -57,9 +72,9 @@ export function BrandSelectPage(): React.ReactElement {
       >
         {category.brands.map((brand) => (
           <button
-            key={brand.id}
+            key={brand.slug}
             onClick={() =>
-              navigate(`/scenario/${category.id}/${brand.id}/intro`)
+              navigate(`/scenario/${category.slug}/${brand.slug}/intro`)
             }
             css={css`
               display: flex;

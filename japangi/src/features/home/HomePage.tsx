@@ -3,10 +3,24 @@ import { adaptive } from "@toss/tds-colors";
 import { Paragraph, Top } from "@toss/tds-mobile";
 import { useNavigate } from "react-router-dom";
 
-import { SCENARIOS } from "../../data/scenarios";
+import { ErrorScreen } from "../../components/ErrorScreen";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import { useCategories } from "../../hooks/useKioskQueries";
+import { queryClient } from "../../lib/queryClient";
 
 export function HomePage(): React.ReactElement {
   const navigate = useNavigate();
+  const { data: categories, isLoading, error } = useCategories();
+
+  if (isLoading) return <LoadingScreen />;
+  if (error !== null)
+    return (
+      <ErrorScreen
+        onRetry={() =>
+          void queryClient.invalidateQueries({ queryKey: ["categories"] })
+        }
+      />
+    );
 
   return (
     <div
@@ -41,10 +55,10 @@ export function HomePage(): React.ReactElement {
           padding: 0 20px 0 20px;
         `}
       >
-        {SCENARIOS.map((scenario) => (
+        {(categories ?? []).map((category) => (
           <button
-            key={scenario.id}
-            onClick={() => navigate(`/scenario/${scenario.id}/brand`)}
+            key={category.slug}
+            onClick={() => navigate(`/scenario/${category.slug}/brand`)}
             css={css`
               display: flex;
               flex-direction: column;
@@ -69,7 +83,7 @@ export function HomePage(): React.ReactElement {
             `}
           >
             <span style={{ fontSize: 64, lineHeight: 1 }}>
-              {scenario.emoji}
+              {category.emoji}
             </span>
             <Paragraph.Text
               css={css`
@@ -78,7 +92,7 @@ export function HomePage(): React.ReactElement {
                 color: ${adaptive.grey900};
               `}
             >
-              {scenario.title}
+              {category.title}
             </Paragraph.Text>
             <Paragraph.Text
               css={css`
@@ -87,7 +101,7 @@ export function HomePage(): React.ReactElement {
                 line-height: 1.4;
               `}
             >
-              {scenario.description}
+              {category.description}
             </Paragraph.Text>
           </button>
         ))}

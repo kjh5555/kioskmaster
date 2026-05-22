@@ -1,19 +1,25 @@
 import { css } from "@emotion/react";
 import { adaptive } from "@toss/tds-colors";
 import { Paragraph, Top } from "@toss/tds-mobile";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BackButton } from "../../components/BackButton";
 import { BigButton } from "../../components/BigButton";
+import { ErrorScreen } from "../../components/ErrorScreen";
 import { HelpOverlay } from "../../components/HelpOverlay";
+import { LoadingScreen } from "../../components/LoadingScreen";
 import { PracticeBadge } from "../../components/PracticeBadge";
-import { getFastfoodScenario } from "../../data/fastfood";
-import { getBrand } from "../../data/scenarios";
+import {
+  useBrand,
+  useBrandScenario,
+  useDynamicGoal,
+} from "../../hooks/useKioskQueries";
+import { queryClient } from "../../lib/queryClient";
 import { OnboardingTour } from "./_engine/OnboardingTour";
 import {
-  wasOnboardingSeen,
   markOnboardingSeen,
+  wasOnboardingSeen,
 } from "./_engine/onboardingStorage";
 import { StepEngine } from "./_engine/StepEngine";
 import type { ScenarioScript } from "./_engine/types";
@@ -79,38 +85,95 @@ function FastfoodStepPage({
   );
 }
 
-export function ScenarioStepPage(): React.ReactElement {
-  const { categoryId = "", brandId = "" } = useParams<{
-    categoryId: string;
-    brandId: string;
-  }>();
+function FastfoodStepPageLoader({
+  categoryId,
+  brandId,
+}: {
+  categoryId: string;
+  brandId: string;
+}): React.ReactElement {
   const navigate = useNavigate();
-  const result = getBrand(categoryId, brandId);
+  const {
+    data: scenarioData,
+    isLoading: scenarioLoading,
+    error: scenarioError,
+  } = useBrandScenario(brandId);
+  const { data: goal, isLoading: goalLoading } = useDynamicGoal(brandId);
 
-  if (result === undefined) {
+  const scenario = useMemo(() => {
+    const raw = scenarioData?.scenario_json as ScenarioScript | undefined;
+    if (raw === undefined || raw === null || !Array.isArray(raw.steps))
+      return raw;
+    if (!goal) return raw;
+    return {
+      ...raw,
+      goalSummary: goal.goal_summary,
+      onboarding: raw.onboarding.map((o, i, arr) =>
+        i === arr.length - 1 ? { ...o, body: goal.goal_summary } : o,
+      ),
+      steps: raw.steps.map((step) =>
+        goal.selections[step.id] != null
+          ? { ...step, correctChoiceId: goal.selections[step.id] }
+          : step,
+      ),
+    };
+  }, [scenarioData, goal]);
+
+  if (scenarioLoading || goalLoading) return <LoadingScreen />;
+  if (scenarioError !== null)
+    return (
+      <ErrorScreen
+        onRetry={() =>
+          void queryClient.invalidateQueries({
+            queryKey: ["brand-scenario", brandId],
+          })
+        }
+      />
+    );
+
+  if (
+    scenario === undefined ||
+    scenario === null ||
+    !Array.isArray(scenario.steps)
+  ) {
     navigate("/");
     return <></>;
   }
 
-  const { category, brand } = result;
+  return (
+    <FastfoodStepPage
+      categoryId={categoryId}
+      brandId={brandId}
+      scenario={scenario}
+    />
+  );
+}
 
-  // ── fastfood: full StepEngine (per brand) ────────────────────────────────
-  if (categoryId === "fastfood") {
-    const scenario = getFastfoodScenario(brandId);
-    if (scenario === undefined) {
-      navigate("/");
-      return <></>;
-    }
+function PlaceholderStepPage({
+  categoryId,
+  brandId,
+}: {
+  categoryId: string;
+  brandId: string;
+}): React.ReactElement {
+  const navigate = useNavigate();
+  const { data: brand, isLoading, error } = useBrand(brandId);
+
+  if (isLoading) return <LoadingScreen />;
+  if (error !== null)
     return (
-      <FastfoodStepPage
-        categoryId={categoryId}
-        brandId={brandId}
-        scenario={scenario}
+      <ErrorScreen
+        onRetry={() =>
+          void queryClient.invalidateQueries({ queryKey: ["brand", brandId] })
+        }
       />
     );
+
+  if (brand === undefined) {
+    navigate("/");
+    return <></>;
   }
 
-  // ── other categories: M2 placeholder (cafe / hospital / train) ────────────
   return (
     <div
       css={css`
@@ -144,7 +207,7 @@ export function ScenarioStepPage(): React.ReactElement {
               color: ${adaptive.grey700};
             `}
           >
-            {brand.name} {category.title} 연습 단계예요.
+            {brand.name} {brand.category_slug} 연습 단계예요.
           </Top.SubtitleParagraph>
         }
       />
@@ -174,9 +237,7 @@ export function ScenarioStepPage(): React.ReactElement {
       </div>
 
       <BigButton
-        onClick={() =>
-          navigate(`/scenario/${category.id}/${brand.id}/complete`)
-        }
+        onClick={() => navigate(`/scenario/${categoryId}/${brandId}/complete`)}
       >
         주문 완료
       </BigButton>
@@ -185,4 +246,17 @@ export function ScenarioStepPage(): React.ReactElement {
       <HelpOverlay helpText="여기서는 실제 키오스크 단계를 따라 해볼 수 있어요. (지금은 준비 중이에요.)" />
     </div>
   );
+}
+
+export function ScenarioStepPage(): React.ReactElement {
+  const { categoryId = "", brandId = "" } = useParams<{
+    categoryId: string;
+    brandId: string;
+  }>();
+
+  if (categoryId === "fastfood") {
+    return <FastfoodStepPageLoader categoryId={categoryId} brandId={brandId} />;
+  }
+
+  return <PlaceholderStepPage categoryId={categoryId} brandId={brandId} />;
 }

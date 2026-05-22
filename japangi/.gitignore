@@ -1,0 +1,7 @@
+# Build output
+dist/
+node_modules/
+
+# Local env overrides (not committed)
+.env.local
+.env.*.local
