@@ -1,6 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
-import type { CustomLayoutProps } from "./types";
+import { idlePulse, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -21,7 +21,9 @@ function shakeWhen(rejected: string | null, id: string) {
 }
 
 export function McdonaldsPayMethod({
+  step,
   rejectedChoiceId,
+  idleHintActive,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   return (
@@ -120,6 +122,7 @@ export function McdonaldsPayMethod({
               }
             `,
             shakeWhen(rejectedChoiceId, "smart-pay"),
+            idlePulse(idleHintActive, step.correctChoiceId === "smart-pay"),
           ]}
           onClick={() => onChoice("smart-pay")}
         >
@@ -200,6 +203,7 @@ export function McdonaldsPayMethod({
               }
             `,
             shakeWhen(rejectedChoiceId, "mobile-voucher"),
+            idlePulse(idleHintActive, step.correctChoiceId === "mobile-voucher"),
           ]}
           onClick={() => onChoice("mobile-voucher")}
         >
@@ -269,6 +273,7 @@ export function McdonaldsPayMethod({
               }
             `,
             shakeWhen(rejectedChoiceId, "credit-card"),
+            idlePulse(idleHintActive, step.correctChoiceId === "credit-card"),
           ]}
           onClick={() => onChoice("credit-card")}
         >

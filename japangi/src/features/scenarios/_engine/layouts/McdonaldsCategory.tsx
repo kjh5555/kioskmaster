@@ -6,7 +6,7 @@ import {
   useBrandMenus,
 } from "../../../../hooks/useKioskQueries";
 import type { ApiMenuItemRead } from "../../../../lib/api";
-import type { CustomLayoutProps } from "./types";
+import { idlePulse, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -41,10 +41,12 @@ function MenuItemCard({
   item,
   onClick,
   isShaking,
+  pulse,
 }: {
   item: ApiMenuItemRead;
   onClick?: () => void;
   isShaking?: boolean;
+  pulse?: boolean;
 }): React.ReactElement {
   const interactive = onClick !== undefined;
   return (
@@ -76,6 +78,7 @@ function MenuItemCard({
           css`
             animation: ${shakeKf} 350ms ease;
           `,
+        idlePulse(pulse === true, true),
       ]}
     >
       {item.is_new === true && (
@@ -133,10 +136,12 @@ function CategoryGridView({
   categorySlug,
   onItemChoice,
   rejectedChoiceId,
+  idlePulseTargetId,
 }: {
   categorySlug: string;
   onItemChoice: (itemId: string) => void;
   rejectedChoiceId: string | null;
+  idlePulseTargetId: string | null;
 }): React.ReactElement {
   const { data, isLoading } = useBrandMenuCategory("mcdonalds", categorySlug);
 
@@ -188,6 +193,7 @@ function CategoryGridView({
               item={item}
               onClick={() => onItemChoice(item.slug)}
               isShaking={rejectedChoiceId === item.slug}
+              pulse={idlePulseTargetId === item.slug}
             />
           ))}
         </div>
@@ -200,9 +206,21 @@ export function McdonaldsCategory({
   step,
   onChoice,
   rejectedChoiceId,
+  idleHintActive,
 }: CustomLayoutProps): React.ReactElement {
   const isCartPopulated = step.id === "post-cart-category";
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // For the burger-category step: until the user opens the 버거 sidebar tab,
+  // pulse the sidebar item. After that, pulse the correct burger card.
+  const isBurgerStep = step.id === "category";
+  const sidebarPulseId =
+    idleHintActive && isBurgerStep && selectedCategory !== "burger"
+      ? "burger"
+      : null;
+  const gridPulseId =
+    idleHintActive && isBurgerStep && selectedCategory === "burger"
+      ? step.correctChoiceId
+      : null;
 
   // Prefetch menu category list so sidebar slugs are available
   useBrandMenus("mcdonalds");
@@ -281,28 +299,31 @@ export function McdonaldsCategory({
           return (
             <button
               key={item.id}
-              css={css`
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 2px;
-                padding: 8px 4px;
-                min-height: 44px;
-                background: ${active ? "#FFF8E1" : "transparent"};
-                border: none;
-                border-bottom: 1px solid #e5e8eb;
-                border-left: ${active
-                  ? "3px solid #FFC72C"
-                  : "3px solid transparent"};
-                cursor: pointer;
-                user-select: none;
-                transition: background 100ms ease;
+              css={[
+                css`
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 2px;
+                  padding: 8px 4px;
+                  min-height: 44px;
+                  background: ${active ? "#FFF8E1" : "transparent"};
+                  border: none;
+                  border-bottom: 1px solid #e5e8eb;
+                  border-left: ${active
+                    ? "3px solid #FFC72C"
+                    : "3px solid transparent"};
+                  cursor: pointer;
+                  user-select: none;
+                  transition: background 100ms ease;
 
-                &:active {
-                  background: #fff3cd;
-                }
-              `}
+                  &:active {
+                    background: #fff3cd;
+                  }
+                `,
+                idlePulse(sidebarPulseId === item.id, true),
+              ]}
               onClick={() => {
                 handleSidebarClick(item.id);
               }}
@@ -727,6 +748,7 @@ export function McdonaldsCategory({
             categorySlug={selectedCategory}
             onItemChoice={onChoice}
             rejectedChoiceId={rejectedChoiceId}
+            idlePulseTargetId={gridPulseId}
           />
         )}
 
@@ -836,6 +858,10 @@ export function McdonaldsCategory({
                       css`
                         animation: ${shakeKf} 350ms ease;
                       `,
+                    idlePulse(
+                      idleHintActive,
+                      step.correctChoiceId === "confirm-cart",
+                    ),
                   ]}
                 >
                   주문내역확인 후 결제하기

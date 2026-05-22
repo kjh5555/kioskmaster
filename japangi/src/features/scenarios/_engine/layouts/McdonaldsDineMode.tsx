@@ -1,6 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
-import type { CustomLayoutProps } from "./types";
+import { idlePulse, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -21,7 +21,9 @@ function shakeWhen(rejected: string | null, id: string) {
 }
 
 export function McdonaldsDineMode({
+  step,
   rejectedChoiceId,
+  idleHintActive,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   return (
@@ -110,6 +112,7 @@ export function McdonaldsDineMode({
               }
             `,
             shakeWhen(rejectedChoiceId, "dine-in"),
+            idlePulse(idleHintActive, step.correctChoiceId === "dine-in"),
           ]}
           onClick={() => onChoice("dine-in")}
         >
@@ -199,6 +202,7 @@ export function McdonaldsDineMode({
               }
             `,
             shakeWhen(rejectedChoiceId, "takeout"),
+            idlePulse(idleHintActive, step.correctChoiceId === "takeout"),
           ]}
           onClick={() => onChoice("takeout")}
         >

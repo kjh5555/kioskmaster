@@ -1,6 +1,10 @@
 import { css, keyframes } from "@emotion/react";
 
-import { lookupCorrectLabel, type CustomLayoutProps } from "./types";
+import {
+  idlePulse,
+  lookupCorrectLabel,
+  type CustomLayoutProps,
+} from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -21,8 +25,10 @@ function shakeWhen(rejected: string | null, id: string) {
 }
 
 export function McdonaldsOrderConfirm({
+  step,
   scenario,
   rejectedChoiceId,
+  idleHintActive,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
@@ -481,6 +487,7 @@ export function McdonaldsOrderConfirm({
               }
             `,
             shakeWhen(rejectedChoiceId, "add-to-cart"),
+            idlePulse(idleHintActive, step.correctChoiceId === "add-to-cart"),
           ]}
           onClick={() => onChoice("add-to-cart")}
         >

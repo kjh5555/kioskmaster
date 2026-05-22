@@ -1,6 +1,10 @@
 import { css, keyframes } from "@emotion/react";
 
-import { lookupCorrectLabel, type CustomLayoutProps } from "./types";
+import {
+  idlePulse,
+  lookupCorrectLabel,
+  type CustomLayoutProps,
+} from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -21,8 +25,10 @@ function shakeWhen(rejected: string | null, id: string) {
 }
 
 export function McdonaldsSideSelect({
+  step,
   scenario,
   rejectedChoiceId,
+  idleHintActive,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
@@ -327,6 +333,7 @@ export function McdonaldsSideSelect({
                 }
               `,
               shakeWhen(rejectedChoiceId, "fries-large"),
+              idlePulse(idleHintActive, step.correctChoiceId === "fries-large"),
             ]}
             onClick={() => onChoice("fries-large")}
           >
@@ -383,6 +390,7 @@ export function McdonaldsSideSelect({
                 }
               `,
               shakeWhen(rejectedChoiceId, "coleslaw"),
+              idlePulse(idleHintActive, step.correctChoiceId === "coleslaw"),
             ]}
             onClick={() => onChoice("coleslaw")}
           >
@@ -455,6 +463,7 @@ export function McdonaldsSideSelect({
                 }
               `,
               shakeWhen(rejectedChoiceId, "fries-cheese"),
+              idlePulse(idleHintActive, step.correctChoiceId === "fries-cheese"),
             ]}
             onClick={() => onChoice("fries-cheese")}
           >

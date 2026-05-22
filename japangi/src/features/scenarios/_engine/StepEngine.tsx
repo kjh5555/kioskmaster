@@ -8,6 +8,7 @@ import { HelpOverlay } from "../../../components/HelpOverlay";
 import { useConfetti } from "../../../hooks/useConfetti";
 import { useSFX } from "../../../hooks/useSFX";
 import { getCustomLayout } from "./layouts/index";
+import { idlePulse } from "./layouts/types";
 import type { BrandTheme, Choice, ScenarioScript, Step } from "./types";
 
 // Shake keyframe for wrong-answer feedback
@@ -79,6 +80,7 @@ const cardSublabel = css`
 interface ChoiceCardProps {
   choice: Choice;
   shaking: boolean;
+  pulse: boolean;
   onTap: (id: string) => void;
   theme?: BrandTheme;
 }
@@ -86,6 +88,7 @@ interface ChoiceCardProps {
 function ChoiceCard({
   choice,
   shaking,
+  pulse,
   onTap,
   theme,
 }: ChoiceCardProps): React.ReactElement {
@@ -97,6 +100,7 @@ function ChoiceCard({
           css`
             animation: ${shakeKf} 300ms ease;
           `,
+        idlePulse(pulse, true),
       ]}
       onClick={() => onTap(choice.id)}
     >
@@ -173,11 +177,13 @@ function StartLayout({
 function DuoLayout({
   step,
   shakingId,
+  idleHintActive,
   onTap,
   theme,
 }: {
   step: Step;
   shakingId: string | null;
+  idleHintActive: boolean;
   onTap: (id: string) => void;
   theme?: BrandTheme;
 }): React.ReactElement {
@@ -195,6 +201,7 @@ function DuoLayout({
           key={choice.id}
           choice={choice}
           shaking={shakingId === choice.id}
+          pulse={idleHintActive && choice.id === step.correctChoiceId}
           onTap={onTap}
           theme={theme}
         />
@@ -206,11 +213,13 @@ function DuoLayout({
 function GridLayout({
   step,
   shakingId,
+  idleHintActive,
   onTap,
   theme,
 }: {
   step: Step;
   shakingId: string | null;
+  idleHintActive: boolean;
   onTap: (id: string) => void;
   theme?: BrandTheme;
 }): React.ReactElement {
@@ -228,6 +237,7 @@ function GridLayout({
           key={choice.id}
           choice={choice}
           shaking={shakingId === choice.id}
+          pulse={idleHintActive && choice.id === step.correctChoiceId}
           onTap={onTap}
           theme={theme}
         />
@@ -239,11 +249,13 @@ function GridLayout({
 function ListLayout({
   step,
   shakingId,
+  idleHintActive,
   onTap,
   theme,
 }: {
   step: Step;
   shakingId: string | null;
+  idleHintActive: boolean;
   onTap: (id: string) => void;
   theme?: BrandTheme;
 }): React.ReactElement {
@@ -291,6 +303,7 @@ function ListLayout({
                 css`
                   animation: ${shakeKf} 300ms ease;
                 `,
+              idlePulse(idleHintActive, choice.id === step.correctChoiceId),
             ]}
             onClick={() => onTap(choice.id)}
           >
@@ -320,6 +333,8 @@ function ListLayout({
 
 // ── StepEngine ────────────────────────────────────────────────────────────────
 
+const IDLE_HINT_DELAY_MS = 5000;
+
 export function StepEngine({
   scenario,
   onScenarioComplete,
@@ -329,6 +344,17 @@ export function StepEngine({
   const [history, setHistory] = useState<number[]>([]);
   const [shakingId, setShakingId] = useState<string | null>(null);
   const [locked, setLocked] = useState(false);
+  const [idleHintActive, setIdleHintActive] = useState(false);
+
+  // Restart 5-second idle timer whenever the user lands on a new step or taps.
+  // After 5s without correct progress, the matching button starts pulsing.
+  useEffect(() => {
+    setIdleHintActive(false);
+    const timer = window.setTimeout(() => {
+      setIdleHintActive(true);
+    }, IDLE_HINT_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [stepIndex, shakingId]);
 
   const sfx = useSFX();
   const confetti = useConfetti();
@@ -431,6 +457,7 @@ export function StepEngine({
             scenario={scenario}
             theme={theme}
             rejectedChoiceId={shakingId}
+            idleHintActive={idleHintActive}
             onChoice={handleTap}
           />
         );
@@ -452,6 +479,7 @@ export function StepEngine({
           <DuoLayout
             step={step}
             shakingId={shakingId}
+            idleHintActive={idleHintActive}
             onTap={handleTap}
             theme={theme}
           />
@@ -461,6 +489,7 @@ export function StepEngine({
           <GridLayout
             step={step}
             shakingId={shakingId}
+            idleHintActive={idleHintActive}
             onTap={handleTap}
             theme={theme}
           />
@@ -470,6 +499,7 @@ export function StepEngine({
           <ListLayout
             step={step}
             shakingId={shakingId}
+            idleHintActive={idleHintActive}
             onTap={handleTap}
             theme={theme}
           />

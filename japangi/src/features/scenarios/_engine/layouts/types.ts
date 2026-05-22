@@ -1,3 +1,5 @@
+import { css, keyframes, type SerializedStyles } from "@emotion/react";
+
 import type { BrandTheme, ScenarioScript, Step } from "../types";
 
 export interface CustomLayoutProps {
@@ -5,10 +7,37 @@ export interface CustomLayoutProps {
   scenario: ScenarioScript;
   theme?: BrandTheme;
   rejectedChoiceId: string | null;
+  /**
+   * True when the user has been idle on this step for ~5s.
+   * Custom layouts should visually signal the correct next button
+   * (typically a soft yellow pulsing glow).
+   */
+  idleHintActive: boolean;
   onChoice: (choiceId: string) => void;
 }
 
 export type CustomLayoutComponent = React.FC<CustomLayoutProps>;
+
+/**
+ * Soft pulsing glow used to point users at the button they should tap when
+ * they've been idle for too long. Tuned to be calm (not jumpy) so elderly
+ * users don't feel rushed.
+ */
+const pulseKf = keyframes`
+  0%   { box-shadow: 0 0 0 0 rgba(255, 199, 44, 0.55); }
+  60%  { box-shadow: 0 0 0 14px rgba(255, 199, 44, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 199, 44, 0); }
+`;
+
+export function idlePulse(
+  active: boolean,
+  isTarget: boolean,
+): SerializedStyles | false {
+  if (!active || !isTarget) return false;
+  return css`
+    animation: ${pulseKf} 1.6s ease-in-out infinite;
+  `;
+}
 
 /**
  * Look up the label of the correct answer for an earlier step in the scenario.
