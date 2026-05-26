@@ -29,8 +29,9 @@ _FALLBACK_SUMMARY = "오늘은 세트 메뉴를 주문하고 카드로 결제해
 # (utility choices like cancel/home/help are kept). Otherwise the scenario's
 # original choices are used as-is.
 _STEP_MENU_CATEGORY: dict[str, str] = {
-    "category": "burger",  # McDonald's burger picker step
-    "menu": "burger",      # Burger King burger picker step
+    "category": "burger",       # McDonald's burger picker step
+    "menu": "burger",           # Burger King burger picker step
+    "burger-choice": "burger",  # Lotteria + KFC burger picker step
 }
 
 # Choice ids that are navigation/utility rather than real answers — excluded

@@ -42,6 +42,18 @@ const IMG: Record<string, string> = {
   "jeonju-bibim-rice": `${CDN}/2023/02/03/20230203180810686_7.png/dims/resize/x420/optimize`,
   "ria-shrimp-bacon": `${CDN}/2023/08/11/20230811165041889_8.png/dims/resize/x420/optimize`,
   "ria-bulgogi-bacon": `${CDN}/2023/07/12/20230712163805886_0.png/dims/resize/x420/optimize`,
+  // Remaining 11 burgers — covers any slug LLM might pick from the burger category
+  "hanwoo-bulgogi-double": `${CDN}/2022/06/22/202206221401250_4.png/dims/resize/x420/optimize`,
+  "hanwoo-bulgogi": `${CDN}/2023/02/10/20230210102118259_1.png/dims/resize/x420/optimize`,
+  "chicken-burger-double": `${CDN}/2025/12/03/20251203084906466_7.png/dims/resize/x420/optimize`,
+  "teri-double": `${CDN}/2023/03/21/20230321151944859_2.png/dims/resize/x420/optimize`,
+  "xx2-double": `${CDN}/2020/08/03/20200803175039962_2.png/dims/resize/x420/optimize`,
+  "ria-bulgogi-double": `${CDN}/2019/12/20/20191220163556949_8.png/dims/resize/x420/optimize`,
+  "chicken-burger": `${CDN}/2025/12/03/20251203084852773_5.png/dims/resize/x420/optimize`,
+  teri: `${CDN}/2020/01/02/20200102234537645_5.png/dims/resize/x420/optimize`,
+  "hanwoo-couple-pack": `${CDN}/2024/11/20/20241120203422611_0.png/dims/resize/x420/optimize`,
+  "hanwoo-premium-pack": `${CDN}/2024/11/20/20241120203400302_2.png/dims/resize/x420/optimize`,
+  "mozza-in-burger-bacon": `${CDN}/2023/03/08/20230308094308298_4.png/dims/resize/x420/optimize`,
   // Dessert/chicken
   "spicy-tonkatsu-hot": `${CDN}/2026/03/11/20260311110817134_1.png/dims/resize/x420/optimize`,
   "chicken-nugget": `${CDN}/2024/11/20/20241120195357957_4.png/dims/resize/x420/optimize`,
