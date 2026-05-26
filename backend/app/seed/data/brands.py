@@ -418,6 +418,20 @@ BURGERKING_SCENARIO = {
             "hintMessage": "왼쪽 갈색 '아니오' 버튼을 눌러주세요.",
         },
         {
+            "id": "dine-mode",
+            "instruction": "'포장주문'을 골라요",
+            "helpText": "매장에서 드시면 매장식사, 가져가시면 포장주문을 골라요. 오늘은 포장주문이에요. 오른쪽 가방 그림을 누른 뒤 빨간 '확인' 버튼을 누르면 돼요.",
+            "layout": "duo",
+            "customLayoutId": "burgerking-dine-mode",
+            "choices": [
+                {"id": "takeout", "label": "포장주문", "emoji": "🛍️"},
+                {"id": "dine-in", "label": "매장식사", "emoji": "🍽️"},
+            ],
+            "correctChoiceId": "takeout",
+            "successMessage": "포장주문으로 골랐어요!",
+            "hintMessage": "오른쪽 '포장주문' 카드를 누른 뒤 빨간 '확인' 버튼을 눌러주세요.",
+        },
+        {
             "id": "pay-method",
             "instruction": "카드로 결제할게요",
             "helpText": "카드 또는 모바일 페이로 낼 수 있어요. 오늘은 카드를 골라요. 이건 연습이라 진짜 돈은 안 나가요.",
