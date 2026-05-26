@@ -157,37 +157,39 @@ export function LotteriaMenu({
             return (
               <button
                 key={tab}
-                onClick={() => {
-                  if (!active) onChoice(`tab:${tab}`);
-                }}
-                css={css`
-                  border: none;
-                  background: transparent;
-                  font-size: 14px;
-                  font-weight: ${active ? 900 : 600};
-                  color: ${active ? "#d62300" : "#4e5968"};
-                  padding: 12px 10px 10px;
-                  position: relative;
-                  white-space: nowrap;
-                  flex-shrink: 0;
-                  cursor: pointer;
-                  :active {
-                    background: #f6f7f9;
-                  }
-                  ${active &&
+                type="button"
+                css={[
                   css`
-                    &::after {
-                      content: "";
-                      position: absolute;
-                      left: 8px;
-                      right: 8px;
-                      bottom: -2px;
-                      height: 3px;
-                      background: #d62300;
-                      border-radius: 2px;
+                    border: none;
+                    background: transparent;
+                    font-size: 14px;
+                    font-weight: ${active ? 900 : 600};
+                    color: ${active ? "#d62300" : "#4e5968"};
+                    padding: 12px 10px 10px;
+                    position: relative;
+                    white-space: nowrap;
+                    flex-shrink: 0;
+                    cursor: pointer;
+                    border-radius: 6px;
+                    :active {
+                      background: #f6f7f9;
                     }
-                  `}
-                `}
+                    ${active &&
+                    css`
+                      &::after {
+                        content: "";
+                        position: absolute;
+                        left: 8px;
+                        right: 8px;
+                        bottom: -2px;
+                        height: 3px;
+                        background: #d62300;
+                        border-radius: 2px;
+                      }
+                    `}
+                  `,
+                  idlePulse(idleHintActive, active),
+                ]}
               >
                 {tab}
               </button>
@@ -216,7 +218,7 @@ export function LotteriaMenu({
       >
         {/* Left "이전" tab */}
         <button
-          onClick={() => onChoice("page:prev")}
+          type="button"
           css={css`
             position: absolute;
             left: 0;
@@ -243,7 +245,7 @@ export function LotteriaMenu({
 
         {/* Right "다음" tab */}
         <button
-          onClick={() => onChoice("page:next")}
+          type="button"
           css={css`
             position: absolute;
             right: 0;
@@ -445,17 +447,14 @@ export function LotteriaMenu({
           gap: 8px;
         `}
       >
-        <button
-          onClick={() => onChoice("footer:coupon")}
-          css={[footerBtn, couponBtn]}
-        >
+        <button type="button" css={[footerBtn, couponBtn]}>
           <span style={{ fontSize: 12, fontWeight: 800 }}>쿠폰</span>
           <span style={{ fontSize: 11, fontWeight: 700 }}>교환권</span>
         </button>
-        <button onClick={() => onChoice("footer:cancel")} css={[footerBtn, cancelBtn]}>
+        <button type="button" css={[footerBtn, cancelBtn]}>
           취소하기
         </button>
-        <button onClick={() => onChoice("footer:pay")} css={[footerBtn, payBtn]}>
+        <button type="button" css={[footerBtn, payBtn]}>
           결제하기
         </button>
       </div>
