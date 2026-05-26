@@ -73,6 +73,19 @@ _IMAGE_BY_SLUG: dict[str, str] = {
     "boneless-full": "https://img.lotteeatz.com/upload/product/2019/12/20/20191220165904235_1.png/dims/resize/x420/optimize",
     "fried-boneless-l": "https://img.lotteeatz.com/upload/product/2026/04/07/20260407092425935_1.png/dims/resize/x420/optimize",
     "chicken-leg-half": "https://img.lotteeatz.com/upload/product/2025/02/20/20250220132842689_6.png/dims/resize/x420/optimize",
+    # Drinks
+    "coke": "https://img.lotteeatz.com/upload/product/2024/02/28/20240228145257542_2.png/dims/resize/x420/optimize",
+    "sprite": "https://img.lotteeatz.com/upload/product/2024/05/08/20240508172732913_1.png/dims/resize/x420/optimize",
+    "coke-zero": "https://img.lotteeatz.com/upload/product/2023/03/14/202303141158073_1.png/dims/resize/x420/optimize",
+    "matcha-latte": "https://img.lotteeatz.com/upload/product/2026/05/14/20260514094947663_6.png/dims/resize/x420/optimize",
+    "ice-tea": "https://img.lotteeatz.com/upload/product/2025/09/08/20250908091242562_7.png/dims/resize/x420/optimize",
+    "lemonade": "https://img.lotteeatz.com/upload/product/2025/01/24/20250124101144899_1.png/dims/resize/x420/optimize",
+    "americano": "https://img.lotteeatz.com/upload/product/2025/01/24/20250124101000339_9.png/dims/resize/x420/optimize",
+    "ice-americano": "https://img.lotteeatz.com/upload/product/2025/01/24/20250124102006301_3.png/dims/resize/x420/optimize",
+    "cafe-latte": "https://img.lotteeatz.com/upload/product/2025/01/24/20250124100825669_5.png/dims/resize/x420/optimize",
+    "ice-cafe-latte": "https://img.lotteeatz.com/upload/product/2025/01/24/20250124101201439_7.png/dims/resize/x420/optimize",
+    "orange-juice": "https://img.lotteeatz.com/upload/product/2020/03/26/2020032610450342_0.png/dims/resize/x420/optimize",
+    "hot-choco": "https://img.lotteeatz.com/upload/product/2020/09/22/20200922082554944_3.png/dims/resize/x420/optimize",
 }
 
 
