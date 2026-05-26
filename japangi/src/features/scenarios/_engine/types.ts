@@ -29,6 +29,13 @@ export interface Step {
    * jumps straight to order-confirm-single, skipping set-size/side/drink).
    */
   branchTo?: Record<string, string>;
+  /**
+   * Optional detour map: fires regardless of correctness. When the user picks
+   * an id that has an entry here, jump to that step (no shake/toast). Used
+   * for kiosk pop-ups that appear when a non-goal choice is picked — e.g.
+   * BK's "upgrade to set?" modal when 단품 is selected.
+   */
+  detourTo?: Record<string, string>;
 }
 
 export interface OnboardingStep {

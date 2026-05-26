@@ -347,8 +347,23 @@ BURGERKING_SCENARIO = {
                 {"id": "close", "label": "닫기", "emoji": "✕"},
             ],
             "correctChoiceId": "7111691",
+            "detourTo": {"1080013": "upsell-popup"},
             "successMessage": "와퍼 라지세트로 골랐어요!",
             "hintMessage": "'와퍼 라지세트' 동그라미를 누른 뒤 빨간 '확인' 버튼을 눌러주세요.",
+        },
+        {
+            "id": "upsell-popup",
+            "instruction": "'업그레이드 하기'를 눌러요",
+            "helpText": "단품을 고르면 세트로 업그레이드를 제안해요. 빨간 '업그레이드 하기' 버튼을 누르면 세트로 바뀌어요.",
+            "layout": "duo",
+            "customLayoutId": "burgerking-upsell",
+            "choices": [
+                {"id": "upgrade-to-set", "label": "업그레이드 하기", "emoji": "⬆️"},
+                {"id": "cancel-keep-single", "label": "취소", "emoji": "✕"},
+            ],
+            "correctChoiceId": "upgrade-to-set",
+            "successMessage": "세트로 업그레이드했어요!",
+            "hintMessage": "오른쪽 빨간 '업그레이드 하기' 버튼을 눌러주세요.",
         },
         {
             "id": "pay-method",

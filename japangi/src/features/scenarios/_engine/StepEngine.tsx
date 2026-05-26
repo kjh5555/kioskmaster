@@ -476,6 +476,23 @@ export function StepEngine({
   function handleTap(choiceId: string): void {
     if (locked) return;
 
+    // Detour: an "if you tap this non-goal choice, the kiosk shows this
+    // pop-up first" path. Navigate silently — no shake, no toast, no
+    // success sound. The user can recover from the pop-up.
+    const detourTargetId = step.detourTo?.[choiceId];
+    if (detourTargetId !== undefined) {
+      setLocked(true);
+      setTimeout(() => {
+        const idx = scenario.steps.findIndex((s) => s.id === detourTargetId);
+        if (idx >= 0) {
+          setHistory((h) => [...h, stepIndex]);
+          setStepIndex(idx);
+        }
+        setLocked(false);
+      }, 200);
+      return;
+    }
+
     if (choiceId === step.correctChoiceId) {
       setLocked(true);
       sfx.playSuccess();
