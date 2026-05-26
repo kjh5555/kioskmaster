@@ -19,11 +19,45 @@ LOTTERIA_CATEGORY_ORDER = [
 
 _LOGO = "https://upload.wikimedia.org/wikipedia/commons/3/34/Lotteria_logo.svg"
 
+# Real product photos served by Lotte Eatz's CDN (img.lotteeatz.com).
+# Slug → image URL. Any slug not in this map falls back to the brand logo.
+_IMAGE_BY_SLUG: dict[str, str] = {
+    # Burgers
+    "bunt-beef": "https://img.lotteeatz.com/upload/product/2026/04/17/20260417142700466_3.png/dims/resize/x420/optimize",
+    "crispy-chicken-greek": "https://img.lotteeatz.com/upload/product/2026/01/06/20260106083745809_0.png/dims/resize/x420/optimize",
+    "crispy-chicken-fire": "https://img.lotteeatz.com/upload/product/2026/01/06/20260106083759930_0.png/dims/resize/x420/optimize",
+    "mozza-tomato": "https://img.lotteeatz.com/upload/product/2025/01/15/20250115162931395_8.png/dims/resize/x420/optimize",
+    "mozza-balsamic": "https://img.lotteeatz.com/upload/product/2025/01/15/20250115163300416_3.png/dims/resize/x420/optimize",
+    "jeonju-bibim-rice": "https://img.lotteeatz.com/upload/product/2023/02/03/20230203180810686_7.png/dims/resize/x420/optimize",
+    "ria-shrimp-bacon": "https://img.lotteeatz.com/upload/product/2023/08/11/20230811165041889_8.png/dims/resize/x420/optimize",
+    "ria-bulgogi-bacon": "https://img.lotteeatz.com/upload/product/2023/07/12/20230712163805886_0.png/dims/resize/x420/optimize",
+    "hanwoo-bulgogi-double": "https://img.lotteeatz.com/upload/product/2022/06/22/202206221401250_4.png/dims/resize/x420/optimize",
+    "hanwoo-bulgogi": "https://img.lotteeatz.com/upload/product/2023/02/10/20230210102118259_1.png/dims/resize/x420/optimize",
+    "classic-cheese-double": "https://img.lotteeatz.com/upload/product/2023/03/21/20230321152358223_1.png/dims/resize/x420/optimize",
+    "chicken-burger-double": "https://img.lotteeatz.com/upload/product/2025/12/03/20251203084906466_7.png/dims/resize/x420/optimize",
+    "teri-double": "https://img.lotteeatz.com/upload/product/2023/03/21/20230321151944859_2.png/dims/resize/x420/optimize",
+    "xx2-double": "https://img.lotteeatz.com/upload/product/2020/08/03/20200803175039962_2.png/dims/resize/x420/optimize",
+    "ria-bulgogi-double": "https://img.lotteeatz.com/upload/product/2019/12/20/20191220163556949_8.png/dims/resize/x420/optimize",
+    "miracle": "https://img.lotteeatz.com/upload/product/2025/10/16/20251016134637371_3.png/dims/resize/x420/optimize",
+    "miracle-double": "https://img.lotteeatz.com/upload/product/2025/10/16/20251016134709789_6.png/dims/resize/x420/optimize",
+    "mozza-in-burger-bacon": "https://img.lotteeatz.com/upload/product/2023/03/08/20230308094308298_4.png/dims/resize/x420/optimize",
+    "hot-crispy-chicken": "https://img.lotteeatz.com/upload/product/2023/06/21/20230621174724947_5.png/dims/resize/x420/optimize",
+    "ria-shrimp-square-double": "https://img.lotteeatz.com/upload/product/2020/12/31/20201231115111151_3.png/dims/resize/x420/optimize",
+    "classic-cheese": "https://img.lotteeatz.com/upload/product/2022/05/19/20220519092203878_5.png/dims/resize/x420/optimize",
+    "ria-bulgogi": "https://img.lotteeatz.com/upload/product/2021/07/23/20210723103917912_2.png/dims/resize/x420/optimize",
+    "ria-shrimp": "https://img.lotteeatz.com/upload/product/2019/12/20/20191220163836176_9.png/dims/resize/x420/optimize",
+    "chicken-burger": "https://img.lotteeatz.com/upload/product/2025/12/03/20251203084852773_5.png/dims/resize/x420/optimize",
+    "teri": "https://img.lotteeatz.com/upload/product/2020/01/02/20200102234537645_5.png/dims/resize/x420/optimize",
+    "hanwoo-couple-pack": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120203422611_0.png/dims/resize/x420/optimize",
+    "hanwoo-premium-pack": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120203400302_2.png/dims/resize/x420/optimize",
+}
+
 
 def _item(id_, name, price, kcal="", emoji="🍔", isNew=False):
     return {
         "id": id_, "name": name, "price": price, "kcal": kcal,
-        "emoji": emoji, "isNew": isNew, "imageUrl": _LOGO,
+        "emoji": emoji, "isNew": isNew,
+        "imageUrl": _IMAGE_BY_SLUG.get(id_, _LOGO),
     }
 
 
