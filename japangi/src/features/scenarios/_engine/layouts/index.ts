@@ -13,7 +13,9 @@ import { BurgerKingStart } from "./BurgerKingStart";
 import { BurgerKingUpsell } from "./BurgerKingUpsell";
 import { LotteriaCardInsert } from "./LotteriaCardInsert";
 import { LotteriaMenu } from "./LotteriaMenu";
+import { LotteriaOrderComplete } from "./LotteriaOrderComplete";
 import { LotteriaPayMethod } from "./LotteriaPayMethod";
+import { LotteriaReceiptPrompt } from "./LotteriaReceiptPrompt";
 import { LotteriaSetPopup } from "./LotteriaSetPopup";
 import { LotteriaSideSelect } from "./LotteriaSideSelect";
 import { LotteriaStart } from "./LotteriaStart";
@@ -52,7 +54,9 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "lotteria-menu": LotteriaMenu,
   "lotteria-set-popup": LotteriaSetPopup,
   "lotteria-card-insert": LotteriaCardInsert,
+  "lotteria-order-complete": LotteriaOrderComplete,
   "lotteria-pay-method": LotteriaPayMethod,
+  "lotteria-receipt-prompt": LotteriaReceiptPrompt,
   "lotteria-side-select": LotteriaSideSelect,
   "mcdonalds-category": McdonaldsCategory,
   "mcdonalds-dine-mode": McdonaldsDineMode,
