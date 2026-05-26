@@ -202,13 +202,21 @@ export function LotteriaMenu({
     activeTab === TAB_HAMBURGER && page === 1;
 
   // Render items: real step.choices on 햄버거 page 2, decorative everywhere else.
+  // When cart is populated, the current step ("menu-with-cart") only carries a
+  // single "pay-cta" choice — so we resolve the original 8-burger grid from the
+  // burger-choice step instead, otherwise the menu would collapse to one card.
+  const burgerChoiceStep = scenario.steps.find((s) => s.id === "burger-choice");
+  const gridChoices = cartPopulated
+    ? burgerChoiceStep?.choices ?? step.choices
+    : step.choices;
+
   const items: Array<{
     id: string;
     label: string;
     price: string;
     isReal: boolean;
   }> = onHamburgerPage2
-    ? step.choices.map((c) => ({
+    ? gridChoices.map((c) => ({
         id: c.id,
         label: c.label,
         price: c.sublabel ?? "",
