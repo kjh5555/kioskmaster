@@ -1,7 +1,7 @@
 import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
-import { idlePulse, type CustomLayoutProps } from "./types";
+import { idlePulse, lookupCorrectLabel, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -131,12 +131,63 @@ const DECOR: Record<string, DecorItem[][]> = {
   ],
 };
 
+// Per-burger info shown in the cart-populated top card. Keyed by burger slug.
+const BURGER_INFO: Record<string, { description: string; setPrice: number }> = {
+  "ria-bulgogi": {
+    description:
+      "달콤한 불고기 패티에 신선한 양상추가 더해진 롯데리아의 시그니처 버거예요.",
+    setPrice: 9800,
+  },
+  "ria-shrimp": {
+    description:
+      "통새우 패티의 바삭한 식감과 부드러운 빵이 어우러진 인기 메뉴예요.",
+    setPrice: 9800,
+  },
+  "classic-cheese": {
+    description: "고소한 체다치즈가 듬뿍 들어간 정통 클래식 치즈버거예요.",
+    setPrice: 10300,
+  },
+  "classic-cheese-double": {
+    description:
+      "두 장의 패티가 이루는 조화로운 맛에 든든함까지 추가된 더블 클래식치즈버거예요.",
+    setPrice: 12000,
+  },
+  "hot-crispy-chicken": {
+    description: "매콤한 양념이 입혀진 바삭한 핫크리스피 치킨 패티예요.",
+    setPrice: 10700,
+  },
+  miracle: {
+    description: "100% 식물성 패티로 만든 친환경 미라클 버거예요.",
+    setPrice: 10500,
+  },
+  "miracle-double": {
+    description: "식물성 패티 두 장으로 든든함을 더한 더블 미라클 버거예요.",
+    setPrice: 12000,
+  },
+  "ria-shrimp-square-double": {
+    description: "사각 새우 패티 두 장이 들어간 바삭한 더블 새우 버거예요.",
+    setPrice: 10500,
+  },
+};
+
 export function LotteriaMenu({
   step,
+  scenario,
   rejectedChoiceId,
   idleHintActive,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  // step.id === "menu-with-cart" → 세트 + 사이드 + 음료를 다 골랐고 결제 직전.
+  // 상단은 살균 안내 대신 선택된 버거 정보 카드로 바뀌고, 하단에 카트가 채워지며
+  // 결제하기 버튼이 활성/펄스 상태가 된다.
+  const cartPopulated = step.id === "menu-with-cart";
+
+  const burgerLabel =
+    lookupCorrectLabel(scenario, "burger-choice") ?? "불고기버거";
+  const burgerSlug =
+    scenario.steps.find((s) => s.id === "burger-choice")?.correctChoiceId ?? "ria-bulgogi";
+  const burgerInfo = BURGER_INFO[burgerSlug] ?? BURGER_INFO["ria-bulgogi"];
+
   // 햄버거 탭 page 2가 정답이 살아있는 화면. 그 외 페이지/탭은 자유 탐색용.
   const [activeTab, setActiveTab] = useState<string>(TAB_HAMBURGER);
   const [pageByTab, setPageByTab] = useState<Record<string, number>>({
@@ -194,65 +245,176 @@ export function LotteriaMenu({
         position: relative;
       `}
     >
-      {/* Top sanitation banner ------------------------------------- */}
-      <div
-        css={css`
-          background: linear-gradient(180deg, #d62300 0%, #b81f00 100%);
-          color: #ffffff;
-          padding: 10px 16px 14px;
-        `}
-      >
+      {/* Top banner: sanitation notice OR (cart populated) burger info card */}
+      {!cartPopulated ? (
         <div
           css={css`
-            display: flex;
-            justify-content: flex-end;
-            gap: 14px;
-            font-size: 11px;
-            font-weight: 700;
-            opacity: 0.95;
-            padding-bottom: 6px;
+            background: linear-gradient(180deg, #d62300 0%, #b81f00 100%);
+            color: #ffffff;
+            padding: 10px 16px 14px;
           `}
         >
-          <span style={{ color: "#fff" }}>한국어</span>
-          <span style={{ opacity: 0.7 }}>English</span>
-          <span style={{ opacity: 0.7 }}>中国语</span>
-          <span style={{ opacity: 0.7 }}>日本语</span>
-        </div>
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 8px 12px;
-          `}
-        >
-          <span style={{ fontSize: 24 }}>💧</span>
           <div
             css={css`
-              font-size: 13px;
+              display: flex;
+              justify-content: flex-end;
+              gap: 14px;
+              font-size: 11px;
               font-weight: 700;
-              line-height: 1.4;
-              flex: 1;
-              text-align: center;
+              opacity: 0.95;
+              padding-bottom: 6px;
             `}
           >
-            고객님들의
-            <br />
-            안전과 질병 예방을 위해
-            <br />
-            <span style={{ background: "#ffd400", color: "#2a1408", padding: "0 4px", borderRadius: 2 }}>
-              무인포스
-            </span>
-            는 <span style={{ background: "#ffd400", color: "#2a1408", padding: "0 4px", borderRadius: 2 }}>매시간 살균, 소독</span>을
-            <br />
-            실시하고 있습니다.
+            <span style={{ color: "#fff" }}>한국어</span>
+            <span style={{ opacity: 0.7 }}>English</span>
+            <span style={{ opacity: 0.7 }}>中国语</span>
+            <span style={{ opacity: 0.7 }}>日本语</span>
           </div>
-          <span style={{ fontSize: 24 }}>🧼</span>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              background: rgba(255, 255, 255, 0.08);
+              border: 1px solid rgba(255, 255, 255, 0.2);
+              border-radius: 8px;
+              padding: 8px 12px;
+            `}
+          >
+            <span style={{ fontSize: 24 }}>💧</span>
+            <div
+              css={css`
+                font-size: 13px;
+                font-weight: 700;
+                line-height: 1.4;
+                flex: 1;
+                text-align: center;
+              `}
+            >
+              고객님들의
+              <br />
+              안전과 질병 예방을 위해
+              <br />
+              <span style={{ background: "#ffd400", color: "#2a1408", padding: "0 4px", borderRadius: 2 }}>
+                무인포스
+              </span>
+              는 <span style={{ background: "#ffd400", color: "#2a1408", padding: "0 4px", borderRadius: 2 }}>매시간 살균, 소독</span>을
+              <br />
+              실시하고 있습니다.
+            </div>
+            <span style={{ fontSize: 24 }}>🧼</span>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div
+          css={css`
+            background: #ffffff;
+            padding: 10px 14px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+          `}
+        >
+          <div
+            css={css`
+              display: flex;
+              justify-content: flex-end;
+              gap: 12px;
+              font-size: 11px;
+              font-weight: 700;
+              color: #4e5968;
+            `}
+          >
+            <span style={{ color: "#d62300" }}>한국어</span>
+            <span>English</span>
+            <span>中国语</span>
+            <span>日本语</span>
+          </div>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            `}
+          >
+            <div
+              css={css`
+                width: 86px;
+                height: 86px;
+                flex-shrink: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #fff7e8;
+                border-radius: 10px;
+                padding: 4px;
+              `}
+            >
+              {IMG[burgerSlug] ? (
+                <img
+                  src={IMG[burgerSlug]}
+                  alt={burgerLabel}
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                />
+              ) : (
+                <span style={{ fontSize: 40 }}>🍔</span>
+              )}
+            </div>
+            <div
+              css={css`
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+              `}
+            >
+              <div
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  gap: 6px;
+                  flex-wrap: wrap;
+                `}
+              >
+                <span
+                  css={css`
+                    font-size: 18px;
+                    font-weight: 900;
+                    color: #2a1408;
+                    letter-spacing: -0.02em;
+                  `}
+                >
+                  {burgerLabel.replace(/\n/g, " ")}
+                </span>
+                <span
+                  css={css`
+                    background: #d62300;
+                    color: #ffffff;
+                    font-size: 10px;
+                    font-weight: 800;
+                    padding: 3px 8px;
+                    border-radius: 999px;
+                  `}
+                >
+                  영양성분
+                </span>
+              </div>
+              <div
+                css={css`
+                  font-size: 11px;
+                  font-weight: 600;
+                  color: #4e5968;
+                  line-height: 1.4;
+                  word-break: keep-all;
+                `}
+              >
+                {burgerInfo.description}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Tabs row -------------------------------------------------- */}
       <div
@@ -283,8 +445,11 @@ export function LotteriaMenu({
             const active = tab === activeTab;
             // Pulse 햄버거 tab when user has wandered off it; pulse off
             // when already there (no point hinting at a tab you're on).
+            // Also off when cart is populated — focus shifts to 결제하기.
             const shouldPulseTab =
-              tab === TAB_HAMBURGER && activeTab !== TAB_HAMBURGER;
+              !cartPopulated &&
+              tab === TAB_HAMBURGER &&
+              activeTab !== TAB_HAMBURGER;
             return (
               <button
                 key={tab}
@@ -408,7 +573,7 @@ export function LotteriaMenu({
             `,
             idlePulse(
               idleHintActive,
-              activeTab === TAB_HAMBURGER && page === 0,
+              !cartPopulated && activeTab === TAB_HAMBURGER && page === 0,
             ),
           ]}
         >
@@ -434,6 +599,9 @@ export function LotteriaMenu({
                 key={`${activeTab}-${page}-${item.id}`}
                 type="button"
                 onClick={() => {
+                  // In cart-populated mode the menu becomes decorative — only
+                  // the 결제하기 footer button advances the scenario.
+                  if (cartPopulated) return;
                   if (item.isReal) onChoice(item.id);
                   // decorative items are tappable but inert
                 }}
@@ -454,8 +622,8 @@ export function LotteriaMenu({
                       background: #f6f7f9;
                     }
                   `,
-                  item.isReal && shakeWhen(rejectedChoiceId, item.id),
-                  idlePulse(idleHintActive, isCorrect),
+                  !cartPopulated && item.isReal && shakeWhen(rejectedChoiceId, item.id),
+                  idlePulse(idleHintActive, !cartPopulated && isCorrect),
                 ]}
               >
                 <div
@@ -542,53 +710,209 @@ export function LotteriaMenu({
       </div>
 
       {/* Cart summary --------------------------------------------- */}
-      <div
-        css={css`
-          background: #f6f7f9;
-          padding: 10px 18px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-top: 1px solid #e5e8eb;
-        `}
-      >
+      {!cartPopulated ? (
         <div
           css={css`
-            font-size: 18px;
-            font-weight: 800;
-            color: #2a1408;
-          `}
-        >
-          0 <span style={{ fontSize: 14, fontWeight: 700 }}>개</span>
-        </div>
-        <div
-          css={css`
+            background: #f6f7f9;
+            padding: 10px 18px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            justify-content: space-between;
+            border-top: 1px solid #e5e8eb;
           `}
         >
           <div
             css={css`
-              font-size: 22px;
-              font-weight: 900;
+              font-size: 18px;
+              font-weight: 800;
               color: #2a1408;
             `}
           >
-            0
+            0 <span style={{ fontSize: 14, fontWeight: 700 }}>개</span>
           </div>
           <div
             css={css`
               display: flex;
-              flex-direction: column;
-              gap: 2px;
+              align-items: center;
+              gap: 14px;
             `}
           >
-            <span css={arrowChip}>∧</span>
-            <span css={arrowChip}>∨</span>
+            <div
+              css={css`
+                font-size: 22px;
+                font-weight: 900;
+                color: #2a1408;
+              `}
+            >
+              0
+            </div>
+            <div
+              css={css`
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+              `}
+            >
+              <span css={arrowChip}>∧</span>
+              <span css={arrowChip}>∨</span>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div
+          css={css`
+            background: #ffffff;
+            border-top: 1px solid #e5e8eb;
+            padding: 8px 14px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+          `}
+        >
+          {/* Total row */}
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 4px 0;
+            `}
+          >
+            <span
+              css={css`
+                font-size: 14px;
+                font-weight: 800;
+                color: #2a1408;
+              `}
+            >
+              총주문내역
+            </span>
+            <div
+              css={css`
+                display: flex;
+                align-items: center;
+                gap: 14px;
+              `}
+            >
+              <span
+                css={css`
+                  font-size: 18px;
+                  font-weight: 900;
+                  color: #2a1408;
+                `}
+              >
+                1 <span style={{ fontSize: 12, fontWeight: 700 }}>개</span>
+              </span>
+              <span
+                css={css`
+                  font-size: 20px;
+                  font-weight: 900;
+                  color: #2a1408;
+                `}
+              >
+                {burgerInfo.setPrice.toLocaleString()}
+              </span>
+            </div>
+          </div>
+          {/* Cart item row */}
+          <div
+            css={css`
+              display: grid;
+              grid-template-columns: 1fr auto auto auto;
+              align-items: center;
+              gap: 8px;
+              border-top: 1px solid #e5e8eb;
+              padding: 6px 0 4px;
+              font-size: 12px;
+              font-weight: 700;
+              color: #2a1408;
+            `}
+          >
+            <div
+              css={css`
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                min-width: 0;
+              `}
+            >
+              <span
+                css={css`
+                  font-weight: 800;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                `}
+              >
+                {burgerLabel.replace(/\n/g, " ")}세트
+              </span>
+            </div>
+            <div
+              css={css`
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                color: #2a1408;
+              `}
+            >
+              1
+              <div
+                css={css`
+                  display: flex;
+                  flex-direction: column;
+                  gap: 1px;
+                `}
+              >
+                <span css={qtyArrowChip}>∧</span>
+                <span css={qtyArrowChip}>∨</span>
+              </div>
+            </div>
+            <span style={{ fontWeight: 900 }}>
+              {burgerInfo.setPrice.toLocaleString()}
+            </span>
+            <div
+              css={css`
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 10px;
+                font-weight: 700;
+              `}
+            >
+              <span
+                css={css`
+                  background: #d62300;
+                  color: #ffffff;
+                  padding: 3px 6px;
+                  border-radius: 4px;
+                `}
+              >
+                토핑추가
+              </span>
+              <span
+                css={css`
+                  background: #f0f1f3;
+                  color: #4e5968;
+                  padding: 3px 6px;
+                  border-radius: 4px;
+                `}
+              >
+                변경
+              </span>
+              <span
+                css={css`
+                  background: #f0f1f3;
+                  color: #4e5968;
+                  padding: 3px 6px;
+                  border-radius: 4px;
+                `}
+              >
+                삭제
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer ---------------------------------------------------- */}
       <div
@@ -606,7 +930,17 @@ export function LotteriaMenu({
         <button type="button" css={[footerBtn, cancelBtn]}>
           취소하기
         </button>
-        <button type="button" css={[footerBtn, payBtn]}>
+        <button
+          type="button"
+          onClick={() => {
+            if (cartPopulated) onChoice(step.correctChoiceId);
+          }}
+          css={[
+            footerBtn,
+            payBtn,
+            idlePulse(idleHintActive, cartPopulated),
+          ]}
+        >
           결제하기
         </button>
       </div>
@@ -624,6 +958,19 @@ const arrowChip = css`
   align-items: center;
   justify-content: center;
   font-size: 10px;
+  color: #4e5968;
+`;
+
+const qtyArrowChip = css`
+  width: 16px;
+  height: 10px;
+  border-radius: 3px;
+  background: #ffffff;
+  border: 1px solid #d1d5da;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
   color: #4e5968;
 `;
 
