@@ -82,26 +82,26 @@ const DECOR: Record<string, DecorItem[][]> = {
   추천메뉴: [
     [
       { id: "bunt-beef", label: "번트비프버거", price: "8,800" },
-      { id: "crispy-chicken-fire", label: "통다리 크리스피치킨버거", price: "6,900" },
-      { id: "mozza-balsamic", label: "모짜렐라버거 발사믹바질", price: "9,100" },
-      { id: "jeonju-bibim-rice", label: "전주 비빔라이스 버거", price: "7,300" },
-      { id: "ria-shrimp-bacon", label: "리아 새우 베이컨", price: "6,100" },
-      { id: "ria-bulgogi-bacon", label: "리아 불고기 베이컨", price: "6,100" },
-      { id: "mozza-tomato", label: "모짜렐라버거 토마토바질", price: "9,100" },
-      { id: "crispy-chicken-greek", label: "통다리 크리스피치킨버거 그릭랜치", price: "6,900" },
+      { id: "crispy-chicken-fire", label: "크리스피치킨\n(파이어)", price: "6,900" },
+      { id: "mozza-balsamic", label: "모짜렐라\n(발사믹)", price: "9,100" },
+      { id: "jeonju-bibim-rice", label: "전주비빔\n라이스버거", price: "7,300" },
+      { id: "ria-shrimp-bacon", label: "리아 새우\n베이컨", price: "6,100" },
+      { id: "ria-bulgogi-bacon", label: "리아 불고기\n베이컨", price: "6,100" },
+      { id: "mozza-tomato", label: "모짜렐라\n(토마토)", price: "9,100" },
+      { id: "crispy-chicken-greek", label: "크리스피치킨\n(그릭랜치)", price: "6,900" },
     ],
   ],
   // 햄버거 page 1 — decorative. Page 2 uses step.choices (real scenario items).
   [TAB_HAMBURGER]: [
     [
       { id: "bunt-beef", label: "번트비프버거", price: "8,800" },
-      { id: "crispy-chicken-fire", label: "통다리 크리스피치킨버거", price: "6,900" },
-      { id: "crispy-chicken-greek", label: "그릭랜치 크리스피치킨버거", price: "6,900" },
-      { id: "mozza-balsamic", label: "모짜렐라버거 발사믹", price: "9,100" },
-      { id: "mozza-tomato", label: "모짜렐라버거 토마토", price: "9,100" },
-      { id: "jeonju-bibim-rice", label: "전주 비빔라이스 버거", price: "7,300" },
-      { id: "ria-shrimp-bacon", label: "리아 새우 베이컨", price: "6,100" },
-      { id: "ria-bulgogi-bacon", label: "리아 불고기 베이컨", price: "6,100" },
+      { id: "crispy-chicken-fire", label: "크리스피치킨\n(파이어)", price: "6,900" },
+      { id: "crispy-chicken-greek", label: "크리스피치킨\n(그릭랜치)", price: "6,900" },
+      { id: "mozza-balsamic", label: "모짜렐라\n(발사믹)", price: "9,100" },
+      { id: "mozza-tomato", label: "모짜렐라\n(토마토)", price: "9,100" },
+      { id: "jeonju-bibim-rice", label: "전주비빔\n라이스버거", price: "7,300" },
+      { id: "ria-shrimp-bacon", label: "리아 새우\n베이컨", price: "6,100" },
+      { id: "ria-bulgogi-bacon", label: "리아 불고기\n베이컨", price: "6,100" },
     ],
     [], // page 2 sentinel — replaced at render-time with step.choices
   ],
@@ -269,6 +269,9 @@ export function LotteriaMenu({
           css={css`
             display: flex;
             flex: 1;
+            justify-content: flex-start;
+            align-items: stretch;
+            min-width: 0;
             overflow-x: auto;
             scrollbar-width: none;
             ::-webkit-scrollbar {
@@ -294,12 +297,13 @@ export function LotteriaMenu({
                     font-size: 14px;
                     font-weight: ${active ? 900 : 600};
                     color: ${active ? "#d62300" : "#4e5968"};
-                    padding: 12px 10px 10px;
+                    padding: 12px 8px 10px;
                     position: relative;
                     white-space: nowrap;
-                    flex-shrink: 0;
+                    flex: 1;
                     cursor: pointer;
                     border-radius: 6px;
+                    font-family: inherit;
                     :active {
                       background: #f6f7f9;
                     }
@@ -341,7 +345,7 @@ export function LotteriaMenu({
         css={css`
           position: relative;
           flex: 1;
-          padding: 12px 36px 8px;
+          padding: 12px 28px 8px;
           background: #ffffff;
         `}
       >
@@ -478,6 +482,8 @@ export function LotteriaMenu({
                     display: flex;
                     flex-direction: column;
                     gap: 2px;
+                    min-width: 0;
+                    overflow: hidden;
                   `}
                 >
                   <div
@@ -489,6 +495,9 @@ export function LotteriaMenu({
                       font-weight: 700;
                       color: #2a1408;
                       line-height: 1.2;
+                      white-space: pre-line;
+                      word-break: keep-all;
+                      min-width: 0;
                     `}
                   >
                     <span>{item.label}</span>
