@@ -25,13 +25,42 @@ function shakeWhen(rejected: string | null, id: string) {
 
 const TABS = BK_MENU_TABS;
 
+// Combo metadata used when the cart bar shows the populated state.
+const CART_COMBO_DETAILS: Record<
+  string,
+  { name: string; price: number }
+> = {
+  "7111691": { name: "와퍼 라지세트", price: 9800 },
+  "7111052": { name: "와퍼 세트", price: 9100 },
+  "1080013": { name: "와퍼", price: 7100 },
+};
+
 export function BurgerKingMenu({
   step,
+  scenario,
   rejectedChoiceId,
   idleHintActive,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const [activeTab, setActiveTab] = useState<string>("recommend");
+
+  // When this layout is re-used as the "menu-with-cart" step (post-카트담기),
+  // we render a populated cart row + 취소/결제하기 actions instead of the
+  // empty-cart bar.
+  const cartPopulated = step.id === "menu-with-cart";
+  const comboStep = scenario.steps.find((s) => s.id === "combo-select");
+  const upsellStep = scenario.steps.find((s) => s.id === "upsell-popup");
+  let cartSlug = comboStep?.correctChoiceId ?? "7111691";
+  if (upsellStep?.correctChoiceId === "upgrade-to-set") {
+    cartSlug = "7111052";
+  } else if (upsellStep?.correctChoiceId === "cancel-keep-single") {
+    cartSlug = "1080013";
+  }
+  const cartDetail = CART_COMBO_DETAILS[cartSlug] ?? CART_COMBO_DETAILS["7111691"];
+  const cartCount = cartPopulated ? 1 : 0;
+  const cartTotal = cartPopulated
+    ? `${cartDetail.price.toLocaleString("ko-KR")}원`
+    : "0원";
 
   // Row 1 + Row 2 of tabs (4 each)
   const row1 = TABS.slice(0, 4);
@@ -254,7 +283,7 @@ export function BurgerKingMenu({
                 justify-content: center;
               `}
             >
-              0
+              {cartCount}
             </span>
           </div>
           <span
@@ -288,10 +317,137 @@ export function BurgerKingMenu({
               color: #2a1408;
             `}
           >
-            0원
+            {cartTotal}
           </span>
         </div>
       </div>
+
+      {/* Cart item card (only when populated) */}
+      {cartPopulated && (
+        <div
+          css={css`
+            padding: 0 16px 12px;
+            background: #ffffff;
+          `}
+        >
+          <div
+            css={css`
+              border: 1px solid #d1d6db;
+              border-radius: 12px;
+              padding: 12px 14px;
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+              position: relative;
+              max-width: 220px;
+              background: #ffffff;
+            `}
+          >
+            <button
+              type="button"
+              aria-label="삭제"
+              onClick={() => onChoice("remove-cart-item")}
+              css={[
+                css`
+                  position: absolute;
+                  top: 6px;
+                  right: 8px;
+                  width: 22px;
+                  height: 22px;
+                  border: none;
+                  background: transparent;
+                  color: #8b95a1;
+                  font-size: 14px;
+                  cursor: pointer;
+                  &:active {
+                    color: #2a1408;
+                  }
+                `,
+                shakeWhen(rejectedChoiceId, "remove-cart-item"),
+              ]}
+            >
+              ✕
+            </button>
+            <span
+              css={css`
+                font-size: 14px;
+                font-weight: 700;
+                color: #2a1408;
+              `}
+            >
+              {cartDetail.name} 1
+            </span>
+            <span
+              css={css`
+                font-size: 16px;
+                font-weight: 800;
+                color: #d62300;
+              `}
+            >
+              {cartTotal}
+            </span>
+          </div>
+        </div>
+      )}
+
+      {/* 취소 / 결제하기 row (only when cart populated) */}
+      {cartPopulated && (
+        <div
+          css={css`
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+            gap: 12px;
+            padding: 0 16px 14px;
+            background: #ffffff;
+          `}
+        >
+          <button
+            type="button"
+            onClick={() => onChoice("cancel-order")}
+            css={[
+              css`
+                height: 56px;
+                background: #4a2412;
+                color: #ffffff;
+                border: none;
+                border-radius: 999px;
+                font-size: 16px;
+                font-weight: 800;
+                cursor: pointer;
+                &:active {
+                  background: #2a1408;
+                }
+              `,
+              shakeWhen(rejectedChoiceId, "cancel-order"),
+            ]}
+          >
+            취소
+          </button>
+          <button
+            type="button"
+            onClick={() => onChoice("pay")}
+            css={[
+              css`
+                height: 56px;
+                background: #d62300;
+                color: #ffffff;
+                border: none;
+                border-radius: 999px;
+                font-size: 16px;
+                font-weight: 800;
+                cursor: pointer;
+                &:active {
+                  background: #a91a00;
+                }
+              `,
+              shakeWhen(rejectedChoiceId, "pay"),
+              idlePulse(idleHintActive, step.correctChoiceId === "pay"),
+            ]}
+          >
+            결제하기
+          </button>
+        </div>
+      )}
 
       {/* ── D. Bottom action bar (utility buttons, all "wrong" picks) ── */}
       <div
