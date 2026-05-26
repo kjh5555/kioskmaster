@@ -432,6 +432,20 @@ BURGERKING_SCENARIO = {
             "hintMessage": "오른쪽 '포장주문' 카드를 누른 뒤 빨간 '확인' 버튼을 눌러주세요.",
         },
         {
+            "id": "order-confirm",
+            "instruction": "'결제'를 눌러요",
+            "helpText": "주문 확인 화면이에요. 메뉴와 합계금액을 확인하고 빨간 '결제' 버튼을 누르면 결제 단계로 넘어가요.",
+            "layout": "duo",
+            "customLayoutId": "burgerking-order-confirm",
+            "choices": [
+                {"id": "pay", "label": "결제", "emoji": "💳"},
+                {"id": "cancel-order", "label": "취소", "emoji": "✕"},
+            ],
+            "correctChoiceId": "pay",
+            "successMessage": "결제 단계로 넘어갈게요!",
+            "hintMessage": "오른쪽 빨간 '결제' 버튼을 눌러주세요.",
+        },
+        {
             "id": "pay-method",
             "instruction": "카드로 결제할게요",
             "helpText": "카드 또는 모바일 페이로 낼 수 있어요. 오늘은 카드를 골라요. 이건 연습이라 진짜 돈은 안 나가요.",
