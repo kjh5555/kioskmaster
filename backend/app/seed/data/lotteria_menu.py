@@ -29,11 +29,21 @@ def _item(id_, name, price, kcal="", emoji="🍔", isNew=False):
 
 LOTTERIA_CATEGORY_ITEMS: dict[str, list[dict[str, object]]] = {
     "recommend": [
-        _item("ria-bulgogi", "리아 불고기", "₩5,000", "462kcal"),
+        _item("bunt-beef", "번트비프버거", "₩8,800", "602kcal", isNew=True),
+        _item("crispy-chicken-greek", "통다리 크리스피치킨버거(그릭랜치)", "₩6,900", "618kcal"),
+        _item("crispy-chicken-fire", "통다리 크리스피치킨버거(파이어핫)", "₩6,900", "594kcal", emoji="🌶️"),
+        _item("mozza-tomato", "모짜렐라버거 토마토바질", "₩9,100", "733kcal"),
+        _item("mozza-balsamic", "모짜렐라버거 발사믹바질", "₩9,100", "733kcal"),
+        _item("jeonju-bibim-rice", "전주 비빔라이스 버거", "₩7,300", "574kcal", emoji="🍙"),
+        _item("ria-shrimp-bacon", "리아 새우 베이컨", "₩6,100", "519kcal"),
+        _item("ria-bulgogi-bacon", "리아 불고기 베이컨", "₩6,100", "508kcal"),
+        _item("classic-cheese-double", "더블 클래식치즈버거(버터번)", "₩7,200", "717kcal"),
+        _item("teri-double", "더블 데리버거", "₩5,000", "446kcal"),
+        _item("hanwoo-bulgogi-double", "더블 한우불고기버거", "₩13,000", "802kcal"),
         _item("hanwoo-bulgogi", "한우불고기버거", "₩9,000", "572kcal"),
         _item("mozza-in-burger-bacon", "모짜렐라 인 더 버거 베이컨", "₩8,000", "696kcal"),
-        _item("ria-shrimp", "리아 새우", "₩5,000", "473kcal"),
-        _item("bunt-beef", "번트비프버거", "₩8,800", "602kcal", isNew=True),
+        _item("hanwoo-couple-pack", "한우연인팩", "₩16,700", emoji="🎁"),
+        _item("hanwoo-premium-pack", "한우명품팩", "₩18,500", emoji="🎁🌶️"),
     ],
     "burger": [
         # NEW items
