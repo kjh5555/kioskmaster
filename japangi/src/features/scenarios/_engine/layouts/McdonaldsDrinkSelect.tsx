@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import {
   idlePulse,
   lookupCorrectLabel,
@@ -473,15 +474,28 @@ export function McdonaldsDrinkSelect({
                   {drink.badge}
                 </span>
               )}
-              <div
-                css={css`
-                  font-size: 44px;
-                  line-height: 1;
-                  margin-top: ${drink.badge !== null ? "18px" : "0"};
-                `}
-              >
-                {drink.emoji}
-              </div>
+              {lookupMcdImage(drink.id) !== null ? (
+                <img
+                  src={lookupMcdImage(drink.id) as string}
+                  alt={drink.label}
+                  style={{
+                    width: 44,
+                    height: 50,
+                    objectFit: "contain",
+                    marginTop: drink.badge !== null ? 18 : 0,
+                  }}
+                />
+              ) : (
+                <div
+                  css={css`
+                    font-size: 44px;
+                    line-height: 1;
+                    margin-top: ${drink.badge !== null ? "18px" : "0"};
+                  `}
+                >
+                  {drink.emoji}
+                </div>
+              )}
               <span
                 css={css`
                   font-size: 11px;

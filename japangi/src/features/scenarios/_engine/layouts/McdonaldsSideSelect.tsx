@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import {
   idlePulse,
   lookupCorrectLabel,
@@ -337,14 +338,22 @@ export function McdonaldsSideSelect({
             ]}
             onClick={() => onChoice("fries-large")}
           >
-            <div
-              css={css`
-                font-size: 48px;
-                line-height: 1;
-              `}
-            >
-              🍟
-            </div>
+            {lookupMcdImage("fries-large") !== null ? (
+              <img
+                src={lookupMcdImage("fries-large") as string}
+                alt="후렌치 후라이"
+                style={{ width: 56, height: 56, objectFit: "contain" }}
+              />
+            ) : (
+              <div
+                css={css`
+                  font-size: 48px;
+                  line-height: 1;
+                `}
+              >
+                🍟
+              </div>
+            )}
             <span
               css={css`
                 font-size: 13px;
@@ -411,14 +420,22 @@ export function McdonaldsSideSelect({
             >
               신제품
             </span>
-            <div
-              css={css`
-                font-size: 48px;
-                line-height: 1;
-              `}
-            >
-              🥗
-            </div>
+            {lookupMcdImage("coleslaw") !== null ? (
+              <img
+                src={lookupMcdImage("coleslaw") as string}
+                alt="코울슬로"
+                style={{ width: 56, height: 56, objectFit: "contain" }}
+              />
+            ) : (
+              <div
+                css={css`
+                  font-size: 48px;
+                  line-height: 1;
+                `}
+              >
+                🥗
+              </div>
+            )}
             <span
               css={css`
                 font-size: 13px;
@@ -467,17 +484,34 @@ export function McdonaldsSideSelect({
             ]}
             onClick={() => onChoice("fries-cheese")}
           >
-            <div
-              css={css`
-                display: flex;
-                gap: 2px;
-                font-size: 40px;
-                line-height: 1;
-              `}
-            >
-              <span>🍟</span>
-              <span>🧀</span>
-            </div>
+            {lookupMcdImage("fries-large") !== null ? (
+              <div
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  gap: 2px;
+                `}
+              >
+                <img
+                  src={lookupMcdImage("fries-large") as string}
+                  alt="후렌치+치즈스틱"
+                  style={{ width: 40, height: 40, objectFit: "contain" }}
+                />
+                <span style={{ fontSize: 28, lineHeight: 1 }}>🧀</span>
+              </div>
+            ) : (
+              <div
+                css={css`
+                  display: flex;
+                  gap: 2px;
+                  font-size: 40px;
+                  line-height: 1;
+                `}
+              >
+                <span>🍟</span>
+                <span>🧀</span>
+              </div>
+            )}
             <span
               css={css`
                 font-size: 12px;

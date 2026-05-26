@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import {
   idlePulse,
   lookupCorrectLabel,
@@ -32,6 +33,11 @@ export function McdonaldsSetSize({
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
+  const burgerSlug = scenario.steps.find((s) => s.id === "category")
+    ?.correctChoiceId;
+  const burgerImage = lookupMcdImage(burgerSlug);
+  const friesImage = lookupMcdImage("fries-large");
+  const drinkImage = lookupMcdImage("coke-large");
   return (
     <div
       css={css`
@@ -342,14 +348,36 @@ export function McdonaldsSetSize({
                 align-items: center;
                 justify-content: center;
                 gap: 4px;
-                font-size: 30px;
-                line-height: 1;
                 width: 100%;
               `}
             >
-              <span>🍔</span>
-              <span>🥤</span>
-              <span>🍟</span>
+              {burgerImage !== null ? (
+                <img
+                  src={burgerImage}
+                  alt={burgerLabel}
+                  style={{ width: 42, height: 42, objectFit: "contain" }}
+                />
+              ) : (
+                <span style={{ fontSize: 30, lineHeight: 1 }}>🍔</span>
+              )}
+              {drinkImage !== null ? (
+                <img
+                  src={drinkImage}
+                  alt="음료"
+                  style={{ width: 28, height: 42, objectFit: "contain" }}
+                />
+              ) : (
+                <span style={{ fontSize: 30, lineHeight: 1 }}>🥤</span>
+              )}
+              {friesImage !== null ? (
+                <img
+                  src={friesImage}
+                  alt="감자튀김"
+                  style={{ width: 28, height: 42, objectFit: "contain" }}
+                />
+              ) : (
+                <span style={{ fontSize: 30, lineHeight: 1 }}>🍟</span>
+              )}
             </div>
 
             {/* Name */}

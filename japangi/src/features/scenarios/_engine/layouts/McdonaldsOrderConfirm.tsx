@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import {
   idlePulse,
   lookupCorrectLabel,
@@ -36,10 +37,17 @@ export function McdonaldsOrderConfirm({
   const sideLabel = lookupCorrectLabel(scenario, "side-select") ?? "사이드";
   const drinkLabel = lookupCorrectLabel(scenario, "drink-select") ?? "음료";
 
+  const burgerSlug = scenario.steps.find((s) => s.id === "category")
+    ?.correctChoiceId;
+  const sideSlug = scenario.steps.find((s) => s.id === "side-select")
+    ?.correctChoiceId;
+  const drinkSlug = scenario.steps.find((s) => s.id === "drink-select")
+    ?.correctChoiceId;
+
   const ITEMS = [
-    { emoji: "🍔", name: burgerLabel, kcal: "" },
-    { emoji: "🍟", name: sideLabel, kcal: "" },
-    { emoji: "🥤", name: drinkLabel, kcal: "" },
+    { emoji: "🍔", name: burgerLabel, kcal: "", image: lookupMcdImage(burgerSlug) },
+    { emoji: "🍟", name: sideLabel, kcal: "", image: lookupMcdImage(sideSlug) },
+    { emoji: "🥤", name: drinkLabel, kcal: "", image: lookupMcdImage(drinkSlug) },
   ];
   return (
     <div
@@ -137,41 +145,84 @@ export function McdonaldsOrderConfirm({
         `}
       >
         {/* Fries — top-left */}
-        <span
-          css={css`
-            position: absolute;
-            font-size: 96px;
-            line-height: 1;
-            left: calc(50% - 80px);
-            top: 0;
-          `}
-        >
-          🍟
-        </span>
-        {/* Drink — top-right */}
-        <span
-          css={css`
-            position: absolute;
-            font-size: 96px;
-            line-height: 1;
-            left: calc(50% + 0px);
-            top: 0;
-          `}
-        >
-          🥤
-        </span>
-        {/* Burger — center-bottom overlap */}
-        <span
-          css={css`
-            position: absolute;
-            font-size: 120px;
-            line-height: 1;
-            left: calc(50% - 60px);
-            bottom: -10px;
-          `}
-        >
-          🍔
-        </span>
+        {ITEMS[1].image !== null ? (
+          <img
+            src={ITEMS[1].image}
+            alt={sideLabel}
+            style={{
+              position: "absolute",
+              width: 90,
+              height: 90,
+              objectFit: "contain",
+              left: "calc(50% - 90px)",
+              top: 0,
+            }}
+          />
+        ) : (
+          <span
+            css={css`
+              position: absolute;
+              font-size: 96px;
+              line-height: 1;
+              left: calc(50% - 80px);
+              top: 0;
+            `}
+          >
+            🍟
+          </span>
+        )}
+        {ITEMS[2].image !== null ? (
+          <img
+            src={ITEMS[2].image}
+            alt={drinkLabel}
+            style={{
+              position: "absolute",
+              width: 90,
+              height: 90,
+              objectFit: "contain",
+              left: "calc(50% + 0px)",
+              top: 0,
+            }}
+          />
+        ) : (
+          <span
+            css={css`
+              position: absolute;
+              font-size: 96px;
+              line-height: 1;
+              left: calc(50% + 0px);
+              top: 0;
+            `}
+          >
+            🥤
+          </span>
+        )}
+        {ITEMS[0].image !== null ? (
+          <img
+            src={ITEMS[0].image}
+            alt={burgerLabel}
+            style={{
+              position: "absolute",
+              width: 120,
+              height: 120,
+              objectFit: "contain",
+              left: "calc(50% - 60px)",
+              bottom: -10,
+            }}
+          />
+        ) : (
+          <span
+            css={css`
+              position: absolute;
+              font-size: 120px;
+              line-height: 1;
+              left: calc(50% - 60px);
+              bottom: -10px;
+            `}
+          >
+            🍔
+          </span>
+        )}
       </div>
 
       {/* ── C. Item breakdown row ── */}
@@ -197,14 +248,22 @@ export function McdonaldsOrderConfirm({
               padding: 8px 4px;
             `}
           >
-            <span
-              css={css`
-                font-size: 32px;
-                line-height: 1;
-              `}
-            >
-              {item.emoji}
-            </span>
+            {item.image !== null ? (
+              <img
+                src={item.image}
+                alt={item.name}
+                style={{ width: 40, height: 40, objectFit: "contain" }}
+              />
+            ) : (
+              <span
+                css={css`
+                  font-size: 32px;
+                  line-height: 1;
+                `}
+              >
+                {item.emoji}
+              </span>
+            )}
             <span
               css={css`
                 font-size: 11px;

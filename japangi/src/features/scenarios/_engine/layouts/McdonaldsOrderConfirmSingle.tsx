@@ -1,6 +1,7 @@
 import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import {
   idlePulse,
   lookupCorrectLabel,
@@ -33,6 +34,9 @@ export function McdonaldsOrderConfirmSingle({
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
+  const burgerSlug = scenario.steps.find((s) => s.id === "category")
+    ?.correctChoiceId;
+  const burgerImage = lookupMcdImage(burgerSlug);
   const [qty, setQty] = useState(1);
 
   return (
@@ -58,7 +62,15 @@ export function McdonaldsOrderConfirmSingle({
           padding: 20px 0 12px;
         `}
       >
-        <span style={{ fontSize: 96, lineHeight: 1 }}>🍔</span>
+        {burgerImage !== null ? (
+          <img
+            src={burgerImage}
+            alt={burgerLabel}
+            style={{ width: 140, height: 140, objectFit: "contain" }}
+          />
+        ) : (
+          <span style={{ fontSize: 96, lineHeight: 1 }}>🍔</span>
+        )}
       </div>
 
       {/* ── B. Title + price ── */}

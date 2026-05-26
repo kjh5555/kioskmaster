@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import {
   idlePulse,
   lookupCorrectLabel,
@@ -32,6 +33,11 @@ export function McdonaldsSetSingle({
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const burgerLabel = lookupCorrectLabel(scenario, "category") ?? "버거";
+  const burgerSlug = scenario.steps.find((s) => s.id === "category")
+    ?.correctChoiceId;
+  const burgerImage = lookupMcdImage(burgerSlug);
+  const friesImage = lookupMcdImage("fries-large");
+  const drinkImage = lookupMcdImage("coke-large");
   return (
     <div
       css={css`
@@ -144,14 +150,36 @@ export function McdonaldsSetSingle({
               align-items: center;
               justify-content: center;
               gap: 2px;
-              font-size: 40px;
-              line-height: 1;
               min-width: 0;
             `}
           >
-            <span>🍔</span>
-            <span>🥤</span>
-            <span>🍟</span>
+            {burgerImage !== null ? (
+              <img
+                src={burgerImage}
+                alt={burgerLabel}
+                style={{ width: 56, height: 56, objectFit: "contain" }}
+              />
+            ) : (
+              <span style={{ fontSize: 40, lineHeight: 1 }}>🍔</span>
+            )}
+            {drinkImage !== null ? (
+              <img
+                src={drinkImage}
+                alt="음료"
+                style={{ width: 40, height: 56, objectFit: "contain" }}
+              />
+            ) : (
+              <span style={{ fontSize: 40, lineHeight: 1 }}>🥤</span>
+            )}
+            {friesImage !== null ? (
+              <img
+                src={friesImage}
+                alt="감자튀김"
+                style={{ width: 40, height: 56, objectFit: "contain" }}
+              />
+            ) : (
+              <span style={{ fontSize: 40, lineHeight: 1 }}>🍟</span>
+            )}
           </div>
           <span
             css={css`
@@ -202,12 +230,18 @@ export function McdonaldsSetSingle({
               display: flex;
               align-items: center;
               justify-content: center;
-              font-size: 56px;
-              line-height: 1;
               min-width: 0;
             `}
           >
-            <span>🍔</span>
+            {burgerImage !== null ? (
+              <img
+                src={burgerImage}
+                alt={burgerLabel}
+                style={{ width: 80, height: 80, objectFit: "contain" }}
+              />
+            ) : (
+              <span style={{ fontSize: 56, lineHeight: 1 }}>🍔</span>
+            )}
           </div>
           <span
             css={css`

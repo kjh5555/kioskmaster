@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import { idlePulse, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
@@ -120,15 +121,28 @@ export function McdonaldsUpsell({
           >
             해피스낵
           </span>
-          <div
-            css={css`
-              font-size: 44px;
-              line-height: 1;
-              margin-top: 18px;
-            `}
-          >
-            🌯
-          </div>
+          {lookupMcdImage("snack-wrap") !== null ? (
+            <img
+              src={lookupMcdImage("snack-wrap") as string}
+              alt="스낵랩"
+              style={{
+                width: 56,
+                height: 56,
+                objectFit: "contain",
+                marginTop: 18,
+              }}
+            />
+          ) : (
+            <div
+              css={css`
+                font-size: 44px;
+                line-height: 1;
+                margin-top: 18px;
+              `}
+            >
+              🌯
+            </div>
+          )}
           <span
             css={css`
               font-size: 12px;
@@ -175,14 +189,22 @@ export function McdonaldsUpsell({
           ]}
           onClick={() => onChoice("mcnuggets")}
         >
-          <div
-            css={css`
-              font-size: 44px;
-              line-height: 1;
-            `}
-          >
-            🍗
-          </div>
+          {lookupMcdImage("mcnuggets") !== null ? (
+            <img
+              src={lookupMcdImage("mcnuggets") as string}
+              alt="맥너겟"
+              style={{ width: 56, height: 56, objectFit: "contain" }}
+            />
+          ) : (
+            <div
+              css={css`
+                font-size: 44px;
+                line-height: 1;
+              `}
+            >
+              🍗
+            </div>
+          )}
           <span
             css={css`
               font-size: 12px;
@@ -246,15 +268,28 @@ export function McdonaldsUpsell({
           >
             해피스낵
           </span>
-          <div
-            css={css`
-              font-size: 44px;
-              line-height: 1;
-              margin-top: 18px;
-            `}
-          >
-            ☕
-          </div>
+          {lookupMcdImage("ice-drip-discount") !== null ? (
+            <img
+              src={lookupMcdImage("ice-drip-discount") as string}
+              alt="아이스 드립 커피"
+              style={{
+                width: 56,
+                height: 56,
+                objectFit: "contain",
+                marginTop: 18,
+              }}
+            />
+          ) : (
+            <div
+              css={css`
+                font-size: 44px;
+                line-height: 1;
+                margin-top: 18px;
+              `}
+            >
+              ☕
+            </div>
+          )}
           <span
             css={css`
               font-size: 12px;

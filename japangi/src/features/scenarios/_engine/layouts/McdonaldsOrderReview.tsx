@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import {
   idlePulse,
   lookupCorrectLabel,
@@ -35,6 +36,9 @@ export function McdonaldsOrderReview({
   const sizeLabel = lookupCorrectLabel(scenario, "set-size") ?? "세트";
   const sideLabel = lookupCorrectLabel(scenario, "side-select") ?? "사이드";
   const drinkLabel = lookupCorrectLabel(scenario, "drink-select") ?? "음료";
+  const burgerSlug = scenario.steps.find((s) => s.id === "category")
+    ?.correctChoiceId;
+  const burgerImage = lookupMcdImage(burgerSlug);
   return (
     <div
       css={css`
@@ -107,16 +111,30 @@ export function McdonaldsOrderReview({
           </button>
 
           {/* Burger thumbnail */}
-          <span
-            css={css`
-              font-size: 48px;
-              line-height: 1;
-              flex-shrink: 0;
-              padding: 4px;
-            `}
-          >
-            🍔
-          </span>
+          {burgerImage !== null ? (
+            <img
+              src={burgerImage}
+              alt={burgerLabel}
+              style={{
+                width: 56,
+                height: 56,
+                objectFit: "contain",
+                flexShrink: 0,
+                padding: 4,
+              }}
+            />
+          ) : (
+            <span
+              css={css`
+                font-size: 48px;
+                line-height: 1;
+                flex-shrink: 0;
+                padding: 4px;
+              `}
+            >
+              🍔
+            </span>
+          )}
 
           {/* Middle text block */}
           <div
