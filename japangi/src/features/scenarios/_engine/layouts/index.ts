@@ -2,6 +2,7 @@ import { BurgerKingCartAdd } from "./BurgerKingCartAdd";
 import { BurgerKingComboPopup } from "./BurgerKingComboPopup";
 import { BurgerKingMembership } from "./BurgerKingMembership";
 import { BurgerKingMenu } from "./BurgerKingMenu";
+import { BurgerKingSideUpsell } from "./BurgerKingSideUpsell";
 import { BurgerKingStart } from "./BurgerKingStart";
 import { BurgerKingUpsell } from "./BurgerKingUpsell";
 import { McdonaldsCategory } from "./McdonaldsCategory";
@@ -28,6 +29,7 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "burgerking-combo-popup": BurgerKingComboPopup,
   "burgerking-upsell": BurgerKingUpsell,
   "burgerking-cart-add": BurgerKingCartAdd,
+  "burgerking-side-upsell": BurgerKingSideUpsell,
   "mcdonalds-category": McdonaldsCategory,
   "mcdonalds-dine-mode": McdonaldsDineMode,
   "mcdonalds-set-single": McdonaldsSetSingle,
