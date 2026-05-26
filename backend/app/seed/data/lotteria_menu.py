@@ -86,6 +86,20 @@ _IMAGE_BY_SLUG: dict[str, str] = {
     "ice-cafe-latte": "https://img.lotteeatz.com/upload/product/2025/01/24/20250124101201439_7.png/dims/resize/x420/optimize",
     "orange-juice": "https://img.lotteeatz.com/upload/product/2020/03/26/2020032610450342_0.png/dims/resize/x420/optimize",
     "hot-choco": "https://img.lotteeatz.com/upload/product/2020/09/22/20200922082554944_3.png/dims/resize/x420/optimize",
+    # Ice-shot (빙수 / 토네이도 / 선데 / 소프트콘)
+    "patbingsu-bag": "https://img.lotteeatz.com/upload/product/2026/05/14/20260514094834508_4.png/dims/resize/x420/optimize",
+    "patbingsu": "https://img.lotteeatz.com/upload/product/2026/05/14/20260514094819974_9.png/dims/resize/x420/optimize",
+    "matcha-bingsu-bag": "https://img.lotteeatz.com/upload/product/2026/05/14/2026051409490161_4.png/dims/resize/x420/optimize",
+    "matcha-bingsu": "https://img.lotteeatz.com/upload/product/2026/05/14/20260514094847883_1.png/dims/resize/x420/optimize",
+    "tornado-matcha-cookie": "https://img.lotteeatz.com/upload/product/2026/05/14/20260514094959144_2.png/dims/resize/x420/optimize",
+    "tornado-mango-jelly": "https://img.lotteeatz.com/upload/product/2025/05/22/20250522132239130_5.png/dims/resize/x420/optimize",
+    "tornado-choco-cookie": "https://img.lotteeatz.com/upload/product/2025/05/22/20250522132322744_9.png/dims/resize/x420/optimize",
+    "tornado-strawberry": "https://img.lotteeatz.com/upload/product/2025/05/22/20250522132336418_0.png/dims/resize/x420/optimize",
+    "tornado-double-choco": "https://img.lotteeatz.com/upload/product/2025/05/22/20250522132309707_2.png/dims/resize/x420/optimize",
+    "sundae-plain": "https://img.lotteeatz.com/upload/product/2025/05/22/20250522132349844_6.png/dims/resize/x420/optimize",
+    "sundae-strawberry": "https://img.lotteeatz.com/upload/product/2025/05/22/20250522132414156_0.png/dims/resize/x420/optimize",
+    "sundae-hershey": "https://img.lotteeatz.com/upload/product/2025/05/22/20250522132401853_0.png/dims/resize/x420/optimize",
+    "soft-cone": "https://img.lotteeatz.com/upload/product/2025/05/22/20250522132436353_0.png/dims/resize/x420/optimize",
 }
 
 
