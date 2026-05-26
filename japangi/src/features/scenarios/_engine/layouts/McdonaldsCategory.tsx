@@ -34,11 +34,39 @@ const SIDEBAR_ITEMS = [
   { id: "happymeal", emoji: "🎁", label: "해피밀" },
 ];
 
-const MENU_CARDS = [
-  { id: "recommend", emoji: "⭐", label: "추천메뉴" },
-  { id: "lunch", emoji: "🍔🍟", label: "맥런치" },
-  { id: "happysnack", emoji: "🥯", label: "이달의\n해피스낵" },
-  { id: "coffee-dessert", emoji: "☕🍦", label: "커피&디저트" },
+const MENU_CARDS: ReadonlyArray<{
+  id: string;
+  emoji: string;
+  label: string;
+  imageUrl: string;
+}> = [
+  {
+    id: "recommend",
+    emoji: "⭐",
+    label: "추천메뉴",
+    imageUrl:
+      "https://www.mcdonalds.co.kr/upload/2026/02/Corp_PC_VIEW_맥크리피_치킨_디럭스_772x530_new.png",
+  },
+  {
+    id: "lunch",
+    emoji: "🍔🍟",
+    label: "맥런치",
+    imageUrl: "https://www.mcdonalds.co.kr/upload/2025/08/빅맥®_세트.png",
+  },
+  {
+    id: "happysnack",
+    emoji: "🥯",
+    label: "이달의\n해피스낵",
+    imageUrl:
+      "https://www.mcdonalds.co.kr/upload/2026/05/Corp_PC_View_772x530_26_해피스낵Q2_그리머스쉐이크.png",
+  },
+  {
+    id: "coffee-dessert",
+    emoji: "☕🍦",
+    label: "커피&디저트",
+    imageUrl:
+      "https://www.mcdonalds.co.kr/upload/product/pcfile/1615378578396.png",
+  },
 ];
 
 function MenuItemCard({
@@ -450,12 +478,12 @@ export function McdonaldsCategory({
                     background: #fff;
                     border: 1px solid #e5e8eb;
                     border-radius: 14px;
-                    padding: 16px;
-                    min-height: 90px;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: flex-start;
-                    justify-content: space-between;
+                    padding: 12px 12px 10px;
+                    min-height: 110px;
+                    display: grid;
+                    grid-template-columns: 1fr auto;
+                    align-items: end;
+                    column-gap: 6px;
                     cursor: pointer;
                     user-select: none;
                     text-align: left;
@@ -476,11 +504,39 @@ export function McdonaldsCategory({
                       color: #191f28;
                       line-height: 1.4;
                       white-space: pre-line;
+                      align-self: start;
+                      grid-column: 1 / -1;
                     `}
                   >
                     {card.label}
                   </span>
-                  <span style={{ fontSize: 22, lineHeight: 1, marginTop: 6 }}>
+                  <img
+                    src={card.imageUrl}
+                    alt={card.label}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display =
+                        "none";
+                      const sib = e.currentTarget
+                        .nextElementSibling as HTMLElement | null;
+                      if (sib !== null) sib.style.display = "inline-block";
+                    }}
+                    style={{
+                      width: 56,
+                      height: 56,
+                      objectFit: "contain",
+                      justifySelf: "end",
+                      gridColumn: 2,
+                    }}
+                  />
+                  <span
+                    style={{
+                      fontSize: 28,
+                      lineHeight: 1,
+                      display: "none",
+                      justifySelf: "end",
+                      gridColumn: 2,
+                    }}
+                  >
                     {card.emoji}
                   </span>
                 </button>
@@ -554,7 +610,11 @@ export function McdonaldsCategory({
                     flex-shrink: 0;
                   `}
                 >
-                  <span style={{ fontSize: 32, lineHeight: 1 }}>🍦</span>
+                  <img
+                    src="https://www.mcdonalds.co.kr/upload/product/pcfile/1657246845162.png"
+                    alt="Ice Cream Latte"
+                    style={{ width: 56, height: 56, objectFit: "contain" }}
+                  />
                   <span
                     css={css`
                       font-size: 10px;
@@ -616,15 +676,16 @@ export function McdonaldsCategory({
                     {"겉은 바삭! 속은 쫄깃!\n여름엔 역시 맥윙"}
                   </div>
                 </div>
-                <div
+                <img
+                  src="https://www.mcdonalds.co.kr/upload/2026/03/Corp_PC_view_772x530_맥윙-4pc.png"
+                  alt="McWings"
                   css={css`
-                    font-size: 32px;
-                    line-height: 1;
+                    width: 64px;
+                    height: 64px;
+                    object-fit: contain;
                     flex-shrink: 0;
                   `}
-                >
-                  🍗🍗
-                </div>
+                />
               </div>
             </div>
 
@@ -666,7 +727,11 @@ export function McdonaldsCategory({
                     min-height: 90px;
                   `}
                 >
-                  <span style={{ fontSize: 28, lineHeight: 1 }}>🍔</span>
+                  <img
+                    src="https://www.mcdonalds.co.kr/upload/2025/08/빅맥®_세트.png"
+                    alt="빅맥"
+                    style={{ width: 44, height: 44, objectFit: "contain" }}
+                  />
                   <span
                     css={css`
                       font-size: 12px;
@@ -705,7 +770,11 @@ export function McdonaldsCategory({
                     min-height: 90px;
                   `}
                 >
-                  <span style={{ fontSize: 28, lineHeight: 1 }}>🍔</span>
+                  <img
+                    src="https://www.mcdonalds.co.kr/upload/product/pcfile/1723562660091.png"
+                    alt="맥스파이시 상하이버거"
+                    style={{ width: 44, height: 44, objectFit: "contain" }}
+                  />
                   <span
                     css={css`
                       font-size: 11px;
@@ -762,7 +831,11 @@ export function McdonaldsCategory({
                   >
                     해피스낵
                   </div>
-                  <span style={{ fontSize: 28, lineHeight: 1 }}>🥤</span>
+                  <img
+                    src="https://www.mcdonalds.co.kr/upload/2025/08/코카-콜라_Large.png"
+                    alt="코카-콜라"
+                    style={{ width: 44, height: 44, objectFit: "contain" }}
+                  />
                   <span
                     css={css`
                       font-size: 11px;
