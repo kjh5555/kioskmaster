@@ -226,6 +226,7 @@ export function BurgerKingMenu({
           gap: 1px;
           background: #e5e8eb;
           padding: 1px;
+          flex: 1;
         `}
       >
         {activeItems.map((item) => (
@@ -307,6 +308,186 @@ export function BurgerKingMenu({
             </span>
           </button>
         ))}
+      </div>
+
+      {/* ── C. Cart info row ── */}
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 16px 10px;
+          background: #ffffff;
+          border-top: 1px solid #e5e8eb;
+          gap: 12px;
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          `}
+        >
+          <div
+            css={css`
+              position: relative;
+              width: 36px;
+              height: 36px;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              background: #f3f4f5;
+              border-radius: 8px;
+              font-size: 18px;
+            `}
+          >
+            🛒
+            <span
+              css={css`
+                position: absolute;
+                top: -4px;
+                right: -4px;
+                min-width: 16px;
+                height: 16px;
+                padding: 0 4px;
+                background: #d62300;
+                color: #fff;
+                font-size: 10px;
+                font-weight: 800;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              `}
+            >
+              0
+            </span>
+          </div>
+          <span
+            css={css`
+              font-size: 12px;
+              color: #8b95a1;
+            `}
+          >
+            카트
+          </span>
+        </div>
+        <div
+          css={css`
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+          `}
+        >
+          <span
+            css={css`
+              font-size: 12px;
+              color: #8b95a1;
+            `}
+          >
+            총 주문금액
+          </span>
+          <span
+            css={css`
+              font-size: 18px;
+              font-weight: 800;
+              color: #2a1408;
+            `}
+          >
+            0원
+          </span>
+        </div>
+      </div>
+
+      {/* ── D. Bottom action bar (utility buttons, all "wrong" picks) ── */}
+      <div
+        css={css`
+          display: grid;
+          grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 0.8fr);
+          background: #e07a1a;
+          color: #ffffff;
+          font-weight: 700;
+          font-size: 13px;
+        `}
+      >
+        <button
+          type="button"
+          onClick={() => onChoice("use-coupon")}
+          css={[
+            css`
+              padding: 14px 10px;
+              background: transparent;
+              border: none;
+              color: inherit;
+              font: inherit;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 6px;
+              border-right: 1px solid rgba(255, 255, 255, 0.2);
+              &:active {
+                background: rgba(0, 0, 0, 0.08);
+              }
+            `,
+            shakeWhen(rejectedChoiceId, "use-coupon"),
+          ]}
+        >
+          🎟️ 쿠폰사용하기
+        </button>
+        <button
+          type="button"
+          onClick={() => onChoice("nutrition")}
+          css={[
+            css`
+              padding: 14px 8px;
+              background: transparent;
+              border: none;
+              color: inherit;
+              font: inherit;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 4px;
+              border-right: 1px solid rgba(255, 255, 255, 0.2);
+              line-height: 1.2;
+              &:active {
+                background: rgba(0, 0, 0, 0.08);
+              }
+            `,
+            shakeWhen(rejectedChoiceId, "nutrition"),
+          ]}
+        >
+          ⓘ 알레르기/
+          <br />
+          영양성분
+        </button>
+        <button
+          type="button"
+          onClick={() => onChoice("exit")}
+          css={[
+            css`
+              padding: 14px 10px;
+              background: transparent;
+              border: none;
+              color: inherit;
+              font: inherit;
+              cursor: pointer;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 6px;
+              &:active {
+                background: rgba(0, 0, 0, 0.08);
+              }
+            `,
+            shakeWhen(rejectedChoiceId, "exit"),
+          ]}
+        >
+          ← 나가기
+        </button>
       </div>
     </div>
   );
