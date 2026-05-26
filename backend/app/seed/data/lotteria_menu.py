@@ -50,6 +50,20 @@ _IMAGE_BY_SLUG: dict[str, str] = {
     "teri": "https://img.lotteeatz.com/upload/product/2020/01/02/20200102234537645_5.png/dims/resize/x420/optimize",
     "hanwoo-couple-pack": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120203422611_0.png/dims/resize/x420/optimize",
     "hanwoo-premium-pack": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120203400302_2.png/dims/resize/x420/optimize",
+    # Desserts (사이드류)
+    "spicy-tonkatsu-hot": "https://img.lotteeatz.com/upload/product/2026/03/11/20260311110817134_1.png/dims/resize/x420/optimize",
+    "spicy-tonkatsu-mild": "https://img.lotteeatz.com/upload/product/2026/03/11/20260311111029815_9.png/dims/resize/x420/optimize",
+    "yangnyeom-nugget": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120195418270_3.png/dims/resize/x420/optimize",
+    "chicken-nugget": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120195357957_4.png/dims/resize/x420/optimize",
+    "potato-r": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120200342965_4.png/dims/resize/x420/optimize",
+    "potato-l": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120200401294_9.png/dims/resize/x420/optimize",
+    "yangnyeom-potato": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120200429258_0.png/dims/resize/x420/optimize",
+    "cheese-stick": "https://img.lotteeatz.com/upload/product/2024/11/20/20241120200451610_3.png/dims/resize/x420/optimize",
+    "long-cheese-stick": "https://img.lotteeatz.com/upload/product/2019/12/20/20191220164604550_2.png/dims/resize/x420/optimize",
+    "squid-ring": "https://img.lotteeatz.com/upload/product/2023/02/10/20230210180512639_0.png/dims/resize/x420/optimize",
+    "g-pie-habanero": "https://img.lotteeatz.com/upload/product/2025/10/31/20251031093246521_6.png/dims/resize/x420/optimize",
+    "g-pie-mild-s": "https://img.lotteeatz.com/upload/product/2019/12/20/20191220165208212_3.png/dims/resize/x420/optimize",
+    "coleslaw": "https://img.lotteeatz.com/upload/product/2025/02/19/20250219202403231_5.png/dims/resize/x420/optimize",
 }
 
 
