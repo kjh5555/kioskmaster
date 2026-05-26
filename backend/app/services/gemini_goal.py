@@ -66,6 +66,11 @@ def generate_goal(
     expanded = _expand_scenario(scenario_json, menu_by_category)
     step_choices = _extract_step_choices(expanded)
 
+    if not settings.use_llm:
+        fb = _make_fallback(expanded)
+        fb["debug_reason"] = "llm_disabled"
+        return fb
+
     if not settings.gemini_api_key or not step_choices:
         fb = _make_fallback(expanded)
         fb["debug_reason"] = "no_api_key" if not settings.gemini_api_key else "no_steps"
