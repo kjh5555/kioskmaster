@@ -100,16 +100,21 @@ function FastfoodStepPageLoader({
     if (raw === undefined || raw === null || !Array.isArray(raw.steps))
       return raw;
 
+    // The 단품/세트 branching + order-confirm-single injection is McDonald's
+    // -specific (other brands like Lotteria use their own flow). Gate on the
+    // scenario id so the branchTo override doesn't redirect Lotteria into a
+    // missing set-size step.
+    const isMcdonalds = raw.id === "fastfood:mcdonalds";
+
     const stepsWithGoal = raw.steps.map((step) => {
       const next =
         goal.selections[step.id] != null
           ? { ...step, correctChoiceId: goal.selections[step.id] }
           : { ...step };
-      // Wire branching so the 단품 path skips set-size/side/drink and
-      // jumps straight to the single confirm screen → cart, and so the
-      // 세트 path explicitly jumps to set-size instead of falling onto
-      // the order-confirm-single step we inject right after.
-      if (next.id === "set-or-single") {
+      // McDonald's: 단품 path skips set-size/side/drink and jumps to the
+      // single confirm screen → cart; 세트 path explicitly targets set-size
+      // so the loader-injected order-confirm-single doesn't intercept it.
+      if (isMcdonalds && next.id === "set-or-single") {
         next.branchTo = {
           ...next.branchTo,
           set: "set-size",
@@ -143,13 +148,14 @@ function FastfoodStepPageLoader({
     // step (pay-confirm) remains the natural last step — otherwise the
     // "done" tap on pay-confirm would fall through to order-confirm-single
     // and reopen the single confirm screen instead of completing.
+    // McDonald's only — uses mcdonalds-order-confirm-single layout.
     const setOrSingleIdx = stepsWithGoal.findIndex(
       (s) => s.id === "set-or-single",
     );
     const alreadyHasSingleStep = stepsWithGoal.some(
       (s) => s.id === "order-confirm-single",
     );
-    if (!alreadyHasSingleStep && setOrSingleIdx >= 0) {
+    if (isMcdonalds && !alreadyHasSingleStep && setOrSingleIdx >= 0) {
       stepsWithGoal.splice(setOrSingleIdx + 1, 0, singleStep);
     }
 
