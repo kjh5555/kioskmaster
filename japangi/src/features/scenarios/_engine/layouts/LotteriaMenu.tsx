@@ -709,210 +709,55 @@ export function LotteriaMenu({
         </div>
       </div>
 
-      {/* Cart summary --------------------------------------------- */}
-      {!cartPopulated ? (
+      {/* Cart summary — same compact row as step 2; only the numbers change */}
+      <div
+        css={css`
+          background: #f6f7f9;
+          padding: 10px 18px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-top: 1px solid #e5e8eb;
+        `}
+      >
         <div
           css={css`
-            background: #f6f7f9;
-            padding: 10px 18px;
+            font-size: 18px;
+            font-weight: 800;
+            color: #2a1408;
+          `}
+        >
+          {cartPopulated ? 1 : 0}{" "}
+          <span style={{ fontSize: 14, fontWeight: 700 }}>개</span>
+        </div>
+        <div
+          css={css`
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            border-top: 1px solid #e5e8eb;
+            gap: 14px;
           `}
         >
           <div
             css={css`
-              font-size: 18px;
-              font-weight: 800;
+              font-size: 22px;
+              font-weight: 900;
               color: #2a1408;
             `}
           >
-            0 <span style={{ fontSize: 14, fontWeight: 700 }}>개</span>
+            {cartPopulated ? burgerInfo.setPrice.toLocaleString() : 0}
           </div>
           <div
             css={css`
               display: flex;
-              align-items: center;
-              gap: 14px;
+              flex-direction: column;
+              gap: 2px;
             `}
           >
-            <div
-              css={css`
-                font-size: 22px;
-                font-weight: 900;
-                color: #2a1408;
-              `}
-            >
-              0
-            </div>
-            <div
-              css={css`
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-              `}
-            >
-              <span css={arrowChip}>∧</span>
-              <span css={arrowChip}>∨</span>
-            </div>
+            <span css={arrowChip}>∧</span>
+            <span css={arrowChip}>∨</span>
           </div>
         </div>
-      ) : (
-        <div
-          css={css`
-            background: #ffffff;
-            border-top: 1px solid #e5e8eb;
-            padding: 8px 14px 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-          `}
-        >
-          {/* Total row */}
-          <div
-            css={css`
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              padding: 4px 0;
-            `}
-          >
-            <span
-              css={css`
-                font-size: 14px;
-                font-weight: 800;
-                color: #2a1408;
-              `}
-            >
-              총주문내역
-            </span>
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-                gap: 14px;
-              `}
-            >
-              <span
-                css={css`
-                  font-size: 18px;
-                  font-weight: 900;
-                  color: #2a1408;
-                `}
-              >
-                1 <span style={{ fontSize: 12, fontWeight: 700 }}>개</span>
-              </span>
-              <span
-                css={css`
-                  font-size: 20px;
-                  font-weight: 900;
-                  color: #2a1408;
-                `}
-              >
-                {burgerInfo.setPrice.toLocaleString()}
-              </span>
-            </div>
-          </div>
-          {/* Cart item row */}
-          <div
-            css={css`
-              display: grid;
-              grid-template-columns: 1fr auto auto auto;
-              align-items: center;
-              gap: 8px;
-              border-top: 1px solid #e5e8eb;
-              padding: 6px 0 4px;
-              font-size: 12px;
-              font-weight: 700;
-              color: #2a1408;
-            `}
-          >
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                min-width: 0;
-              `}
-            >
-              <span
-                css={css`
-                  font-weight: 800;
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                `}
-              >
-                {burgerLabel.replace(/\n/g, " ")}세트
-              </span>
-            </div>
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                color: #2a1408;
-              `}
-            >
-              1
-              <div
-                css={css`
-                  display: flex;
-                  flex-direction: column;
-                  gap: 1px;
-                `}
-              >
-                <span css={qtyArrowChip}>∧</span>
-                <span css={qtyArrowChip}>∨</span>
-              </div>
-            </div>
-            <span style={{ fontWeight: 900 }}>
-              {burgerInfo.setPrice.toLocaleString()}
-            </span>
-            <div
-              css={css`
-                display: flex;
-                align-items: center;
-                gap: 4px;
-                font-size: 10px;
-                font-weight: 700;
-              `}
-            >
-              <span
-                css={css`
-                  background: #d62300;
-                  color: #ffffff;
-                  padding: 3px 6px;
-                  border-radius: 4px;
-                `}
-              >
-                토핑추가
-              </span>
-              <span
-                css={css`
-                  background: #f0f1f3;
-                  color: #4e5968;
-                  padding: 3px 6px;
-                  border-radius: 4px;
-                `}
-              >
-                변경
-              </span>
-              <span
-                css={css`
-                  background: #f0f1f3;
-                  color: #4e5968;
-                  padding: 3px 6px;
-                  border-radius: 4px;
-                `}
-              >
-                삭제
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
 
       {/* Footer ---------------------------------------------------- */}
       <div

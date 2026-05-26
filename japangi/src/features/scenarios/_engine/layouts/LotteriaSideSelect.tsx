@@ -123,8 +123,15 @@ export function LotteriaSideSelect({
   const correctIdForTab = tab === "dessert" ? correctDessertId : correctDrinkId;
 
   function handleSelect(id: string) {
-    if (tab === "dessert") setDessertId(id);
-    else setDrinkId(id);
+    if (tab === "dessert") {
+      setDessertId(id);
+      // Auto-switch to drink tab on dessert pick so the user always lands on
+      // the next selection step without needing to hit 선택완료 first.
+      // Small delay so the highlight is visible before the tab swap.
+      setTimeout(() => setTab("drink"), 200);
+    } else {
+      setDrinkId(id);
+    }
   }
 
   function flashInternalShake() {
@@ -133,27 +140,22 @@ export function LotteriaSideSelect({
   }
 
   function handleConfirm() {
-    if (tab === "dessert") {
-      if (dessertId == null) {
-        flashInternalShake();
-        return;
-      }
-      if (dessertId !== correctDessertId) {
-        // Wrong dessert — let the engine shake the chosen card via onChoice.
-        onChoice(dessertId);
-        return;
-      }
-      // Dessert correct → auto-switch to drink tab. User must also pick a drink.
-      setTab("drink");
+    // Both dessert + drink must be chosen before we hand off to the engine.
+    if (dessertId == null) {
+      flashInternalShake();
+      setTab("dessert");
       return;
     }
-    // Drink tab
     if (drinkId == null) {
       flashInternalShake();
       return;
     }
-    // Any drink completes the step — advance with the dessert id (which is
-    // the engine's correctChoiceId).
+    if (dessertId !== correctDessertId) {
+      // Wrong dessert — bounce back to dessert tab and let the engine shake.
+      setTab("dessert");
+      onChoice(dessertId);
+      return;
+    }
     onChoice(correctDessertId);
   }
 
