@@ -310,19 +310,6 @@ BURGERKING_SCENARIO = {
             "hintMessage": "왼쪽 검정색 '비회원으로 주문' 버튼을 눌러주세요.",
         },
         {
-            "id": "dine-mode",
-            "instruction": "오늘은 매장에서 드시는 걸 골라요",
-            "helpText": "여기서 드시면 '여기서 드세요', 포장하실 거면 '포장이에요'를 눌러요.",
-            "layout": "duo",
-            "choices": [
-                {"id": "dine-in", "label": "여기서 드세요", "emoji": "🍽️"},
-                {"id": "takeout", "label": "포장이에요", "emoji": "🛍️"},
-            ],
-            "correctChoiceId": "dine-in",
-            "successMessage": "잘하셨어요! 매장 식사로 골랐어요.",
-            "hintMessage": "오늘은 매장에서 드시는 거라 '여기서 드세요'를 눌러보세요.",
-        },
-        {
             "id": "menu",
             "instruction": "'와퍼&주니어' 탭에서 '와퍼'를 골라요",
             "helpText": "윗쪽 탭에서 '와퍼&주니어'를 누르면 와퍼 메뉴가 나와요. 거기서 '와퍼' 카드를 눌러주세요.",
