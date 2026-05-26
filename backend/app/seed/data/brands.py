@@ -525,6 +525,7 @@ LOTTERIA_SCENARIO = {
             "instruction": "화면을 눌러서 주문을 시작해요",
             "helpText": "키오스크는 처음에 큰 안내 화면이 떠 있어요. 어디든 한 번 누르면 주문 화면으로 넘어가요.",
             "layout": "start",
+            "customLayoutId": "lotteria-start",
             "choices": [{"id": "start-tap", "label": "주문하시려면\n화면을 눌러주세요", "emoji": "🍔"}],
             "correctChoiceId": "start-tap",
             "successMessage": "좋아요, 시작해볼까요?",

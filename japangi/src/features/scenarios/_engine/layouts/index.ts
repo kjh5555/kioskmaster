@@ -11,6 +11,7 @@ import { BurgerKingReceiptPopup } from "./BurgerKingReceiptPopup";
 import { BurgerKingSideUpsell } from "./BurgerKingSideUpsell";
 import { BurgerKingStart } from "./BurgerKingStart";
 import { BurgerKingUpsell } from "./BurgerKingUpsell";
+import { LotteriaStart } from "./LotteriaStart";
 import { McdonaldsCategory } from "./McdonaldsCategory";
 import { McdonaldsDineMode } from "./McdonaldsDineMode";
 import { McdonaldsSetSize } from "./McdonaldsSetSize";
@@ -42,6 +43,7 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "burgerking-pay-method": BurgerKingPayMethod,
   "burgerking-card-insert": BurgerKingCardInsert,
   "burgerking-membership-accrual": BurgerKingMembershipAccrual,
+  "lotteria-start": LotteriaStart,
   "mcdonalds-category": McdonaldsCategory,
   "mcdonalds-dine-mode": McdonaldsDineMode,
   "mcdonalds-set-single": McdonaldsSetSingle,
