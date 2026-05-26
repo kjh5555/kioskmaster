@@ -46,6 +46,7 @@ def get_menu_category(slug: str, category_slug: str, session: Session = Depends(
                 price=item.price,
                 kcal=item.kcal,
                 emoji=item.emoji,
+                image_url=item.image_url,
                 is_new=item.is_new,
                 order=item.order,
             )
