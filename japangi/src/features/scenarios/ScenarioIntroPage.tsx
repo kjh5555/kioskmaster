@@ -94,7 +94,33 @@ export function ScenarioIntroPage(): React.ReactElement {
           justify-content: center;
         `}
       >
-        <span style={{ fontSize: 96, lineHeight: 1 }}>{brand.emoji}</span>
+        {brand.image_url != null && brand.image_url !== "" ? (
+          <img
+            src={brand.image_url}
+            alt={brand.name}
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+              const sib = e.currentTarget
+                .nextElementSibling as HTMLElement | null;
+              if (sib !== null) sib.style.display = "inline-block";
+            }}
+            css={css`
+              width: 200px;
+              height: 200px;
+              object-fit: contain;
+            `}
+          />
+        ) : null}
+        <span
+          style={{
+            fontSize: 96,
+            lineHeight: 1,
+            display:
+              brand.image_url != null && brand.image_url !== "" ? "none" : "inline-block",
+          }}
+        >
+          {brand.emoji}
+        </span>
       </div>
 
       <BigButton
