@@ -64,6 +64,15 @@ _IMAGE_BY_SLUG: dict[str, str] = {
     "g-pie-habanero": "https://img.lotteeatz.com/upload/product/2025/10/31/20251031093246521_6.png/dims/resize/x420/optimize",
     "g-pie-mild-s": "https://img.lotteeatz.com/upload/product/2019/12/20/20191220165208212_3.png/dims/resize/x420/optimize",
     "coleslaw": "https://img.lotteeatz.com/upload/product/2025/02/19/20250219202403231_5.png/dims/resize/x420/optimize",
+    # Chicken
+    "fire-wing": "https://img.lotteeatz.com/upload/product/2023/06/21/20230621175453874_9.png/dims/resize/x420/optimize",
+    "chicken-fillet": "https://img.lotteeatz.com/upload/product/2020/11/03/20201103152232421_6.png/dims/resize/x420/optimize",
+    "chicken-piece": "https://img.lotteeatz.com/upload/product/2020/11/03/20201103152250708_4.png/dims/resize/x420/optimize",
+    "boneless-half": "https://img.lotteeatz.com/upload/product/2019/12/20/20191220165930895_6.png/dims/resize/x420/optimize",
+    "fried-boneless-r": "https://img.lotteeatz.com/upload/product/2026/04/07/20260407092338875_9.png/dims/resize/x420/optimize",
+    "boneless-full": "https://img.lotteeatz.com/upload/product/2019/12/20/20191220165904235_1.png/dims/resize/x420/optimize",
+    "fried-boneless-l": "https://img.lotteeatz.com/upload/product/2026/04/07/20260407092425935_1.png/dims/resize/x420/optimize",
+    "chicken-leg-half": "https://img.lotteeatz.com/upload/product/2025/02/20/20250220132842689_6.png/dims/resize/x420/optimize",
 }
 
 
