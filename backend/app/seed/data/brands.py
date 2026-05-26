@@ -554,15 +554,16 @@ LOTTERIA_SCENARIO = {
         {
             "id": "set-or-single",
             "instruction": "세트로 주문할게요",
-            "helpText": "세트로 하면 버거 + 감자튀김 + 음료가 같이 나와요. 단품이면 버거만 받아요.",
+            "helpText": "세트로 하면 버거 + 감자튀김 + 음료가 같이 나와요. 단품이면 버거만 받아요. 오른쪽 '세트' 버튼을 눌러주세요.",
             "layout": "duo",
+            "customLayoutId": "lotteria-set-popup",
             "choices": [
-                {"id": "set", "label": "세트", "sublabel": "감자튀김+음료 포함", "emoji": "🍟"},
-                {"id": "single", "label": "단품", "sublabel": "버거만", "emoji": "🍔"},
+                {"id": "set", "label": "세트", "sublabel": "7,800", "emoji": "🍟"},
+                {"id": "single", "label": "버거만", "sublabel": "4,700", "emoji": "🍔"},
             ],
             "correctChoiceId": "set",
             "successMessage": "세트로 골랐어요! 감자튀김도 같이 나와요.",
-            "hintMessage": "감자튀김 그림이 있는 '세트'를 눌러주세요.",
+            "hintMessage": "오른쪽 '세트' 버튼(감자튀김 + 음료 그림)을 눌러주세요.",
         },
         {
             "id": "set-size",

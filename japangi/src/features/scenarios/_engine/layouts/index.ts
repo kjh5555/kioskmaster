@@ -12,6 +12,7 @@ import { BurgerKingSideUpsell } from "./BurgerKingSideUpsell";
 import { BurgerKingStart } from "./BurgerKingStart";
 import { BurgerKingUpsell } from "./BurgerKingUpsell";
 import { LotteriaMenu } from "./LotteriaMenu";
+import { LotteriaSetPopup } from "./LotteriaSetPopup";
 import { LotteriaStart } from "./LotteriaStart";
 import { McdonaldsCategory } from "./McdonaldsCategory";
 import { McdonaldsDineMode } from "./McdonaldsDineMode";
@@ -46,6 +47,7 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "burgerking-membership-accrual": BurgerKingMembershipAccrual,
   "lotteria-start": LotteriaStart,
   "lotteria-menu": LotteriaMenu,
+  "lotteria-set-popup": LotteriaSetPopup,
   "mcdonalds-category": McdonaldsCategory,
   "mcdonalds-dine-mode": McdonaldsDineMode,
   "mcdonalds-set-single": McdonaldsSetSingle,
