@@ -295,6 +295,21 @@ BURGERKING_SCENARIO = {
             "hintMessage": "화면 가운데 큰 버튼을 한 번 눌러주세요.",
         },
         {
+            "id": "membership-popup",
+            "instruction": "오늘은 '비회원으로 주문'을 골라요",
+            "helpText": "멤버십이 있으면 적립을 받을 수 있어요. 오늘은 연습이라서 멤버십 없이 '비회원으로 주문'을 누르면 돼요.",
+            "layout": "duo",
+            "customLayoutId": "burgerking-membership",
+            "choices": [
+                {"id": "guest", "label": "비회원으로 주문", "emoji": "👤"},
+                {"id": "member", "label": "멤버십 번호 입력", "emoji": "📱"},
+                {"id": "close", "label": "닫기", "emoji": "✕"},
+            ],
+            "correctChoiceId": "guest",
+            "successMessage": "비회원 주문으로 진행할게요.",
+            "hintMessage": "왼쪽 검정색 '비회원으로 주문' 버튼을 눌러주세요.",
+        },
+        {
             "id": "dine-mode",
             "instruction": "오늘은 매장에서 드시는 걸 골라요",
             "helpText": "여기서 드시면 '여기서 드세요', 포장하실 거면 '포장이에요'를 눌러요.",
