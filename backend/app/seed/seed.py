@@ -28,6 +28,11 @@ from app.seed.data.burgerking_menu import (
     BURGERKING_CATEGORY_ORDER,
     BURGERKING_CATEGORY_ITEMS,
 )
+from app.seed.data.lotteria_menu import (
+    LOTTERIA_CATEGORY_TITLES,
+    LOTTERIA_CATEGORY_ORDER,
+    LOTTERIA_CATEGORY_ITEMS,
+)
 
 
 def seed_categories(session: Session) -> dict[str, Category]:
@@ -191,6 +196,16 @@ def seed_burgerking_menu(session: Session, slug_to_brand: dict[str, Brand]) -> N
     )
 
 
+def seed_lotteria_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
+    brand = slug_to_brand.get("lotteria")
+    if not brand:
+        print("Lotteria brand not found, skipping menu seed")
+        return
+    _seed_brand_menu(
+        session, brand, LOTTERIA_CATEGORY_ORDER, LOTTERIA_CATEGORY_TITLES, LOTTERIA_CATEGORY_ITEMS,
+    )
+
+
 def run_seed() -> None:
     print("Initializing DB tables...")
     init_db()
@@ -207,6 +222,9 @@ def run_seed() -> None:
 
         print("Seeding Burger King menu...")
         seed_burgerking_menu(session, slug_to_brand)
+
+        print("Seeding Lotteria menu...")
+        seed_lotteria_menu(session, slug_to_brand)
 
         session.commit()
 
