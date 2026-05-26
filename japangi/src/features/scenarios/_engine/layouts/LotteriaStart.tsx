@@ -49,181 +49,175 @@ export function LotteriaStart({
         idlePulse(idleHintActive, true),
       ]}
     >
-      {/* ── Top red promo area ── */}
+      {/* ── White "여기에서 주문하세요!" CTA top ── */}
       <div
         css={css`
-          flex: 6;
-          background: linear-gradient(180deg, #d62300 0%, #b81f00 100%);
-          padding: 18px 18px 12px;
+          flex: 5;
+          background: #ffffff;
+          padding: 28px 22px 18px;
           display: flex;
           flex-direction: column;
-          gap: 10px;
-          position: relative;
+          gap: 14px;
         `}
       >
-        {/* LOTTERIA logo wordmark */}
         <div
           css={css`
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 17px;
+            font-weight: 800;
+            color: #2a1408;
+            line-height: 1.2;
           `}
         >
-          <span
-            css={css`
-              font-size: 16px;
-              font-weight: 900;
-              color: #ffffff;
-              letter-spacing: 0.04em;
-              font-style: italic;
-              font-family: "Trebuchet MS", system-ui, sans-serif;
-            `}
-          >
-            LOTTERIA
-          </span>
-          <span
-            css={css`
-              background: #ffffff;
-              color: #d62300;
-              border-radius: 4px;
-              padding: 1px 5px;
-              font-size: 10px;
-              font-weight: 900;
-              font-style: italic;
-              font-family: "Trebuchet MS", system-ui, sans-serif;
-            `}
-          >
-            AB
-          </span>
+          기다리지 않고 간편하게
         </div>
-
-        {/* Promo copy */}
         <div
           css={css`
-            font-size: 14px;
+            font-size: 60px;
             font-weight: 900;
-            line-height: 1.5;
-            color: #ffe9b0;
-            text-shadow: 1px 1px 0 #6a1100;
+            color: #2a1408;
+            line-height: 0.98;
+            font-style: italic;
+            letter-spacing: -0.03em;
           `}
         >
-          롯데리아가 2023년 한 해동안 땡스~한
+          여기에서
           <br />
-          마음을 전하기 위해 가장 사랑 받은
-          <br />
-          버거로 선정된 전주비빔라이스버거로
-          <br />
-          올해의 땡스버거로{" "}
-          <span
-            css={css`
-              background: #ffffff;
-              color: #d62300;
-              padding: 0 6px;
-              border-radius: 4px;
-              font-size: 12px;
-            `}
-          >
-            재출시
-          </span>{" "}
-          합니다
+          주문하세요!
         </div>
-
-        {/* Burger image */}
         <div
           css={css`
-            flex: 1;
-            display: flex;
+            display: inline-flex;
             align-items: center;
+            gap: 8px;
+            background: #ffd400;
+            color: #2a1408;
+            font-weight: 800;
+            font-size: 16px;
+            padding: 10px 18px;
+            border-radius: 999px;
+            align-self: flex-start;
+            margin-top: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+          `}
+        >
+          <span style={{ fontSize: 22, lineHeight: 1 }}>👆</span>
+          화면을 터치해 주세요
+        </div>
+      </div>
+
+      {/* ── Red bottom promo with burger ── */}
+      <div
+        css={css`
+          flex: 5;
+          background: linear-gradient(180deg, #d62300 0%, #b81f00 100%);
+          position: relative;
+          padding: 14px 18px 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          overflow: hidden;
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            align-items: flex-end;
             justify-content: center;
             position: relative;
-            padding: 8px 0;
+            height: 180px;
           `}
         >
           <img
             src={RICE_BURGER_IMG}
             alt="전주비빔라이스버거"
             style={{
-              maxWidth: "90%",
-              maxHeight: "100%",
+              height: "100%",
               objectFit: "contain",
+              filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.3))",
             }}
           />
           {/* 재출시! badge */}
           <div
             css={css`
               position: absolute;
-              right: 14px;
-              bottom: 24px;
-              width: 64px;
-              height: 64px;
+              right: 12px;
+              top: 32px;
+              width: 58px;
+              height: 58px;
               border-radius: 50%;
               background: #ffd400;
               color: #d62300;
               display: flex;
               align-items: center;
               justify-content: center;
-              font-size: 16px;
+              font-size: 14px;
               font-weight: 900;
               transform: rotate(-12deg);
-              box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
               border: 2px dashed #d62300;
+              text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
             `}
           >
             재출시!
           </div>
         </div>
 
-        {/* Big title overlay at bottom of red area */}
         <div
           css={css`
-            font-size: 48px;
+            font-size: 44px;
             font-weight: 900;
             color: #ffffff;
             line-height: 0.95;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.02em;
             text-shadow: 2px 2px 0 #6a1100;
-            padding-bottom: 4px;
+            padding: 4px 0;
           `}
         >
           전주비빔
           <br />
           라이스버거
         </div>
+
+        <div
+          css={css`
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffe9b0;
+            text-shadow: 1px 1px 0 #6a1100;
+            padding-top: 4px;
+          `}
+        >
+          2023년 가장 사랑 받은 버거 재출시!
+        </div>
       </div>
 
-      {/* ── Bottom white control area ── */}
+      {/* ── White footer with audio + utility ── */}
       <div
         css={css`
           flex: 0 0 auto;
           background: #ffffff;
-          padding: 12px 18px 16px;
+          padding: 8px 18px 14px;
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 6px;
         `}
       >
-        {/* Audio player controls (decorative) */}
         <div
           css={css`
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 18px;
             padding: 4px 0;
           `}
         >
           <span css={ctrlBtn}>⏮</span>
-          <span css={ctrlBtn}>⏸</span>
-          <span css={ctrlBtn}>⏭</span>
         </div>
-
-        {/* Utility row + languages */}
         <div
           css={css`
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            padding-top: 8px;
+            padding-top: 6px;
             border-top: 1px solid #e5e8eb;
           `}
         >
@@ -231,8 +225,7 @@ export function LotteriaStart({
             css={css`
               display: grid;
               grid-template-columns: repeat(4, auto);
-              gap: 8px 16px;
-              align-items: center;
+              gap: 4px 16px;
             `}
           >
             <span css={utilIconWrap}>
@@ -252,7 +245,6 @@ export function LotteriaStart({
               <span css={utilLabel}>직원호출</span>
             </span>
           </div>
-
           <div
             css={css`
               display: flex;
@@ -285,14 +277,14 @@ export function LotteriaStart({
 }
 
 const ctrlBtn = css`
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #f3f4f5;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #2a1408;
 `;
 
