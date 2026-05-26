@@ -29,20 +29,37 @@ _FALLBACK_SUMMARY = "오늘은 세트 메뉴를 주문하고 카드로 결제해
 # (utility choices like cancel/home/help are kept). Otherwise the scenario's
 # original choices are used as-is.
 _STEP_MENU_CATEGORY: dict[str, str] = {
-    "category": "burger",
+    "category": "burger",  # McDonald's burger picker step
+    "menu": "burger",      # Burger King burger picker step
 }
 
 # Choice ids that are navigation/utility rather than real answers — excluded
 # from the randomizable pool so Gemini doesn't pick "cancel" as the goal,
 # but kept in the scenario's choices so the UI still renders the button.
 _UTILITY_CHOICE_IDS = {
-    "cancel", "home", "help", "back",
+    # Generic nav
+    "cancel", "home", "help", "back", "close",
     "language", "accessibility", "point-accumulate", "point-qr",
     "lang-english", "lang-korean",
     "nutrition", "edit-burger",
     "edit-fries", "edit-fries-ingredient",
     "edit-drink", "edit-drink-ingredient",
     "qty-minus", "qty-plus", "add-more", "cancel-item",
+    # Burger King specific utility / non-goal alternatives
+    "use-coupon", "exit", "edit-ingredients",
+    "cancel-order", "cancel-pay",
+    "remove-cart-item",
+    "manual-code",
+    # BK side-upsell: 4 side items are alternatives Gemini shouldn't pick;
+    # the goal is to decline (decline-side stays as the only real choice).
+    "add-side", "creamy-mozzaball", "2030348", "2030420", "6080072",
+    # BK receipt popup: 영수증 출력 is the wrong path; 주문번호표만 출력 wins.
+    "receipt",
+    # BK pay-method: only credit-card is the goal for now.
+    "payco", "meal-ticket",
+    # BK combo-select alternatives: only 라지세트 (7111691) is the goal.
+    # Other combos (단품, 세트) shouldn't be Gemini-selected.
+    "7111052", "1080013",
 }
 
 

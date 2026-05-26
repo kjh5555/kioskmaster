@@ -1,6 +1,7 @@
 import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
+import { lookupBkBurger } from "./burgerKingMenuData";
 import { idlePulse, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
@@ -57,12 +58,47 @@ const COMBO_OPTIONS: ReadonlyArray<ComboOption> = [
 
 export function BurgerKingComboPopup({
   step,
+  scenario,
   rejectedChoiceId,
   idleHintActive,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   // Local selection — only the confirm tap commits.
   const [selected, setSelected] = useState<string>(step.correctChoiceId);
+
+  // Show whichever burger was chosen at the upstream `menu` step (Gemini may
+  // randomize). Fall back to 와퍼 details if no override is available.
+  const menuStep = scenario.steps.find((s) => s.id === "menu");
+  const burger = lookupBkBurger(menuStep?.correctChoiceId);
+  const burgerName = burger?.name ?? "와퍼";
+  const burgerImageUrl = burger?.imageUrl ?? COMBO_OPTIONS[2].imageUrl;
+
+  // Build display options that swap in the chosen burger's name + image,
+  // leaving prices as approximations from the 와퍼 combo (real prices
+  // would require per-burger combo data we don't have).
+  const displayOptions: ComboOption[] = [
+    {
+      id: COMBO_OPTIONS[0].id,
+      name: `${burgerName} 라지세트`,
+      components: `${burgerName} + 프렌치프라이(L) + 콜라(L)`,
+      price: COMBO_OPTIONS[0].price,
+      imageUrl: burgerImageUrl,
+    },
+    {
+      id: COMBO_OPTIONS[1].id,
+      name: `${burgerName} 세트`,
+      components: `${burgerName} + 프렌치프라이(R) + 콜라(R)`,
+      price: COMBO_OPTIONS[1].price,
+      imageUrl: burgerImageUrl,
+    },
+    {
+      id: COMBO_OPTIONS[2].id,
+      name: burgerName,
+      components: "단품",
+      price: COMBO_OPTIONS[2].price,
+      imageUrl: burgerImageUrl,
+    },
+  ];
 
   return (
     <div
@@ -140,7 +176,7 @@ export function BurgerKingComboPopup({
             padding: 6px 4px;
           `}
         >
-          {COMBO_OPTIONS.map((opt) => {
+          {displayOptions.map((opt) => {
             const isSelected = selected === opt.id;
             return (
               <button

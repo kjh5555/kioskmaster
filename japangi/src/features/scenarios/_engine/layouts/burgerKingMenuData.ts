@@ -17,6 +17,24 @@ export interface BkMenuTab {
   items: ReadonlyArray<BkMenuItem>;
 }
 
+/**
+ * Look up a burger's display details by its BK menuCd id (which is what
+ * scenario steps store in correctChoiceId). Searches all menu tabs since
+ * BK uses the same menu code in 추천메뉴 + 와퍼&주니어 + premium, etc.
+ */
+export function lookupBkBurger(
+  id: string | undefined,
+): { name: string; imageUrl: string } | null {
+  if (id === undefined) return null;
+  for (const tab of BK_MENU_TABS) {
+    const found = tab.items.find((it) => it.id === id);
+    if (found !== undefined) {
+      return { name: found.name, imageUrl: found.imageUrl };
+    }
+  }
+  return null;
+}
+
 export const BK_MENU_TABS: ReadonlyArray<BkMenuTab> = [
   {
     id: "recommend",

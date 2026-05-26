@@ -23,6 +23,11 @@ from app.seed.data.mcdonalds_menu import (
     MCDONALDS_CATEGORY_ORDER,
     MCDONALDS_CATEGORY_ITEMS,
 )
+from app.seed.data.burgerking_menu import (
+    BURGERKING_CATEGORY_TITLES,
+    BURGERKING_CATEGORY_ORDER,
+    BURGERKING_CATEGORY_ITEMS,
+)
 
 
 def seed_categories(session: Session) -> dict[str, Category]:
@@ -79,22 +84,17 @@ def seed_brands(session: Session, slug_to_cat: dict[str, Category]) -> dict[str,
     return slug_to_brand
 
 
-def seed_mcdonalds_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
-    brand = slug_to_brand.get("mcdonalds")
-    if not brand:
-        print("McDonald's brand not found, skipping menu seed")
-        return
-
-    # Debug: confirm the data file actually carries imageUrl keys at boot time.
-    sample = next(
-        (it for it in MCDONALDS_CATEGORY_ITEMS.get("burger", []) if it.get("id") == "bigmac"),
-        None,
-    )
-    print(f"[seed] bigmac data sample: {sample}")
-
-    for order_idx, cat_slug in enumerate(MCDONALDS_CATEGORY_ORDER):
-        title = MCDONALDS_CATEGORY_TITLES[cat_slug]
-        items_data = MCDONALDS_CATEGORY_ITEMS.get(cat_slug, [])
+def _seed_brand_menu(
+    session: Session,
+    brand: Brand,
+    category_order: list[str],
+    category_titles: dict[str, str],
+    category_items: dict[str, list[dict]],
+) -> None:
+    """Brand-agnostic menu seeder. Used by both McDonald's and Burger King."""
+    for order_idx, cat_slug in enumerate(category_order):
+        title = category_titles[cat_slug]
+        items_data = category_items.get(cat_slug, [])
 
         existing_cat = session.exec(
             select(MenuCategory)
@@ -155,7 +155,7 @@ def seed_mcdonalds_menu(session: Session, slug_to_brand: dict[str, Brand]) -> No
     # mapper state from the column-add migration mid-process. Re-applying
     # via UPDATE here makes the result deterministic.
     conn = session.connection()
-    for cat_slug, items_data in MCDONALDS_CATEGORY_ITEMS.items():
+    for cat_slug, items_data in category_items.items():
         for item_data in items_data:
             url = item_data.get("imageUrl")
             if url is None:
@@ -171,6 +171,26 @@ def seed_mcdonalds_menu(session: Session, slug_to_brand: dict[str, Brand]) -> No
             )
 
 
+def seed_mcdonalds_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
+    brand = slug_to_brand.get("mcdonalds")
+    if not brand:
+        print("McDonald's brand not found, skipping menu seed")
+        return
+    _seed_brand_menu(
+        session, brand, MCDONALDS_CATEGORY_ORDER, MCDONALDS_CATEGORY_TITLES, MCDONALDS_CATEGORY_ITEMS,
+    )
+
+
+def seed_burgerking_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
+    brand = slug_to_brand.get("burgerking")
+    if not brand:
+        print("Burger King brand not found, skipping menu seed")
+        return
+    _seed_brand_menu(
+        session, brand, BURGERKING_CATEGORY_ORDER, BURGERKING_CATEGORY_TITLES, BURGERKING_CATEGORY_ITEMS,
+    )
+
+
 def run_seed() -> None:
     print("Initializing DB tables...")
     init_db()
@@ -184,6 +204,9 @@ def run_seed() -> None:
 
         print("Seeding McDonald's menu...")
         seed_mcdonalds_menu(session, slug_to_brand)
+
+        print("Seeding Burger King menu...")
+        seed_burgerking_menu(session, slug_to_brand)
 
         session.commit()
 
