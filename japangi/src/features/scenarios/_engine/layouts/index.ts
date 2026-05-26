@@ -1,3 +1,4 @@
+import { BurgerKingCardInsert } from "./BurgerKingCardInsert";
 import { BurgerKingCartAdd } from "./BurgerKingCartAdd";
 import { BurgerKingComboPopup } from "./BurgerKingComboPopup";
 import { BurgerKingDineMode } from "./BurgerKingDineMode";
@@ -38,6 +39,7 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "burgerking-order-confirm": BurgerKingOrderConfirm,
   "burgerking-receipt-popup": BurgerKingReceiptPopup,
   "burgerking-pay-method": BurgerKingPayMethod,
+  "burgerking-card-insert": BurgerKingCardInsert,
   "mcdonalds-category": McdonaldsCategory,
   "mcdonalds-dine-mode": McdonaldsDineMode,
   "mcdonalds-set-single": McdonaldsSetSingle,

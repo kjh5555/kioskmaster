@@ -476,6 +476,17 @@ BURGERKING_SCENARIO = {
             "hintMessage": "왼쪽 위 '신용카드' 카드를 눌러주세요.",
         },
         {
+            "id": "card-insert",
+            "instruction": "카드를 투입구에 꽂아요",
+            "helpText": "카드 그림 부분을 한 번 눌러서 카드를 꽂는 흉내를 내요. 실제로는 카드를 기계에 넣으면 결제가 진행돼요.",
+            "layout": "start",
+            "customLayoutId": "burgerking-card-insert",
+            "choices": [{"id": "insert-card", "label": "카드 꽂기", "emoji": "💳"}],
+            "correctChoiceId": "insert-card",
+            "successMessage": "결제가 진행되고 있어요...",
+            "hintMessage": "가운데 카드 그림을 한 번 눌러주세요.",
+        },
+        {
             "id": "pay-confirm",
             "instruction": "결제 버튼을 눌러서 주문을 마쳐요",
             "helpText": "여기는 연습이에요. '결제하기'를 누르면 주문번호가 나와요. 진짜 돈은 절대 나가지 않아요.",
