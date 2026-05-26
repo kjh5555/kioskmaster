@@ -699,7 +699,7 @@ export function StepEngine({
       <>
         <div
           css={css`
-            padding: 8px 0 30px;
+            padding: 8px 0 16px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -708,7 +708,21 @@ export function StepEngine({
           {backButton}
           {goalHint}
         </div>
-        {renderLayout()}
+        {/* Card frame for custom kiosk layouts: rounded corners,
+            shadow, and clipped overflow so each screen paints inside
+            a clear outer container (instead of bleeding into the page
+            background and looking unframed). */}
+        <div
+          css={css`
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+          `}
+        >
+          {renderLayout()}
+        </div>
         <HelpOverlay helpText={step.helpText} />
       </>
     );

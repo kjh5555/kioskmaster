@@ -157,6 +157,9 @@ export function LotteriaMenu({
             return (
               <button
                 key={tab}
+                onClick={() => {
+                  if (!active) onChoice(`tab:${tab}`);
+                }}
                 css={css`
                   border: none;
                   background: transparent;
@@ -168,6 +171,9 @@ export function LotteriaMenu({
                   white-space: nowrap;
                   flex-shrink: 0;
                   cursor: pointer;
+                  :active {
+                    background: #f6f7f9;
+                  }
                   ${active &&
                   css`
                     &::after {
@@ -209,7 +215,8 @@ export function LotteriaMenu({
         `}
       >
         {/* Left "이전" tab */}
-        <div
+        <button
+          onClick={() => onChoice("page:prev")}
           css={css`
             position: absolute;
             left: 0;
@@ -224,13 +231,19 @@ export function LotteriaMenu({
             padding: 14px 6px;
             border-radius: 0 8px 8px 0;
             letter-spacing: 0.1em;
+            border: none;
+            cursor: pointer;
+            :active {
+              background: #4a2818;
+            }
           `}
         >
           이전
-        </div>
+        </button>
 
         {/* Right "다음" tab */}
-        <div
+        <button
+          onClick={() => onChoice("page:next")}
           css={css`
             position: absolute;
             right: 0;
@@ -245,10 +258,15 @@ export function LotteriaMenu({
             padding: 14px 6px;
             border-radius: 8px 0 0 8px;
             letter-spacing: 0.1em;
+            border: none;
+            cursor: pointer;
+            :active {
+              background: #4a2818;
+            }
           `}
         >
           다음
-        </div>
+        </button>
 
         <div
           css={css`
@@ -427,12 +445,19 @@ export function LotteriaMenu({
           gap: 8px;
         `}
       >
-        <div css={[footerBtn, couponBtn]}>
+        <button
+          onClick={() => onChoice("footer:coupon")}
+          css={[footerBtn, couponBtn]}
+        >
           <span style={{ fontSize: 12, fontWeight: 800 }}>쿠폰</span>
           <span style={{ fontSize: 11, fontWeight: 700 }}>교환권</span>
-        </div>
-        <div css={[footerBtn, cancelBtn]}>취소하기</div>
-        <div css={[footerBtn, payBtn]}>결제하기</div>
+        </button>
+        <button onClick={() => onChoice("footer:cancel")} css={[footerBtn, cancelBtn]}>
+          취소하기
+        </button>
+        <button onClick={() => onChoice("footer:pay")} css={[footerBtn, payBtn]}>
+          결제하기
+        </button>
       </div>
     </div>
   );
@@ -461,6 +486,12 @@ const footerBtn = css`
   justify-content: center;
   font-weight: 800;
   font-size: 14px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  :active {
+    filter: brightness(0.92);
+  }
 `;
 
 const couponBtn = css`
