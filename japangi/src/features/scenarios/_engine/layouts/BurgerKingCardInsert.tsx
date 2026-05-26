@@ -1,4 +1,5 @@
 import { css, keyframes } from "@emotion/react";
+import { useEffect, useState } from "react";
 
 import { idlePulse, type CustomLayoutProps } from "./types";
 
@@ -50,6 +51,23 @@ export function BurgerKingCardInsert({
   else if (upsellStep?.correctChoiceId === "cancel-keep-single")
     comboId = "1080013";
   const orderAmount = COMBO_PRICE[comboId] ?? 9800;
+
+  // Simulate the card being read by the terminal: 3-second countdown then
+  // auto-advance as if payment had been approved.
+  const [remaining, setRemaining] = useState(3);
+  useEffect(() => {
+    const tick = window.setInterval(() => {
+      setRemaining((r) => (r > 0 ? r - 1 : 0));
+    }, 1000);
+    const fire = window.setTimeout(() => {
+      onChoice("insert-card");
+    }, 3000);
+    return () => {
+      window.clearInterval(tick);
+      window.clearTimeout(fire);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
@@ -151,6 +169,22 @@ export function BurgerKingCardInsert({
           `}
         >
           결제 오류 시 마그네틱을 아래로 향하게 긁어주세요
+        </span>
+        <span
+          css={css`
+            display: inline-block;
+            margin-top: 12px;
+            padding: 6px 12px;
+            background: #fff5e6;
+            color: #d62300;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+          `}
+        >
+          {remaining > 0
+            ? `${remaining}초 후 결제 완료된 것으로 가정하고 다음 화면으로 넘어가요`
+            : "결제 완료! 다음 화면으로 이동합니다…"}
         </span>
       </div>
 
