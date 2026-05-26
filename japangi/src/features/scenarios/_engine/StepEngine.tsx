@@ -358,25 +358,66 @@ export function StepEngine({
 
   // When idle hint activates, scroll the pulsing button into view so the user
   // can actually see the signal even if the target sits below the fold.
-  // The pulse animation is the only one in the app using a 1.2s duration, so
-  // we walk the DOM for the first button whose computed animation matches.
+  // Detected by the 1.2s+infinite animation duration that's unique to pulseKf.
+  //
+  // Re-runs whenever the user scrolls away: after 1s of no scroll, we slide
+  // the target back to center so elderly users can't lose sight of it.
   useEffect(() => {
     if (!idleHintActive) return;
-    const handle = window.setTimeout(() => {
-      const candidates = document.querySelectorAll<HTMLElement>("button");
-      for (const btn of Array.from(candidates)) {
+
+    function findPulseTarget(): HTMLElement | null {
+      const buttons = document.querySelectorAll<HTMLElement>("button");
+      for (const btn of Array.from(buttons)) {
         const cs = window.getComputedStyle(btn);
         if (
           cs.animationName !== "none" &&
           cs.animationDuration === "1.2s" &&
           cs.animationIterationCount === "infinite"
         ) {
-          btn.scrollIntoView({ behavior: "smooth", block: "center" });
-          return;
+          return btn;
         }
       }
-    }, 120);
-    return () => window.clearTimeout(handle);
+      return null;
+    }
+
+    function scrollToTarget(): void {
+      const target = findPulseTarget();
+      if (target !== null) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }
+
+    // Initial scroll once the pulse has had a beat to render.
+    const initialTimer = window.setTimeout(scrollToTarget, 120);
+
+    // Treat user scrolls as "they're trying to look elsewhere" — wait 1s
+    // after their last scroll, then bring the pulse target back to center.
+    let scrollDebounceTimer: number | null = null;
+    let suppress = true; // ignore the initial smooth-scroll's own scroll events
+    const releaseSuppress = window.setTimeout(() => {
+      suppress = false;
+    }, 900);
+
+    function onScroll(): void {
+      if (suppress) return;
+      if (scrollDebounceTimer !== null) {
+        window.clearTimeout(scrollDebounceTimer);
+      }
+      scrollDebounceTimer = window.setTimeout(() => {
+        scrollToTarget();
+      }, 1000);
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.clearTimeout(initialTimer);
+      window.clearTimeout(releaseSuppress);
+      if (scrollDebounceTimer !== null) {
+        window.clearTimeout(scrollDebounceTimer);
+      }
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [idleHintActive, stepIndex]);
 
   const sfx = useSFX();
