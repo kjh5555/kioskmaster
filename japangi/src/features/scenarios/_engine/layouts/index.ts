@@ -1,3 +1,4 @@
+import { BurgerKingStart } from "./BurgerKingStart";
 import { McdonaldsCategory } from "./McdonaldsCategory";
 import { McdonaldsDineMode } from "./McdonaldsDineMode";
 import { McdonaldsSetSize } from "./McdonaldsSetSize";
@@ -16,6 +17,7 @@ import type { CustomLayoutComponent } from "./types";
 
 export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "mcdonalds-start": McdonaldsStart,
+  "burgerking-start": BurgerKingStart,
   "mcdonalds-category": McdonaldsCategory,
   "mcdonalds-dine-mode": McdonaldsDineMode,
   "mcdonalds-set-single": McdonaldsSetSingle,
