@@ -63,7 +63,6 @@ export function LotteriaPayMethod({
   const [dineMode, setDineMode] = useState<string | null>(null);
   const [promo, setPromo] = useState<string | null>(null);
   const [payMethod, setPayMethod] = useState<string | null>(null);
-  const [confirmShake, setConfirmShake] = useState(false);
 
   // Pull order summary from earlier scenario steps so prices/labels stay in
   // sync with whatever the user picked.
@@ -87,19 +86,15 @@ export function LotteriaPayMethod({
   const drinkExtra = 0;
 
   const totalDue = burgerPrice + sideExtra + drinkExtra;
-  const allSelected = dineMode != null && promo != null && payMethod != null;
-
-  function handleConfirm() {
-    if (!allSelected) {
-      setConfirmShake(true);
-      setTimeout(() => setConfirmShake(false), 350);
-      return;
-    }
-    // Engine validates against step.correctChoiceId ("card").
-    onChoice(payMethod);
-  }
-
   const correctId = step.correctChoiceId;
+
+  // STEP 3 카드 클릭이 최종 advance trigger. STEP 1·2가 다 선택돼야 advance.
+  function handlePayPick(id: string) {
+    setPayMethod(id);
+    if (dineMode != null && promo != null) {
+      onChoice(id);
+    }
+  }
 
   return (
     <div
@@ -410,7 +405,7 @@ export function LotteriaPayMethod({
                     idleHintActive,
                     promo != null && payMethod == null && opt.id === correctId,
                   )}
-                  onClick={() => setPayMethod(opt.id)}
+                  onClick={() => handlePayPick(opt.id)}
                   small
                 >
                   <span style={{ fontSize: 22 }}>{opt.icon}</span>
@@ -419,36 +414,6 @@ export function LotteriaPayMethod({
               ))}
             </div>
           </StepCard>
-
-          {/* 선택완료 button */}
-          <button
-            type="button"
-            onClick={handleConfirm}
-            css={[
-              css`
-                margin-top: 4px;
-                height: 38px;
-                border-radius: 8px;
-                border: none;
-                background: ${allSelected ? "#ffd400" : "#e5e8eb"};
-                color: ${allSelected ? "#2a1408" : "#8b95a1"};
-                font-size: 14px;
-                font-weight: 900;
-                font-family: inherit;
-                cursor: ${allSelected ? "pointer" : "not-allowed"};
-                :active {
-                  filter: brightness(0.92);
-                }
-              `,
-              confirmShake &&
-                css`
-                  animation: ${shakeKf} 350ms ease;
-                `,
-              idlePulse(idleHintActive, allSelected && payMethod === correctId),
-            ]}
-          >
-            선택완료
-          </button>
         </div>
       </div>
 
