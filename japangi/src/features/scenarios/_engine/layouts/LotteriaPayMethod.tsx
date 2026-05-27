@@ -2,6 +2,7 @@ import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
 import { idlePulse, lookupCorrectLabel, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -63,6 +64,7 @@ export function LotteriaPayMethod({
   const [dineMode, setDineMode] = useState<string | null>(null);
   const [promo, setPromo] = useState<string | null>(null);
   const [payMethod, setPayMethod] = useState<string | null>(null);
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   // Pull order summary from earlier scenario steps so prices/labels stay in
   // sync with whatever the user picked.
@@ -289,7 +291,11 @@ export function LotteriaPayMethod({
             <button type="button" disabled css={navBtn}>
               이전
             </button>
-            <button type="button" css={navBtn}>
+            <button
+              type="button"
+              onClick={() => shakeNow("page-next")}
+              css={[navBtn, shakeStyle("page-next")]}
+            >
               다음
             </button>
           </div>
@@ -428,10 +434,18 @@ export function LotteriaPayMethod({
           border-top: 1px solid #e5e8eb;
         `}
       >
-        <button type="button" css={[footerBtn, footerCancel]}>
+        <button
+          type="button"
+          onClick={() => shakeNow("pay-cancel")}
+          css={[footerBtn, footerCancel, shakeStyle("pay-cancel")]}
+        >
           결제취소
         </button>
-        <button type="button" css={[footerBtn, footerAdd]}>
+        <button
+          type="button"
+          onClick={() => shakeNow("add-order")}
+          css={[footerBtn, footerAdd, shakeStyle("add-order")]}
+        >
           추가주문
         </button>
       </div>

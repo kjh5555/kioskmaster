@@ -2,6 +2,7 @@ import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
 import { idlePulse, lookupCorrectLabel, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -110,6 +111,7 @@ export function LotteriaSideSelect({
   const [dessertId, setDessertId] = useState<string | null>(null);
   const [drinkId, setDrinkId] = useState<string | null>(null);
   const [internalShake, setInternalShake] = useState(false);
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   const burgerName =
     lookupCorrectLabel(scenario, "burger-choice") ?? "불고기버거";
@@ -356,7 +358,8 @@ export function LotteriaSideSelect({
           </button>
           <button
             type="button"
-            css={css`
+            onClick={() => shakeNow("page-next")}
+            css={[css`
               position: absolute;
               right: 0;
               top: 50%;
@@ -372,10 +375,11 @@ export function LotteriaSideSelect({
               letter-spacing: 0.1em;
               border: none;
               cursor: pointer;
+              font-family: inherit;
               :active {
                 background: #4a2818;
               }
-            `}
+            `, shakeStyle("page-next")]}
           >
             다음
           </button>

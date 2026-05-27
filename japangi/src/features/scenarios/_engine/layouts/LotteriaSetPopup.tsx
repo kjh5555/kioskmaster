@@ -1,6 +1,7 @@
 import { css, keyframes } from "@emotion/react";
 
 import { idlePulse, lookupCorrectLabel, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -37,6 +38,7 @@ export function LotteriaSetPopup({
 
   const setChoice = step.choices.find((c) => c.id === "set");
   const singleChoice = step.choices.find((c) => c.id === "single");
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   return (
     <div
@@ -202,7 +204,8 @@ export function LotteriaSetPopup({
           <button
             type="button"
             aria-label="닫기"
-            css={css`
+            onClick={() => shakeNow("close")}
+            css={[css`
               position: absolute;
               top: 14px;
               right: 14px;
@@ -222,7 +225,7 @@ export function LotteriaSetPopup({
               :active {
                 background: #f6f7f9;
               }
-            `}
+            `, shakeStyle("close")]}
           >
             ×
           </button>

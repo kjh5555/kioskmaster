@@ -2,6 +2,7 @@ import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
 import { idlePulse, lookupCorrectLabel, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -205,6 +206,7 @@ export function LotteriaMenu({
   const [pageByTab, setPageByTab] = useState<Record<string, number>>({
     [TAB_HAMBURGER]: 1, // start on page 2 (zero-indexed = 1) — that's the screenshot view
   });
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   const pages = DECOR[activeTab] ?? [[]];
   const totalPages = pages.length;
@@ -788,11 +790,19 @@ export function LotteriaMenu({
           gap: 8px;
         `}
       >
-        <button type="button" css={[footerBtn, couponBtn]}>
+        <button
+          type="button"
+          onClick={() => shakeNow("coupon")}
+          css={[footerBtn, couponBtn, shakeStyle("coupon")]}
+        >
           <span style={{ fontSize: 12, fontWeight: 800 }}>쿠폰</span>
           <span style={{ fontSize: 11, fontWeight: 700 }}>교환권</span>
         </button>
-        <button type="button" css={[footerBtn, cancelBtn]}>
+        <button
+          type="button"
+          onClick={() => shakeNow("cancel-all")}
+          css={[footerBtn, cancelBtn, shakeStyle("cancel-all")]}
+        >
           취소하기
         </button>
         <button

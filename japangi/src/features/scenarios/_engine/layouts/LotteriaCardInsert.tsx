@@ -2,6 +2,7 @@ import { css, keyframes } from "@emotion/react";
 import { useEffect, useState } from "react";
 
 import { type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const popIn = keyframes`
   0%   { transform: scale(0.92); opacity: 0; }
@@ -21,6 +22,7 @@ export function LotteriaCardInsert({
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const [remaining, setRemaining] = useState(Math.ceil(AUTO_ADVANCE_MS / 1000));
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   useEffect(() => {
     const tick = setInterval(() => {
@@ -186,7 +188,8 @@ export function LotteriaCardInsert({
             </span>
             <button
               type="button"
-              css={css`
+              onClick={() => shakeNow("cancel")}
+              css={[css`
                 padding: 6px 22px;
                 border-radius: 8px;
                 border: 1.5px solid #2a1408;
@@ -199,7 +202,7 @@ export function LotteriaCardInsert({
                 :active {
                   background: #f6f7f9;
                 }
-              `}
+              `, shakeStyle("cancel")]}
             >
               취소
             </button>
@@ -220,7 +223,8 @@ export function LotteriaCardInsert({
       >
         <button
           type="button"
-          css={css`
+          onClick={() => shakeNow("pay-cancel")}
+          css={[css`
             height: 44px;
             border-radius: 8px;
             font-weight: 900;
@@ -233,13 +237,14 @@ export function LotteriaCardInsert({
             :active {
               filter: brightness(0.92);
             }
-          `}
+          `, shakeStyle("pay-cancel")]}
         >
           결제취소
         </button>
         <button
           type="button"
-          css={css`
+          onClick={() => shakeNow("add-order")}
+          css={[css`
             height: 44px;
             border-radius: 8px;
             font-weight: 900;
@@ -252,7 +257,7 @@ export function LotteriaCardInsert({
             :active {
               filter: brightness(0.92);
             }
-          `}
+          `, shakeStyle("add-order")]}
         >
           추가주문
         </button>
