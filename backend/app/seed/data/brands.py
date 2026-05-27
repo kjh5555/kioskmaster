@@ -709,8 +709,9 @@ KFC_SCENARIO = {
         {
             "id": "burger-choice",
             "instruction": "징거버거를 골라요",
-            "helpText": "오늘은 징거버거 세트가 목표예요. 징거버거는 KFC의 대표 치킨버거예요.",
+            "helpText": "오늘은 징거버거 세트가 목표예요. 징거버거는 KFC의 대표 치킨버거예요. 왼쪽 사이드바에서 '버거박스' 탭이 활성화되어 있어요.",
             "layout": "grid",
+            "customLayoutId": "kfc-menu",
             "choices": [
                 {"id": "jinger", "label": "징거", "sublabel": "6,200원", "emoji": "🍔"},
                 {"id": "jinger-tower", "label": "징거타워", "sublabel": "7,200원", "emoji": "🍔"},
@@ -721,7 +722,7 @@ KFC_SCENARIO = {
             ],
             "correctChoiceId": "jinger",
             "successMessage": "징거! 맛있겠네요.",
-            "hintMessage": "왼쪽 위 '징거' 카드를 눌러보세요.",
+            "hintMessage": "위쪽 첫번째 줄 왼쪽 '징거' 카드를 눌러보세요.",
         },
         {
             "id": "set-or-single",
