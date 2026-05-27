@@ -33,6 +33,11 @@ from app.seed.data.lotteria_menu import (
     LOTTERIA_CATEGORY_ORDER,
     LOTTERIA_CATEGORY_ITEMS,
 )
+from app.seed.data.kfc_menu import (
+    KFC_CATEGORY_TITLES,
+    KFC_CATEGORY_ORDER,
+    KFC_CATEGORY_ITEMS,
+)
 
 
 def seed_categories(session: Session) -> dict[str, Category]:
@@ -206,6 +211,16 @@ def seed_lotteria_menu(session: Session, slug_to_brand: dict[str, Brand]) -> Non
     )
 
 
+def seed_kfc_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
+    brand = slug_to_brand.get("kfc")
+    if not brand:
+        print("KFC brand not found, skipping menu seed")
+        return
+    _seed_brand_menu(
+        session, brand, KFC_CATEGORY_ORDER, KFC_CATEGORY_TITLES, KFC_CATEGORY_ITEMS,
+    )
+
+
 def run_seed() -> None:
     print("Initializing DB tables...")
     init_db()
@@ -225,6 +240,9 @@ def run_seed() -> None:
 
         print("Seeding Lotteria menu...")
         seed_lotteria_menu(session, slug_to_brand)
+
+        print("Seeding KFC menu...")
+        seed_kfc_menu(session, slug_to_brand)
 
         session.commit()
 
