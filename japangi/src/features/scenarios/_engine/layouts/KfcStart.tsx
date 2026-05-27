@@ -67,6 +67,7 @@ export function KfcStart({
       <div
         css={css`
           flex: 1;
+          position: relative;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -83,6 +84,32 @@ export function KfcStart({
           overflow: hidden;
         `}
       >
+        {/* KFC logo top-left */}
+        <div
+          css={css`
+            position: absolute;
+            top: 14px;
+            left: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: "Arial Black", "Helvetica", sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            background: #E4002B;
+            color: #ffffff;
+            padding: 6px 10px 4px;
+            border-radius: 4px;
+            line-height: 0.9;
+            letter-spacing: -0.04em;
+            box-shadow: 0 2px 10px rgba(228, 0, 43, 0.45);
+          `}
+        >
+          <span style={{ fontSize: 22 }}>KFC</span>
+          <span style={{ fontSize: 6, fontWeight: 700, fontStyle: "normal", letterSpacing: "0.02em", paddingTop: 2 }}>
+            It's finger lickin' good!
+          </span>
+        </div>
         <img
           src={FEATURED_BURGER}
           alt="징거버거"
