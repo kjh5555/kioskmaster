@@ -35,27 +35,6 @@ export function KfcSetCustomize({
         flex-direction: column;
       `}
     >
-      {/* Watermark text overlay */}
-      <div
-        css={css`
-          position: absolute;
-          top: 70px;
-          left: 0;
-          right: 0;
-          text-align: center;
-          font-size: 22px;
-          font-weight: 900;
-          color: rgba(120, 120, 120, 0.3);
-          letter-spacing: -0.02em;
-          line-height: 1.25;
-          pointer-events: none;
-          padding: 0 8px;
-          z-index: 1;
-        `}
-      >
-        야채, 치즈, 패티를 더 추가하고 싶다면{"\n"}추가를 선택합니다.
-      </div>
-
       {/* Top: set photo + title + price */}
       <div
         css={css`
