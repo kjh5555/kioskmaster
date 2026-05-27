@@ -12,10 +12,14 @@ import { BurgerKingSideUpsell } from "./BurgerKingSideUpsell";
 import { BurgerKingStart } from "./BurgerKingStart";
 import { BurgerKingUpsell } from "./BurgerKingUpsell";
 import { KfcBestUpsell } from "./KfcBestUpsell";
+import { KfcCardConfirm } from "./KfcCardConfirm";
+import { KfcCardInsert } from "./KfcCardInsert";
 import { KfcMembership } from "./KfcMembership";
 import { KfcMenu } from "./KfcMenu";
+import { KfcOrderComplete } from "./KfcOrderComplete";
 import { KfcOrderReview } from "./KfcOrderReview";
 import { KfcPayMethod } from "./KfcPayMethod";
+import { KfcReceiptPrompt } from "./KfcReceiptPrompt";
 import { KfcSetCustomize } from "./KfcSetCustomize";
 import { KfcSetUpsell } from "./KfcSetUpsell";
 import { KfcSideSize } from "./KfcSideSize";
@@ -63,10 +67,14 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "lotteria-menu": LotteriaMenu,
   "lotteria-set-popup": LotteriaSetPopup,
   "kfc-best-upsell": KfcBestUpsell,
+  "kfc-card-confirm": KfcCardConfirm,
+  "kfc-card-insert": KfcCardInsert,
   "kfc-membership": KfcMembership,
   "kfc-menu": KfcMenu,
+  "kfc-order-complete": KfcOrderComplete,
   "kfc-order-review": KfcOrderReview,
   "kfc-pay-method": KfcPayMethod,
+  "kfc-receipt-prompt": KfcReceiptPrompt,
   "kfc-set-customize": KfcSetCustomize,
   "kfc-set-upsell": KfcSetUpsell,
   "kfc-side-size": KfcSideSize,

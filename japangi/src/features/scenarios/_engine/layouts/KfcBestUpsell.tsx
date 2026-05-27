@@ -13,13 +13,11 @@ type UpsellItem = {
 };
 
 const ITEMS: UpsellItem[] = [
-  { id: "chicken-skin-fry",  label: "닭껍질튀김",       price: "3,300", emoji: "🍗", badge: "인기" },
   { id: "tender-2",          label: "텐더 2조각",       price: "3,000", emoji: "🍗", imgSlug: "tender-2" },
   { id: "butter-biscuit",    label: "버터비스킷",       price: "2,500", emoji: "🥐", imgSlug: "butter-biscuit", badge: "신메뉴" },
   { id: "nugget-4",          label: "치킨너겟 4조각",   price: "2,200", emoji: "🍗", imgSlug: "nugget-4" },
   { id: "egg-tart",          label: "에그타르트(1개)",  price: "2,200", emoji: "🥮", imgSlug: "egg-tart", badge: "인기" },
   { id: "coleslaw",          label: "코울슬로(1개)",    price: "2,000", emoji: "🥗", imgSlug: "coleslaw" },
-  { id: "corn-salad",        label: "콘샐러드(1개)",    price: "2,000", emoji: "🌽" },
   { id: "spicy-mayo-sauce",  label: "스파이시마요소스", price: "500",   emoji: "🥫", imgSlug: "spicy-mayo-sauce" },
 ];
 
