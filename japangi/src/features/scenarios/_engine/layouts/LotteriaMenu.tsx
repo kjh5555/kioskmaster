@@ -1,6 +1,8 @@
 import { css, keyframes } from "@emotion/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
+import { useBrandMenuCategory } from "../../../../hooks/useKioskQueries";
+import type { ApiMenuItemRead } from "../../../../lib/api";
 import { idlePulse, lookupCorrectLabel, type CustomLayoutProps } from "./types";
 import { useDecoShake } from "./useDecoShake";
 
@@ -84,87 +86,8 @@ const BADGES: Record<string, string> = {
   "fire-wing": "🌶️",
 };
 
-type DecorItem = { id: string; label: string; price: string };
-
 const TAB_HAMBURGER = "햄버거";
 const TABS = ["추천메뉴", TAB_HAMBURGER, "디저트/치킨", "음료/커피"];
-
-// Decorative items shown on non-target views. Selecting these does nothing
-// (no onChoice call) — they exist so users can freely explore the kiosk UI.
-const DECOR: Record<string, DecorItem[][]> = {
-  추천메뉴: [
-    [
-      { id: "bunt-beef", label: "번트비프버거", price: "8,800" },
-      { id: "crispy-chicken-fire", label: "크리스피치킨\n(파이어)", price: "6,900" },
-      { id: "mozza-balsamic", label: "모짜렐라\n(발사믹)", price: "9,100" },
-      { id: "jeonju-bibim-rice", label: "전주비빔\n라이스버거", price: "7,300" },
-      { id: "ria-shrimp-bacon", label: "리아 새우\n베이컨", price: "6,100" },
-      { id: "ria-bulgogi-bacon", label: "리아 불고기\n베이컨", price: "6,100" },
-      { id: "mozza-tomato", label: "모짜렐라\n(토마토)", price: "9,100" },
-      { id: "crispy-chicken-greek", label: "크리스피치킨\n(그릭랜치)", price: "6,900" },
-    ],
-  ],
-  // 햄버거 page 1 — decorative. Page 2 uses step.choices (real scenario items).
-  // Pages 3-4 are extra decorative pages so the 8-per-page pagination shows
-  // multiple pages without breaking the grid layout.
-  [TAB_HAMBURGER]: [
-    [
-      { id: "bunt-beef", label: "번트비프버거", price: "8,800" },
-      { id: "crispy-chicken-fire", label: "크리스피치킨\n(파이어)", price: "6,900" },
-      { id: "crispy-chicken-greek", label: "크리스피치킨\n(그릭랜치)", price: "6,900" },
-      { id: "mozza-balsamic", label: "모짜렐라\n(발사믹)", price: "9,100" },
-      { id: "mozza-tomato", label: "모짜렐라\n(토마토)", price: "9,100" },
-      { id: "jeonju-bibim-rice", label: "전주비빔\n라이스버거", price: "7,300" },
-      { id: "ria-shrimp-bacon", label: "리아 새우\n베이컨", price: "6,100" },
-      { id: "ria-bulgogi-bacon", label: "리아 불고기\n베이컨", price: "6,100" },
-    ],
-    [], // page 2 sentinel — replaced at render-time with step.choices
-    [
-      { id: "indian-burger",   label: "인디안버거",         price: "7,500" },
-      { id: "az-burger",       label: "AZ버거",             price: "5,500" },
-      { id: "hanwoo-bulgogi",  label: "한우불고기버거",     price: "11,800" },
-      { id: "t-rex",           label: "T-Rex 빅버거",       price: "12,500" },
-      { id: "deri-burger",     label: "데리버거",           price: "3,400" },
-      { id: "shrimp-burger",   label: "새우버거",           price: "4,500" },
-      { id: "mozza-mushroom",  label: "모짜렐라\n(머쉬룸)", price: "9,100" },
-      { id: "t-rex-double",    label: "T-Rex 더블",         price: "14,500" },
-    ],
-    [
-      { id: "fried-chicken-burger", label: "후라이드\n치킨버거", price: "5,300" },
-      { id: "chicken-fillet-burger", label: "치킨휠레\n버거",   price: "5,800" },
-      { id: "shrimp-square",   label: "새우스퀘어",         price: "5,800" },
-      { id: "beef-square",     label: "비프스퀘어",         price: "6,500" },
-      { id: "bigcorn",         label: "빅콘",               price: "4,800" },
-      { id: "hot-crispy-classic", label: "핫크리스피\n클래식", price: "6,900" },
-      { id: "ria-classic",     label: "리아클래식",         price: "6,300" },
-      { id: "spicy-seasoner",  label: "매운\n시즈너버거",   price: "5,500" },
-    ],
-  ],
-  "디저트/치킨": [
-    [
-      { id: "spicy-tonkatsu-hot", label: "디지게 매운 돈까스", price: "3,500" },
-      { id: "chicken-nugget", label: "치킨너겟", price: "3,100" },
-      { id: "potato-r", label: "포테이토", price: "2,000" },
-      { id: "cheese-stick", label: "치즈스틱", price: "2,800" },
-      { id: "fire-wing", label: "화이어윙", price: "3,200" },
-      { id: "chicken-fillet", label: "치킨휠레", price: "3,100" },
-      { id: "boneless-half", label: "순살치킨 하프팩", price: "10,500" },
-      { id: "g-pie-mild-s", label: "G파이", price: "2,400" },
-    ],
-  ],
-  "음료/커피": [
-    [
-      { id: "coke", label: "코카콜라", price: "2,300" },
-      { id: "sprite", label: "스프라이트", price: "2,300" },
-      { id: "coke-zero", label: "코카콜라 제로", price: "2,300" },
-      { id: "ice-tea", label: "아이스 티", price: "2,500" },
-      { id: "ice-americano", label: "아이스 아메리카노", price: "2,500" },
-      { id: "cafe-latte", label: "카페라떼", price: "3,000" },
-      { id: "ice-cafe-latte", label: "아이스 카페라떼", price: "3,200" },
-      { id: "hot-choco", label: "핫초코", price: "3,000" },
-    ],
-  ],
-};
 
 // Per-burger info shown in the cart-populated top card. Keyed by burger slug.
 const BURGER_INFO: Record<string, { description: string; setPrice: number }> = {
@@ -223,42 +146,87 @@ export function LotteriaMenu({
     scenario.steps.find((s) => s.id === "burger-choice")?.correctChoiceId ?? "ria-bulgogi";
   const burgerInfo = BURGER_INFO[burgerSlug] ?? BURGER_INFO["ria-bulgogi"];
 
-  // 햄버거 탭 page 2가 정답이 살아있는 화면. 그 외 페이지/탭은 자유 탐색용.
+  // 햄버거 탭 page 0이 정답이 살아있는 화면. 그 외 페이지/탭은 자유 탐색용.
   const [activeTab, setActiveTab] = useState<string>(TAB_HAMBURGER);
-  const [pageByTab, setPageByTab] = useState<Record<string, number>>({
-    [TAB_HAMBURGER]: 1, // start on page 2 (zero-indexed = 1) — that's the screenshot view
-  });
+  const [pageByTab, setPageByTab] = useState<Record<string, number>>({});
   const { shakeNow, shakeStyle } = useDecoShake();
 
-  const pages = DECOR[activeTab] ?? [[]];
-  const totalPages = pages.length;
-  const page = pageByTab[activeTab] ?? 0;
+  // ── Backend-fetched menu data per category ──────────────────────
+  const recommendQ = useBrandMenuCategory("lotteria", "recommend");
+  const burgerQ = useBrandMenuCategory("lotteria", "burger");
+  const chickenQ = useBrandMenuCategory("lotteria", "chicken");
+  const dessertQ = useBrandMenuCategory("lotteria", "dessert");
+  const drinkQ = useBrandMenuCategory("lotteria", "drink");
+  const iceShotQ = useBrandMenuCategory("lotteria", "ice-shot");
 
-  const onHamburgerPage2 =
-    activeTab === TAB_HAMBURGER && page === 1;
-
-  // Render items: real step.choices on 햄버거 page 2, decorative everywhere else.
-  // When cart is populated, the current step ("menu-with-cart") only carries a
-  // single "pay-cta" choice — so we resolve the original 8-burger grid from the
-  // burger-choice step instead, otherwise the menu would collapse to one card.
+  // For 햄버거 탭: reorder so the scenario's answer set lives on page 0.
   const burgerChoiceStep = scenario.steps.find((s) => s.id === "burger-choice");
+  const correctSlugs = useMemo(
+    () =>
+      new Set(
+        (burgerChoiceStep?.choices ?? step.choices).map((c) => c.id),
+      ),
+    [burgerChoiceStep, step.choices],
+  );
+  const burgerItems = useMemo<ApiMenuItemRead[]>(() => {
+    const all = burgerQ.data?.items ?? [];
+    const answers = all.filter((i) => correctSlugs.has(i.slug));
+    const others = all.filter((i) => !correctSlugs.has(i.slug));
+    return [...answers, ...others];
+  }, [burgerQ.data, correctSlugs]);
+
+  const tabItems: Record<string, ApiMenuItemRead[]> = {
+    "추천메뉴": recommendQ.data?.items ?? [],
+    [TAB_HAMBURGER]: burgerItems,
+    "디저트/치킨": [
+      ...(dessertQ.data?.items ?? []),
+      ...(chickenQ.data?.items ?? []),
+    ],
+    "음료/커피": [
+      ...(drinkQ.data?.items ?? []),
+      ...(iceShotQ.data?.items ?? []),
+    ],
+  };
+
+  const PAGE_SIZE = 8;
+  const allItems = tabItems[activeTab] ?? [];
+  const totalPages = Math.max(1, Math.ceil(allItems.length / PAGE_SIZE));
+  const page = Math.min(pageByTab[activeTab] ?? 0, totalPages - 1);
+
+  // 햄버거 탭 page 0 = 정답 페이지 (answers are at the head of burgerItems).
+  const onHamburgerPage2 =
+    activeTab === TAB_HAMBURGER && page === 0;
+
   const gridChoices = cartPopulated
     ? burgerChoiceStep?.choices ?? step.choices
     : step.choices;
 
+  // Slice current page from backend data (8 per page).
+  const pageItems = allItems.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+
+  // When cart is populated we keep the answer 8 burgers as the grid no matter
+  // what page user lands on, so the final review screen stays consistent.
   const items: Array<{
     id: string;
     label: string;
     price: string;
+    imageUrl?: string;
     isReal: boolean;
-  }> = onHamburgerPage2
+  }> = cartPopulated
     ? gridChoices.map((c) => ({
         id: c.id,
         label: c.label,
         price: c.sublabel ?? "",
+        imageUrl: undefined,
         isReal: true,
       }))
-    : pages[page].map((d) => ({ ...d, isReal: false }));
+    : pageItems.map((bi) => ({
+        id: bi.slug,
+        label: bi.name,
+        price: bi.price.replace(/[^0-9,]/g, ""),
+        imageUrl: bi.image_url ?? undefined,
+        isReal: onHamburgerPage2 && correctSlugs.has(bi.slug),
+      }));
 
   function switchTab(tab: string) {
     setActiveTab(tab);
@@ -634,7 +602,7 @@ export function LotteriaMenu({
         >
           {items.map((item) => {
             const slug = item.id;
-            const img = IMG[slug];
+            const img = item.imageUrl ?? IMG[slug];
             const badge = BADGES[slug];
             const isCorrect =
               item.isReal && slug === step.correctChoiceId;
