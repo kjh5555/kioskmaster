@@ -50,6 +50,11 @@ export function KfcMenu({
   const correctId = step.correctChoiceId;
   const correctCategory: KfcCategoryKey = "burger";
 
+  // When this layout is rendered for the "menu-with-cart" step, the cart
+  // is pre-populated with the user's chosen set + side; menu cards become
+  // inert and the 주문하기 button takes over as the only valid choice.
+  const cartPopulated = step.id === "menu-with-cart";
+
   const [activeTab, setActiveTab] = useState<KfcCategoryKey>("recommend");
   const [pageByTab, setPageByTab] = useState<Record<KfcCategoryKey, number>>({
     recommend: 0,
@@ -274,7 +279,9 @@ export function KfcMenu({
           >
             {visible.map((item) => {
               const isCorrect =
-                activeTab === correctCategory && item.id === correctId;
+                !cartPopulated &&
+                activeTab === correctCategory &&
+                item.id === correctId;
               const interactive = isCorrect;
               return (
                 <MenuCard
@@ -353,10 +360,10 @@ export function KfcMenu({
         `}
       >
         <div css={css`display:flex; align-items:center; gap:6px;`}>
-          <span css={css`font-weight: 900; color: #2a1408;`}>장바구니</span>
+          <span css={css`font-weight: 900; color: #2a1408;`}>주문 수량</span>
           <span
             css={css`
-              background: #2a1408;
+              background: ${cartPopulated ? "#e4002b" : "#2a1408"};
               color: #ffffff;
               font-size: 10px;
               font-weight: 900;
@@ -364,27 +371,46 @@ export function KfcMenu({
               border-radius: 4px;
             `}
           >
-            0
+            {cartPopulated ? 2 : 0}
           </span>
         </div>
         <div css={css`display:flex; align-items:center; gap:6px; font-weight: 800;`}>
           <span style={{ color: "#4e5968", fontSize: 10 }}>주문금액</span>
-          <span style={{ color: "#2a1408", fontSize: 15, fontWeight: 900 }}>₩0</span>
+          <span style={{ color: "#2a1408", fontSize: 15, fontWeight: 900 }}>
+            {cartPopulated ? "11,600" : "₩0"}
+          </span>
         </div>
       </div>
 
-      <div
-        css={css`
-          background: #ffffff;
-          padding: 4px 14px;
-          font-size: 10px;
-          font-weight: 700;
-          color: #8b95a1;
-          text-align: center;
-        `}
-      >
-        🛒 장바구니가 비어있습니다. 메뉴를 담아주세요!
-      </div>
+      {cartPopulated ? (
+        <div
+          css={css`
+            background: #ffffff;
+            padding: 4px 14px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 11px;
+            color: #2a1408;
+          `}
+        >
+          <CartLine name="징거세트 (구:스쿨처플러스버거)" qty={1} price="9,300" />
+          <CartLine name="프렌치프라이(M)" qty={1} price="2,300" />
+        </div>
+      ) : (
+        <div
+          css={css`
+            background: #ffffff;
+            padding: 4px 14px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #8b95a1;
+            text-align: center;
+          `}
+        >
+          🛒 장바구니가 비어있습니다. 메뉴를 담아주세요!
+        </div>
+      )}
 
       {/* Footer buttons ------------------------------------------ */}
       <div
@@ -396,9 +422,23 @@ export function KfcMenu({
           gap: 6px;
         `}
       >
-        <button type="button" css={[footerBtn, couponBtn]}>🎟️ 쿠폰</button>
+        <button type="button" css={[footerBtn, couponBtn]}>🎟️ 쿠폰사용</button>
         <button type="button" css={[footerBtn, cancelBtn]}>전체취소</button>
-        <button type="button" css={[footerBtn, confirmBtn]}>🛍️ 주문확인</button>
+        {cartPopulated ? (
+          <button
+            type="button"
+            onClick={() => onChoice(correctId)}
+            css={[
+              footerBtn,
+              confirmActiveBtn,
+              idlePulse(idleHintActive, true),
+            ]}
+          >
+            🛍️ 주문하기
+          </button>
+        ) : (
+          <button type="button" css={[footerBtn, confirmBtn]}>🛍️ 주문확인</button>
+        )}
       </div>
     </div>
   );
@@ -452,6 +492,65 @@ export function KfcMenu({
       </button>
     );
   }
+}
+
+function CartLine({
+  name,
+  qty,
+  price,
+}: {
+  name: string;
+  qty: number;
+  price: string;
+}) {
+  return (
+    <div
+      css={css`
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+        gap: 8px;
+        padding: 3px 0;
+        border-bottom: 1px dashed #e5e8eb;
+      `}
+    >
+      <span
+        css={css`
+          font-size: 11px;
+          font-weight: 800;
+          color: #2a1408;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        `}
+      >
+        {name}
+      </span>
+      <span
+        css={css`
+          background: #e4002b;
+          color: #ffffff;
+          font-size: 10px;
+          font-weight: 900;
+          padding: 1px 6px;
+          border-radius: 3px;
+        `}
+      >
+        +{qty}
+      </span>
+      <span
+        css={css`
+          font-size: 12px;
+          font-weight: 900;
+          color: #2a1408;
+          min-width: 48px;
+          text-align: right;
+        `}
+      >
+        {price}
+      </span>
+    </div>
+  );
 }
 
 const modeChip = css`
@@ -602,5 +701,10 @@ const cancelBtn = css`
 
 const confirmBtn = css`
   background: #b0b8c1;
+  color: #ffffff;
+`;
+
+const confirmActiveBtn = css`
+  background: #e4002b;
   color: #ffffff;
 `;

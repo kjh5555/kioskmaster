@@ -13,7 +13,9 @@ import { BurgerKingStart } from "./BurgerKingStart";
 import { BurgerKingUpsell } from "./BurgerKingUpsell";
 import { KfcMembership } from "./KfcMembership";
 import { KfcMenu } from "./KfcMenu";
+import { KfcSetCustomize } from "./KfcSetCustomize";
 import { KfcSetUpsell } from "./KfcSetUpsell";
+import { KfcSideSize } from "./KfcSideSize";
 import { KfcStart } from "./KfcStart";
 import { LotteriaCardInsert } from "./LotteriaCardInsert";
 import { LotteriaMenu } from "./LotteriaMenu";
@@ -59,7 +61,9 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "lotteria-set-popup": LotteriaSetPopup,
   "kfc-membership": KfcMembership,
   "kfc-menu": KfcMenu,
+  "kfc-set-customize": KfcSetCustomize,
   "kfc-set-upsell": KfcSetUpsell,
+  "kfc-side-size": KfcSideSize,
   "kfc-start": KfcStart,
   "lotteria-card-insert": LotteriaCardInsert,
   "lotteria-order-complete": LotteriaOrderComplete,
