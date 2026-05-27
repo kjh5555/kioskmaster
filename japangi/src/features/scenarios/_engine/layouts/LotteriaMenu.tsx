@@ -105,6 +105,8 @@ const DECOR: Record<string, DecorItem[][]> = {
     ],
   ],
   // 햄버거 page 1 — decorative. Page 2 uses step.choices (real scenario items).
+  // Pages 3-4 are extra decorative pages so the 8-per-page pagination shows
+  // multiple pages without breaking the grid layout.
   [TAB_HAMBURGER]: [
     [
       { id: "bunt-beef", label: "번트비프버거", price: "8,800" },
@@ -117,6 +119,26 @@ const DECOR: Record<string, DecorItem[][]> = {
       { id: "ria-bulgogi-bacon", label: "리아 불고기\n베이컨", price: "6,100" },
     ],
     [], // page 2 sentinel — replaced at render-time with step.choices
+    [
+      { id: "indian-burger",   label: "인디안버거",         price: "7,500" },
+      { id: "az-burger",       label: "AZ버거",             price: "5,500" },
+      { id: "hanwoo-bulgogi",  label: "한우불고기버거",     price: "11,800" },
+      { id: "t-rex",           label: "T-Rex 빅버거",       price: "12,500" },
+      { id: "deri-burger",     label: "데리버거",           price: "3,400" },
+      { id: "shrimp-burger",   label: "새우버거",           price: "4,500" },
+      { id: "mozza-mushroom",  label: "모짜렐라\n(머쉬룸)", price: "9,100" },
+      { id: "t-rex-double",    label: "T-Rex 더블",         price: "14,500" },
+    ],
+    [
+      { id: "fried-chicken-burger", label: "후라이드\n치킨버거", price: "5,300" },
+      { id: "chicken-fillet-burger", label: "치킨휠레\n버거",   price: "5,800" },
+      { id: "shrimp-square",   label: "새우스퀘어",         price: "5,800" },
+      { id: "beef-square",     label: "비프스퀘어",         price: "6,500" },
+      { id: "bigcorn",         label: "빅콘",               price: "4,800" },
+      { id: "hot-crispy-classic", label: "핫크리스피\n클래식", price: "6,900" },
+      { id: "ria-classic",     label: "리아클래식",         price: "6,300" },
+      { id: "spicy-seasoner",  label: "매운\n시즈너버거",   price: "5,500" },
+    ],
   ],
   "디저트/치킨": [
     [
