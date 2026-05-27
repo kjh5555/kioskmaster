@@ -11,6 +11,22 @@ const shakeKf = keyframes`
   100% { transform: translateX(0); }
 `;
 
+// Stranger Things-style red flicker for the UPSIDEDOWN ZINGER title.
+const flicker = keyframes`
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow:
+      0 0 4px rgba(255, 50, 30, 0.95),
+      0 0 11px rgba(255, 50, 30, 0.85),
+      0 0 22px rgba(255, 50, 30, 0.7),
+      0 0 48px rgba(255, 0, 0, 0.6);
+    opacity: 1;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+    opacity: 0.55;
+  }
+`;
+
 function shakeWhen(rejected: string | null, id: string) {
   return (
     rejected === id &&
@@ -47,14 +63,16 @@ export function KfcStart({
           sans-serif;
       `}
     >
-      {/* Center stage: black background + real burger photo ------------ */}
+      {/* Center stage: black background + real burger photo + ST title -- */}
       <div
         css={css`
           flex: 1;
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
           padding: 24px 16px;
+          gap: 18px;
           background:
             radial-gradient(
               ellipse at center,
@@ -70,11 +88,29 @@ export function KfcStart({
           alt="징거버거"
           style={{
             maxWidth: "85%",
-            maxHeight: "70vh",
+            maxHeight: "55vh",
             objectFit: "contain",
             filter: "drop-shadow(0 18px 50px rgba(228, 0, 43, 0.35))",
           }}
         />
+
+        <div
+          css={css`
+            font-family: "Georgia", "Times New Roman", serif;
+            font-weight: 900;
+            font-style: italic;
+            font-size: 44px;
+            color: #ff1f1f;
+            letter-spacing: 0.04em;
+            text-align: center;
+            line-height: 0.95;
+            -webkit-text-stroke: 1px #8a0000;
+            animation: ${flicker} 5.5s infinite;
+          `}
+        >
+          UPSIDEDOWN
+          <div style={{ fontSize: 26, marginTop: 2 }}>ZINGER</div>
+        </div>
       </div>
 
       {/* Action bar (white) — dine-in vs takeout ------------------------ */}
