@@ -1,6 +1,7 @@
 import { css, keyframes } from "@emotion/react";
 
 import { idlePulse, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const popIn = keyframes`
   0%   { transform: scale(0.94); opacity: 0; }
@@ -49,6 +50,7 @@ export function KfcOrderReview({
   const correctId = step.correctChoiceId;
   const payChoice = step.choices.find((c) => c.id === "pay");
   const closeChoice = step.choices.find((c) => c.id === "close");
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   return (
     <div
@@ -180,8 +182,8 @@ export function KfcOrderReview({
             padding: 4px 0;
           `}
         >
-          <span css={pagDot}>▲</span>
-          <span css={[pagDot, pagDotMuted]}>▼</span>
+          <button type="button" onClick={() => shakeNow("page-up")} css={[pagDot, pagDotBtn, shakeStyle("page-up")]}>▲</button>
+          <button type="button" onClick={() => shakeNow("page-down")} css={[pagDot, pagDotMuted, pagDotBtn, shakeStyle("page-down")]}>▼</button>
         </div>
 
         {/* Totals */}
@@ -295,6 +297,15 @@ const pagDot = css`
   justify-content: center;
   font-size: 10px;
   font-weight: 800;
+`;
+
+const pagDotBtn = css`
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  :active {
+    filter: brightness(0.85);
+  }
 `;
 
 const pagDotMuted = css`

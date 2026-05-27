@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 
 import { KFC_IMAGE_BY_SLUG } from "./kfcMenuData";
 import { idlePulse, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 export function KfcSideSize({
   step,
@@ -14,6 +15,7 @@ export function KfcSideSize({
   const friesM = step.choices.find((c) => c.id === "fries-m");
   const nextChoice = step.choices.find((c) => c.id === "next");
   const prevChoice = step.choices.find((c) => c.id === "prev");
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   const friesLImg = KFC_IMAGE_BY_SLUG["french-fries-l"];
   const friesMImg = KFC_IMAGE_BY_SLUG["french-fries-m"];
@@ -126,8 +128,8 @@ export function KfcSideSize({
           padding: 12px 0 6px;
         `}
       >
-        <span css={pagDot}>▲</span>
-        <span css={[pagDot, pagDotMuted]}>▼</span>
+        <button type="button" onClick={() => shakeNow("page-up")} css={[pagDot, pagDotBtn, shakeStyle("page-up")]}>▲</button>
+        <button type="button" onClick={() => shakeNow("page-down")} css={[pagDot, pagDotMuted, pagDotBtn, shakeStyle("page-down")]}>▼</button>
       </div>
 
       {/* Bottom buttons */}
@@ -172,9 +174,13 @@ export function KfcSideSize({
           color: #2a1408;
         `}
       >
-        <span>📋 주문서</span>
+        <button type="button" onClick={() => shakeNow("order-doc")} css={[footerLink, shakeStyle("order-doc")]}>
+          📋 주문서
+        </button>
         <span css={css`flex: 1;`} />
-        <span css={css`color: #8b95a1;`}>전체취소</span>
+        <button type="button" onClick={() => shakeNow("cancel-all")} css={[footerLink, css`color: #8b95a1;`, shakeStyle("cancel-all")]}>
+          전체취소
+        </button>
       </div>
     </div>
   );
@@ -285,6 +291,29 @@ const pagDot = css`
   justify-content: center;
   font-size: 11px;
   font-weight: 800;
+`;
+
+const pagDotBtn = css`
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  :active {
+    filter: brightness(0.85);
+  }
+`;
+
+const footerLink = css`
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  color: #2a1408;
+  cursor: pointer;
+  padding: 2px 4px;
+  :active {
+    filter: brightness(0.85);
+  }
 `;
 
 const pagDotMuted = css`

@@ -12,6 +12,7 @@ import {
   type KfcMenuItem,
 } from "./kfcMenuData";
 import { idlePulse, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const CHICKEN_PAGE_SIZE = 9;
 
@@ -71,6 +72,8 @@ export function KfcMenu({
   const [chickenModal, setChickenModal] = useState<KfcChickenGroup | null>(
     null,
   );
+  const [dineMode, setDineMode] = useState<"dine-in" | "takeout">("takeout");
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   const isChickenGrouped = activeTab === "chicken";
   const items = isChickenGrouped ? [] : KFC_CATEGORY_ITEMS[activeTab];
@@ -170,10 +173,28 @@ export function KfcMenu({
           gap: 6px;
         `}
       >
-        <button type="button" css={[modeChip]}>매장 식사</button>
-        <button type="button" css={[modeChip, modeChipActive]}>포장 주문</button>
+        <button
+          type="button"
+          onClick={() => setDineMode("dine-in")}
+          css={[modeChip, dineMode === "dine-in" && modeChipActive]}
+        >
+          매장 식사
+        </button>
+        <button
+          type="button"
+          onClick={() => setDineMode("takeout")}
+          css={[modeChip, dineMode === "takeout" && modeChipActive]}
+        >
+          포장 주문
+        </button>
         <div css={css`flex: 1;`} />
-        <button type="button" css={infoChip}>영양정보</button>
+        <button
+          type="button"
+          onClick={() => shakeNow("info")}
+          css={[infoChip, shakeStyle("info")]}
+        >
+          영양정보
+        </button>
         <div
           css={css`
             display: flex;
@@ -462,8 +483,20 @@ export function KfcMenu({
           gap: 6px;
         `}
       >
-        <button type="button" css={[footerBtn, couponBtn]}>🎟️ 쿠폰사용</button>
-        <button type="button" css={[footerBtn, cancelBtn]}>전체취소</button>
+        <button
+          type="button"
+          onClick={() => shakeNow("coupon")}
+          css={[footerBtn, couponBtn, shakeStyle("coupon")]}
+        >
+          🎟️ 쿠폰사용
+        </button>
+        <button
+          type="button"
+          onClick={() => shakeNow("cancel-all")}
+          css={[footerBtn, cancelBtn, shakeStyle("cancel-all")]}
+        >
+          전체취소
+        </button>
         {cartPopulated ? (
           <button
             type="button"
@@ -477,7 +510,13 @@ export function KfcMenu({
             🛍️ 주문하기
           </button>
         ) : (
-          <button type="button" css={[footerBtn, confirmBtn]}>🛍️ 주문확인</button>
+          <button
+            type="button"
+            onClick={() => shakeNow("confirm-empty")}
+            css={[footerBtn, confirmBtn, shakeStyle("confirm-empty")]}
+          >
+            🛍️ 주문확인
+          </button>
         )}
       </div>
 

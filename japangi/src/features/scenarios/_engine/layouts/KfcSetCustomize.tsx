@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 
 import { KFC_IMAGE_BY_SLUG } from "./kfcMenuData";
 import { idlePulse, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 export function KfcSetCustomize({
   step,
@@ -15,6 +16,7 @@ export function KfcSetCustomize({
   const drinkChange = step.choices.find((c) => c.id === "drink-change");
   const nextChoice = step.choices.find((c) => c.id === "next");
   const prevChoice = step.choices.find((c) => c.id === "prev");
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   const setImg = KFC_IMAGE_BY_SLUG["jinger-set"];
   const friesImg = KFC_IMAGE_BY_SLUG["french-fries-m"];
@@ -215,9 +217,13 @@ export function KfcSetCustomize({
           color: #2a1408;
         `}
       >
-        <span>📋 주문서</span>
+        <button type="button" onClick={() => shakeNow("order-doc")} css={[footerLink, shakeStyle("order-doc")]}>
+          📋 주문서
+        </button>
         <span css={css`flex: 1;`} />
-        <span css={css`color: #8b95a1;`}>전체취소</span>
+        <button type="button" onClick={() => shakeNow("cancel-all")} css={[footerLink, css`color: #8b95a1;`, shakeStyle("cancel-all")]}>
+          전체취소
+        </button>
       </div>
     </div>
   );
@@ -318,6 +324,20 @@ const actionPillHighlight = css`
   @keyframes kfcPulseRed {
     0%, 100% { box-shadow: 0 0 0 4px rgba(228, 0, 43, 0.35); }
     50%      { box-shadow: 0 0 0 8px rgba(228, 0, 43, 0.15); }
+  }
+`;
+
+const footerLink = css`
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  color: #2a1408;
+  cursor: pointer;
+  padding: 2px 4px;
+  :active {
+    filter: brightness(0.85);
   }
 `;
 

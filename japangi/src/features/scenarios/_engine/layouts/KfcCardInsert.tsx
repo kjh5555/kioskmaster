@@ -2,6 +2,7 @@ import { css, keyframes } from "@emotion/react";
 import { useEffect } from "react";
 
 import { type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const slide = keyframes`
   0%   { transform: translateX(-100%); }
@@ -14,6 +15,7 @@ export function KfcCardInsert({
 }: CustomLayoutProps): React.ReactElement {
   const next = step.choices.find((c) => c.id === "next");
   const correctId = step.correctChoiceId;
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   // Auto-advance after 3 seconds.
   useEffect(() => {
@@ -43,25 +45,36 @@ export function KfcCardInsert({
         flex-direction: column;
       `}
     >
-      <div
-        css={css`
-          position: absolute;
-          top: 12px;
-          right: 14px;
-          width: 32px;
-          height: 32px;
-          background: #b0b8c1;
-          color: #ffffff;
-          border-radius: 4px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 900;
-          font-size: 18px;
-        `}
+      <button
+        type="button"
+        onClick={() => shakeNow("close")}
+        css={[
+          css`
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            width: 32px;
+            height: 32px;
+            background: #b0b8c1;
+            color: #ffffff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            :active {
+              filter: brightness(0.85);
+            }
+          `,
+          shakeStyle("close"),
+        ]}
       >
         ✕
-      </div>
+      </button>
 
       {/* Card insertion guide */}
       <div

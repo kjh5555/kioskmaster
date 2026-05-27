@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 
 import { KFC_IMAGE_BY_SLUG } from "./kfcMenuData";
 import { idlePulse, type CustomLayoutProps } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 export function KfcSetUpsell({
   step,
@@ -13,6 +14,7 @@ export function KfcSetUpsell({
   const setChoice = step.choices.find((c) => c.id === "set");
   const boxChoice = step.choices.find((c) => c.id === "box");
   const singleChoice = step.choices.find((c) => c.id === "single");
+  const { shakeNow, shakeStyle } = useDecoShake();
 
   // Assume the scenario picked jinger upstream (default KFC goal).
   // If/when LLM-driven goal varies the burger, we can wire the previous
@@ -222,7 +224,11 @@ export function KfcSetUpsell({
             버거 단품만 주문하기
           </button>
         )}
-        <button type="button" css={prevPill}>
+        <button
+          type="button"
+          onClick={() => shakeNow("prev")}
+          css={[prevPill, shakeStyle("prev")]}
+        >
           이전
         </button>
       </div>
@@ -241,9 +247,13 @@ export function KfcSetUpsell({
           color: #2a1408;
         `}
       >
-        <span>📋 주문서</span>
+        <button type="button" onClick={() => shakeNow("order-doc")} css={[footerLink, shakeStyle("order-doc")]}>
+          📋 주문서
+        </button>
         <span css={css`flex: 1;`} />
-        <span css={css`color: #8b95a1;`}>전체취소</span>
+        <button type="button" onClick={() => shakeNow("cancel-all")} css={[footerLink, css`color: #8b95a1;`, shakeStyle("cancel-all")]}>
+          전체취소
+        </button>
       </div>
     </div>
   );
@@ -310,6 +320,20 @@ const singlePill = css`
   min-width: 200px;
   :active {
     filter: brightness(0.94);
+  }
+`;
+
+const footerLink = css`
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  color: #2a1408;
+  cursor: pointer;
+  padding: 2px 4px;
+  :active {
+    filter: brightness(0.85);
   }
 `;
 
