@@ -172,6 +172,162 @@ function it(
   return { id, name, price, emoji, isNew, imageUrl: KFC_IMAGE_BY_SLUG[id] };
 }
 
+// ─── Chicken menu groups (collapsed by series) ────────────────
+// In the real KFC kiosk the 치킨 category lists each series once
+// (e.g., "오리지널치킨 3,000~") and the user taps to open a modal
+// that picks the piece count (1/3/5/8).
+
+export type KfcChickenVariant = {
+  id: string;
+  label: string;
+  composition: string;
+  price: string;
+};
+
+export type KfcChickenGroup = {
+  id: string;
+  name: string;
+  description: string;
+  fromPrice: string; // "3,000~"
+  cardImageUrl?: string; // small card image (representative)
+  modalImageUrl?: string; // large bucket image inside the modal
+  badge?: "추천" | "인기";
+  variants: KfcChickenVariant[];
+};
+
+function variant(slug: string, label: string, comp: string, price: string): KfcChickenVariant {
+  return { id: slug, label, composition: comp, price };
+}
+
+export const KFC_CHICKEN_GROUPS: KfcChickenGroup[] = [
+  {
+    id: "original-chicken",
+    name: "오리지널치킨",
+    description: "커넬샌더스가 개발한 11가지 비밀양념에 고압쿠킹 방식으로 촉촉한 KFC 시그니처 치킨",
+    fromPrice: "3,000~",
+    badge: "인기",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["original-chicken-8"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["original-chicken-8"],
+    variants: [
+      variant("original-chicken-8", "오리지널치킨 8조각", "오리지널치킨(1조각)8개", "22,000"),
+      variant("original-chicken-5", "오리지널치킨 5조각", "오리지널치킨(1조각)5개", "14,200"),
+      variant("original-chicken-3", "오리지널치킨 3조각", "오리지널치킨(1조각)3개", "8,700"),
+      variant("original-chicken-1", "오리지널치킨(1조각)", "오리지널치킨(1조각)", "3,000"),
+    ],
+  },
+  {
+    id: "hotcrispy-chicken",
+    name: "핫크리스피치킨",
+    description: "매콤한 양념옷을 입혀 더 바삭한 KFC 시그니처 매운 치킨",
+    fromPrice: "3,000~",
+    badge: "인기",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["hotcrispy-chicken-8"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["hotcrispy-chicken-8"],
+    variants: [
+      variant("hotcrispy-chicken-8", "핫크리스피치킨 8조각", "핫크리스피치킨(1조각)8개", "22,000"),
+      variant("hotcrispy-chicken-5", "핫크리스피치킨 5조각", "핫크리스피치킨(1조각)5개", "14,200"),
+      variant("hotcrispy-chicken-3", "핫크리스피치킨 3조각", "핫크리스피치킨(1조각)3개", "8,700"),
+      variant("hotcrispy-chicken-1", "핫크리스피치킨(1조각)", "핫크리스피치킨(1조각)", "3,000"),
+    ],
+  },
+  {
+    id: "gy-chicken",
+    name: "갓양념치킨",
+    description: "특제 갓양념을 발라 단짠매콤하게 마무리한 KFC 양념 치킨",
+    fromPrice: "3,300~",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["gy-chicken-8"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["gy-chicken-8"],
+    variants: [
+      variant("gy-chicken-8", "갓양념치킨 8조각", "갓양념치킨(1조각)8개", "24,400"),
+      variant("gy-chicken-5", "갓양념치킨 5조각", "갓양념치킨(1조각)5개", "15,700"),
+      variant("gy-chicken-3", "갓양념치킨 3조각", "갓양념치킨(1조각)3개", "9,600"),
+      variant("gy-chicken-1", "갓양념치킨(1조각)", "갓양념치킨(1조각)", "3,300"),
+    ],
+  },
+  {
+    id: "original-tongdari",
+    name: "오리지널통다리",
+    description: "통다리살로 만든 오리지널 시즈닝 통다리 (조각 단위)",
+    fromPrice: "3,100~",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["original-tongdari-8"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["original-tongdari-8"],
+    variants: [
+      variant("original-tongdari-8", "오리지널통다리 8조각", "오리지널통다리(1조각)8개", "22,800"),
+      variant("original-tongdari-5", "오리지널통다리 5조각", "오리지널통다리(1조각)5개", "14,700"),
+      variant("original-tongdari-3", "오리지널통다리 3조각", "오리지널통다리(1조각)3개", "9,000"),
+      variant("original-tongdari-1", "오리지널통다리(1조각)", "오리지널통다리(1조각)", "3,100"),
+    ],
+  },
+  {
+    id: "gy-tongdari",
+    name: "갓양념통다리",
+    description: "갓양념을 입힌 매콤달콤한 통다리 (조각 단위)",
+    fromPrice: "3,400~",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["gy-tongdari-8"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["gy-tongdari-8"],
+    variants: [
+      variant("gy-tongdari-8", "갓양념통다리 8조각", "갓양념통다리(1조각)8개", "25,000"),
+      variant("gy-tongdari-5", "갓양념통다리 5조각", "갓양념통다리(1조각)5개", "16,200"),
+      variant("gy-tongdari-3", "갓양념통다리 3조각", "갓양념통다리(1조각)3개", "9,900"),
+      variant("gy-tongdari-1", "갓양념통다리(1조각)", "갓양념통다리(1조각)", "3,400"),
+    ],
+  },
+  {
+    id: "hotcrispy-tongdari",
+    name: "핫크리스피통다리",
+    description: "핫크리스피 옷을 입힌 매콤한 통다리 (조각 단위)",
+    fromPrice: "3,100~",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["hotcrispy-tongdari-8"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["hotcrispy-tongdari-8"],
+    variants: [
+      variant("hotcrispy-tongdari-8", "핫크리스피통다리 8조각", "핫크리스피통다리(1조각)8개", "22,800"),
+      variant("hotcrispy-tongdari-5", "핫크리스피통다리 5조각", "핫크리스피통다리(1조각)5개", "14,700"),
+      variant("hotcrispy-tongdari-3", "핫크리스피통다리 3조각", "핫크리스피통다리(1조각)3개", "9,000"),
+      variant("hotcrispy-tongdari-1", "핫크리스피통다리(1조각)", "핫크리스피통다리(1조각)", "3,100"),
+    ],
+  },
+  {
+    id: "truffle-tongdari",
+    name: "트러플치르르통다리",
+    description: "트러플 향을 더한 시그니처 통다리 (조각 단위)",
+    fromPrice: "3,600~",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["truffle-tongdari-8"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["truffle-tongdari-8"],
+    variants: [
+      variant("truffle-tongdari-8", "트러플치르르통다리 8조각", "트러플치르르통다리(1조각)8개", "26,500"),
+      variant("truffle-tongdari-5", "트러플치르르통다리 5조각", "트러플치르르통다리(1조각)5개", "16,900"),
+      variant("truffle-tongdari-3", "트러플치르르통다리 3조각", "트러플치르르통다리(1조각)3개", "10,500"),
+      variant("truffle-tongdari-1", "트러플치르르통다리(1조각)", "트러플치르르통다리(1조각)", "3,600"),
+    ],
+  },
+  {
+    id: "hot-wing",
+    name: "핫윙",
+    description: "매콤한 양념옷을 입힌 닭날개 (조각 단위)",
+    fromPrice: "2,900~",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["hot-wing-15"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["hot-wing-15"],
+    variants: [
+      variant("hot-wing-15", "핫윙 15조각", "핫윙(1조각)15개", "18,900"),
+      variant("hot-wing-10", "핫윙 10조각", "핫윙(1조각)10개", "12,900"),
+      variant("hot-wing-5", "핫윙 5조각", "핫윙(1조각)5개", "6,900"),
+      variant("hot-wing-2", "핫윙 2조각", "핫윙(1조각)2개", "2,900"),
+    ],
+  },
+  {
+    id: "tender",
+    name: "텐더",
+    description: "닭가슴살 안심을 부드럽게 튀긴 KFC 텐더 (조각 단위)",
+    fromPrice: "3,000~",
+    cardImageUrl: KFC_IMAGE_BY_SLUG["tender-4"],
+    modalImageUrl: KFC_IMAGE_BY_SLUG["tender-4"],
+    variants: [
+      variant("tender-4", "텐더 4조각", "텐더(1조각)4개", "5,800"),
+      variant("tender-2", "텐더 2조각", "텐더(1조각)2개", "3,000"),
+    ],
+  },
+];
+
 export const KFC_CATEGORY_ITEMS: Record<KfcCategoryKey, KfcMenuItem[]> = {
   recommend: [
     it("yj-box", "영지s BOX", "₩12,600", "🍔🍗", true),

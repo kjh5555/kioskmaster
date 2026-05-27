@@ -5,10 +5,15 @@ import {
   KFC_CATEGORY_ITEMS,
   KFC_CATEGORY_ORDER,
   KFC_CATEGORY_TITLES,
+  KFC_CHICKEN_GROUPS,
+  KFC_IMAGE_BY_SLUG,
   type KfcCategoryKey,
+  type KfcChickenGroup,
   type KfcMenuItem,
 } from "./kfcMenuData";
 import { idlePulse, type CustomLayoutProps } from "./types";
+
+const CHICKEN_PAGE_SIZE = 9;
 
 const PAGE_SIZE = 9; // 3 columns × 3 rows
 
@@ -63,13 +68,29 @@ export function KfcMenu({
     side: 0,
     drink: 0,
   });
+  const [chickenModal, setChickenModal] = useState<KfcChickenGroup | null>(
+    null,
+  );
 
-  const items = KFC_CATEGORY_ITEMS[activeTab];
-  const pageCount = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
+  const isChickenGrouped = activeTab === "chicken";
+  const items = isChickenGrouped ? [] : KFC_CATEGORY_ITEMS[activeTab];
+  const chickenGroups = isChickenGrouped ? KFC_CHICKEN_GROUPS : [];
+
+  const pageCount = isChickenGrouped
+    ? Math.max(1, Math.ceil(chickenGroups.length / CHICKEN_PAGE_SIZE))
+    : Math.max(1, Math.ceil(items.length / PAGE_SIZE));
   const page = pageByTab[activeTab];
   const visible = useMemo(
     () => items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE),
     [items, page],
+  );
+  const visibleChicken = useMemo(
+    () =>
+      chickenGroups.slice(
+        page * CHICKEN_PAGE_SIZE,
+        (page + 1) * CHICKEN_PAGE_SIZE,
+      ),
+    [chickenGroups, page],
   );
 
   const setPage = (next: number) => {
@@ -277,28 +298,40 @@ export function KfcMenu({
               gap: 6px;
             `}
           >
-            {visible.map((item) => {
-              const isCorrect =
-                !cartPopulated &&
-                activeTab === correctCategory &&
-                item.id === correctId;
-              const interactive = isCorrect;
-              return (
-                <MenuCard
-                  key={item.id}
-                  item={item}
-                  interactive={interactive}
-                  pulse={isCorrect}
-                  idleHintActive={idleHintActive}
-                  rejectedChoiceId={rejectedChoiceId}
-                  onClick={() => {
-                    if (interactive) onChoice(item.id);
-                  }}
-                />
-              );
-            })}
+            {isChickenGrouped
+              ? visibleChicken.map((g) => (
+                  <ChickenGroupCard
+                    key={g.id}
+                    group={g}
+                    onClick={() => setChickenModal(g)}
+                  />
+                ))
+              : visible.map((item) => {
+                  const isCorrect =
+                    !cartPopulated &&
+                    activeTab === correctCategory &&
+                    item.id === correctId;
+                  const interactive = isCorrect;
+                  return (
+                    <MenuCard
+                      key={item.id}
+                      item={item}
+                      interactive={interactive}
+                      pulse={isCorrect}
+                      idleHintActive={idleHintActive}
+                      rejectedChoiceId={rejectedChoiceId}
+                      onClick={() => {
+                        if (interactive) onChoice(item.id);
+                      }}
+                    />
+                  );
+                })}
             {/* Fill empty cells so the grid keeps a 3-col rhythm */}
-            {Array.from({ length: PAGE_SIZE - visible.length }).map((_, i) => (
+            {Array.from({
+              length:
+                (isChickenGrouped ? CHICKEN_PAGE_SIZE : PAGE_SIZE) -
+                (isChickenGrouped ? visibleChicken.length : visible.length),
+            }).map((_, i) => (
               <div key={`empty-${i}`} css={emptyCell} />
             ))}
           </div>
@@ -332,8 +365,15 @@ export function KfcMenu({
                 font-weight: 700;
               `}
             >
-              {page * PAGE_SIZE + 1}–
-              {Math.min((page + 1) * PAGE_SIZE, items.length)} / {items.length}
+              {isChickenGrouped
+                ? `${page * CHICKEN_PAGE_SIZE + 1}–${Math.min(
+                    (page + 1) * CHICKEN_PAGE_SIZE,
+                    chickenGroups.length,
+                  )} / ${chickenGroups.length}`
+                : `${page * PAGE_SIZE + 1}–${Math.min(
+                    (page + 1) * PAGE_SIZE,
+                    items.length,
+                  )} / ${items.length}`}
             </span>
             <button
               type="button"
@@ -440,6 +480,13 @@ export function KfcMenu({
           <button type="button" css={[footerBtn, confirmBtn]}>🛍️ 주문확인</button>
         )}
       </div>
+
+      {chickenModal && (
+        <ChickenModal
+          group={chickenModal}
+          onClose={() => setChickenModal(null)}
+        />
+      )}
     </div>
   );
 
@@ -493,6 +540,335 @@ export function KfcMenu({
     );
   }
 }
+
+function ChickenGroupCard({
+  group,
+  onClick,
+}: {
+  group: KfcChickenGroup;
+  onClick: () => void;
+}) {
+  return (
+    <button type="button" onClick={onClick} css={[menuCard]}>
+      <div css={imgBox}>
+        {group.cardImageUrl ? (
+          <img
+            src={group.cardImageUrl}
+            alt={group.name}
+            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+          />
+        ) : (
+          <span style={{ fontSize: 28 }}>🍗</span>
+        )}
+        {group.badge && (
+          <span
+            css={[
+              cardBadge,
+              css`
+                background: ${group.badge === "추천" ? "#e4002b" : "#f59f00"};
+              `,
+            ]}
+          >
+            {group.badge}
+          </span>
+        )}
+      </div>
+      <div css={cardLabel}>{group.name}</div>
+      <div css={cardPrice}>{group.fromPrice}</div>
+    </button>
+  );
+}
+
+const modalPopIn = keyframes`
+  0%   { transform: scale(0.94); opacity: 0; }
+  100% { transform: scale(1);    opacity: 1; }
+`;
+
+function ChickenModal({
+  group,
+  onClose,
+}: {
+  group: KfcChickenGroup;
+  onClose: () => void;
+}) {
+  return (
+    <div
+      css={css`
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 9000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+      `}
+      onClick={onClose}
+    >
+      <div
+        css={css`
+          width: 100%;
+          max-width: 420px;
+          max-height: 92vh;
+          overflow-y: auto;
+          background: #ffffff;
+          border-radius: 14px;
+          padding: 16px 16px 12px;
+          animation: ${modalPopIn} 220ms ease-out;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        `}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* KFC red stripe */}
+        <div
+          css={css`
+            display: flex;
+            gap: 4px;
+          `}
+        >
+          <span css={modalStripe} />
+          <span css={modalStripe} />
+          <span css={modalStripe} />
+        </div>
+
+        {/* Header row: image + title + description */}
+        <div
+          css={css`
+            display: grid;
+            grid-template-columns: 110px 1fr;
+            align-items: center;
+            gap: 10px;
+          `}
+        >
+          {group.modalImageUrl ? (
+            <img
+              src={group.modalImageUrl}
+              alt={group.name}
+              style={{ width: "100%", aspectRatio: "1/1", objectFit: "contain" }}
+            />
+          ) : (
+            <span style={{ fontSize: 52, textAlign: "center" }}>🍗</span>
+          )}
+          <div css={css`text-align: right;`}>
+            <div
+              css={css`
+                font-size: 22px;
+                font-weight: 900;
+                color: #2a1408;
+                letter-spacing: -0.03em;
+                line-height: 1.1;
+              `}
+            >
+              {group.name}
+            </div>
+            <div
+              css={css`
+                font-size: 11px;
+                font-weight: 700;
+                color: #4e5968;
+                padding-top: 6px;
+                line-height: 1.35;
+              `}
+            >
+              {group.description}
+            </div>
+          </div>
+        </div>
+
+        {/* Variant rows */}
+        <div css={css`display: flex; flex-direction: column; gap: 8px;`}>
+          {group.variants.map((v) => (
+            <button
+              key={v.id}
+              type="button"
+              onClick={onClose}
+              css={css`
+                display: grid;
+                grid-template-columns: 24px 1fr 64px;
+                align-items: center;
+                gap: 10px;
+                padding: 8px 10px;
+                background: #ffffff;
+                border: 1.5px solid #e5e8eb;
+                border-radius: 10px;
+                cursor: pointer;
+                font-family: inherit;
+                text-align: left;
+                :active {
+                  background: #f6f7f9;
+                }
+              `}
+            >
+              <div
+                css={css`
+                  width: 22px;
+                  height: 22px;
+                  border-radius: 50%;
+                  border: 1.5px solid #d1d5da;
+                  background: #ffffff;
+                  color: #c9cdd2;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-size: 13px;
+                `}
+              >
+                ✓
+              </div>
+              <div>
+                <div
+                  css={css`
+                    font-size: 14px;
+                    font-weight: 900;
+                    color: #2a1408;
+                    line-height: 1.15;
+                  `}
+                >
+                  {v.label}
+                </div>
+                <div
+                  css={css`
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    padding-top: 4px;
+                    font-size: 10px;
+                    font-weight: 700;
+                    color: #4e5968;
+                  `}
+                >
+                  <span
+                    css={css`
+                      background: #e4002b;
+                      color: #ffffff;
+                      font-size: 9px;
+                      font-weight: 900;
+                      padding: 1px 5px;
+                      border-radius: 3px;
+                    `}
+                  >
+                    구성
+                  </span>
+                  {v.composition}
+                </div>
+                <div
+                  css={css`
+                    font-size: 15px;
+                    font-weight: 900;
+                    color: #2a1408;
+                    padding-top: 4px;
+                  `}
+                >
+                  {v.price}
+                </div>
+              </div>
+              {KFC_IMAGE_BY_SLUG[v.id] ? (
+                <img
+                  src={KFC_IMAGE_BY_SLUG[v.id]}
+                  alt={v.label}
+                  style={{
+                    width: "100%",
+                    aspectRatio: "1/1",
+                    objectFit: "contain",
+                  }}
+                />
+              ) : (
+                <span style={{ fontSize: 32, textAlign: "right" }}>🍗</span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Pagination dots (decorative) */}
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 4px 0 2px;
+          `}
+        >
+          <span css={modalDot}>▲</span>
+          <span css={[modalDot, modalDotMuted]}>▼</span>
+        </div>
+
+        {/* Close buttons */}
+        <div
+          css={css`
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 10px;
+          `}
+        >
+          <button type="button" onClick={onClose} css={modalPrev}>
+            이전
+          </button>
+          <button type="button" onClick={onClose} css={modalNext}>
+            다음
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const modalStripe = css`
+  width: 14px;
+  height: 22px;
+  background: #e4002b;
+  border-radius: 2px;
+`;
+
+const modalDot = css`
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #e5e8eb;
+  color: #2a1408;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+`;
+
+const modalDotMuted = css`
+  background: #f2f3f4;
+  color: #c9cdd2;
+`;
+
+const modalPrev = css`
+  background: #ffffff;
+  border: 1.5px solid #d1d5da;
+  border-radius: 999px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #2a1408;
+  font-family: inherit;
+  cursor: pointer;
+  :active {
+    background: #f6f7f9;
+  }
+`;
+
+const modalNext = css`
+  background: #e4002b;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 900;
+  font-family: inherit;
+  cursor: pointer;
+  :active {
+    filter: brightness(0.92);
+  }
+`;
 
 function CartLine({
   name,
