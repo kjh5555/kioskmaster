@@ -36,27 +36,6 @@ export function KfcSetUpsell({
         flex-direction: column;
       `}
     >
-      {/* Watermark hint ----------------------------------------- */}
-      <div
-        css={css`
-          position: absolute;
-          top: 64px;
-          left: 0;
-          right: 0;
-          text-align: center;
-          font-size: 22px;
-          font-weight: 900;
-          color: rgba(120, 120, 120, 0.32);
-          letter-spacing: -0.02em;
-          line-height: 1.25;
-          pointer-events: none;
-          padding: 0 8px;
-          z-index: 1;
-        `}
-      >
-        단품(버거만)은 ‘버거 단품만{"\n"}주문하기’를 선택합니다
-      </div>
-
       {/* Top: burger photo + name + price ----------------------- */}
       <div
         css={css`
