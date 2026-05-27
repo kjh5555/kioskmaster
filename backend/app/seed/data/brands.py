@@ -693,6 +693,20 @@ KFC_SCENARIO = {
             "hintMessage": "왼쪽 흰 버튼 '매장 식사'를 눌러주세요.",
         },
         {
+            "id": "membership",
+            "instruction": "멤버십이 없으니 '그냥 주문하기'를 눌러요",
+            "helpText": "KFC 멤버십에 가입되어 있지 않으면 왼쪽 '그냥 주문하기' 버튼을 눌러서 그냥 주문해도 돼요. 멤버십이 있는 분만 오른쪽 빨강 '멤버십 적립하기'를 누르세요.",
+            "layout": "duo",
+            "customLayoutId": "kfc-membership",
+            "choices": [
+                {"id": "skip-membership", "label": "그냥 주문하기", "emoji": "🍔"},
+                {"id": "earn-membership", "label": "멤버십 적립하기", "emoji": "Ⓜ️"},
+            ],
+            "correctChoiceId": "skip-membership",
+            "successMessage": "멤버십 없이 주문 진행해요.",
+            "hintMessage": "왼쪽 흰 버튼 '그냥 주문하기'를 눌러주세요.",
+        },
+        {
             "id": "burger-choice",
             "instruction": "징거버거를 골라요",
             "helpText": "오늘은 징거버거 세트가 목표예요. 징거버거는 KFC의 대표 치킨버거예요.",
