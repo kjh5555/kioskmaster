@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { lookupMcdImage } from "./mcdonaldsImages";
 import { idlePulse, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
@@ -102,7 +103,7 @@ export function McdonaldsStart({
           세상 처음 맛보는 치킨버거
         </div>
 
-        {/* Burger emojis + captions */}
+        {/* Burger photos + captions */}
         <div
           css={css`
             display: flex;
@@ -114,22 +115,33 @@ export function McdonaldsStart({
             flex: 1;
           `}
         >
-          {/* Burger 1 */}
+          {/* Burger 1 — Deluxe */}
           <div
             css={css`
               display: flex;
               flex-direction: column;
               align-items: center;
               gap: 6px;
+              max-width: 44%;
             `}
           >
-            <span style={{ fontSize: 80, lineHeight: 1 }}>🍗</span>
+            <img
+              src={lookupMcdImage("mccrispy-deluxe")}
+              alt="맥크리스피 디럭스"
+              style={{
+                width: 110,
+                height: 110,
+                objectFit: "contain",
+                filter: "drop-shadow(0 8px 20px rgba(255, 60, 30, 0.45))",
+              }}
+            />
             <div
               css={css`
                 font-size: 10px;
                 color: #f5c36a;
                 text-align: center;
                 font-style: italic;
+                line-height: 1.35;
               `}
             >
               100% 케이준 통닭다리살
@@ -150,22 +162,33 @@ export function McdonaldsStart({
             </div>
           </div>
 
-          {/* Burger 2 */}
+          {/* Burger 2 — Classic */}
           <div
             css={css`
               display: flex;
               flex-direction: column;
               align-items: center;
               gap: 6px;
+              max-width: 44%;
             `}
           >
-            <span style={{ fontSize: 80, lineHeight: 1 }}>🍗</span>
+            <img
+              src={lookupMcdImage("mccrispy-classic")}
+              alt="맥크리스피 클래식"
+              style={{
+                width: 110,
+                height: 110,
+                objectFit: "contain",
+                filter: "drop-shadow(0 8px 20px rgba(255, 60, 30, 0.45))",
+              }}
+            />
             <div
               css={css`
                 font-size: 10px;
                 color: #f5c36a;
                 text-align: center;
                 font-style: italic;
+                line-height: 1.35;
               `}
             >
               100% 케이준 통닭다리살
