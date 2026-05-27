@@ -11,6 +11,7 @@ import {
   lookupCorrectLabel,
   type CustomLayoutProps,
 } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -264,6 +265,7 @@ export function McdonaldsCategory({
 }: CustomLayoutProps): React.ReactElement {
   const isCartPopulated = step.id === "post-cart-category";
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const { shakeNow, shakeStyle } = useDecoShake();
   // For the burger-category step: until the user opens the 버거 sidebar tab,
   // pulse the sidebar item. After that, pulse the correct burger card.
   const isBurgerStep = step.id === "category";
@@ -1271,30 +1273,40 @@ export function McdonaldsCategory({
                 justify-content: center;
               `}
             >
-              <div
-                css={css`
+              <button
+                type="button"
+                onClick={() => shakeNow("home2")}
+                css={[css`
                   font-size: 11px;
                   color: #555;
                   border: 1px solid #ddd;
                   border-radius: 6px;
                   padding: 3px 6px;
                   text-align: center;
-                `}
+                  background: transparent;
+                  cursor: pointer;
+                  font-family: inherit;
+                `, shakeStyle("home2")]}
               >
                 ↺ 처음으로
-              </div>
-              <div
-                css={css`
+              </button>
+              <button
+                type="button"
+                onClick={() => shakeNow("help2")}
+                css={[css`
                   font-size: 11px;
                   color: #555;
                   border: 1px solid #ddd;
                   border-radius: 6px;
                   padding: 3px 6px;
                   text-align: center;
-                `}
+                  background: transparent;
+                  cursor: pointer;
+                  font-family: inherit;
+                `, shakeStyle("help2")]}
               >
                 ♿ 도움 기능
-              </div>
+              </button>
             </div>
           </div>
         )}

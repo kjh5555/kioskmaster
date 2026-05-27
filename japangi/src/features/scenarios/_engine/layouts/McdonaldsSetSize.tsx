@@ -6,6 +6,7 @@ import {
   lookupCorrectLabel,
   type CustomLayoutProps,
 } from "./types";
+import { useDecoShake } from "./useDecoShake";
 
 const shakeKf = keyframes`
   0%   { transform: translateX(0); }
@@ -38,6 +39,7 @@ export function McdonaldsSetSize({
   const burgerImage = lookupMcdImage(burgerSlug);
   const friesImage = lookupMcdImage("fries-large");
   const drinkImage = lookupMcdImage("coke-large");
+  const { shakeNow, shakeStyle } = useDecoShake();
   return (
     <div
       css={css`
@@ -104,9 +106,10 @@ export function McdonaldsSetSize({
           </span>
         </div>
 
-        {/* 영양정보 pill — decorative */}
+        {/* 영양정보 pill — decorative (wiggle on click) */}
         <button
-          css={css`
+          type="button"
+          css={[css`
             flex-shrink: 0;
             background: #ffffff;
             border: 1px solid #d1d6db;
@@ -114,11 +117,11 @@ export function McdonaldsSetSize({
             font-size: 10px;
             color: #4e5968;
             padding: 4px 10px;
-            cursor: default;
+            cursor: pointer;
             white-space: nowrap;
-          `}
-          tabIndex={-1}
-          onClick={(e) => e.preventDefault()}
+            font-family: inherit;
+          `, shakeStyle("info")]}
+          onClick={() => shakeNow("info")}
         >
           영양정보
         </button>
