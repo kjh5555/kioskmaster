@@ -206,19 +206,24 @@ export function LotteriaMenu({
 
   // When cart is populated we keep the answer 8 burgers as the grid no matter
   // what page user lands on, so the final review screen stays consistent.
+  // Also fall back to gridChoices on the 햄버거 정답 페이지 while the backend
+  // fetch is in flight — otherwise the empty grid collapses the container
+  // height and pushes the absolute-positioned "다음" arrow up.
+  const useFallback =
+    cartPopulated || (onHamburgerPage2 && pageItems.length === 0);
   const items: Array<{
     id: string;
     label: string;
     price: string;
     imageUrl?: string;
     isReal: boolean;
-  }> = cartPopulated
+  }> = useFallback
     ? gridChoices.map((c) => ({
         id: c.id,
         label: c.label,
         price: c.sublabel ?? "",
         imageUrl: undefined,
-        isReal: true,
+        isReal: !cartPopulated,
       }))
     : pageItems.map((bi) => ({
         id: bi.slug,
@@ -596,8 +601,11 @@ export function LotteriaMenu({
           css={css`
             display: grid;
             grid-template-columns: 1fr 1fr;
+            grid-auto-rows: 78px;
             row-gap: 6px;
             column-gap: 6px;
+            min-height: 336px;
+            align-content: start;
           `}
         >
           {items.map((item) => {
