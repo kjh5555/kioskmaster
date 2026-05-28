@@ -4,6 +4,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { AdminBrandRequestsPage } from "./features/admin/AdminBrandRequestsPage";
+import { MasterPage } from "./features/master/MasterPage";
 import { GuardianCuratePage } from "./features/family/GuardianCuratePage";
 import { GuardianPairingPage } from "./features/family/GuardianPairingPage";
 import { ParentPairingPage } from "./features/family/ParentPairingPage";
@@ -35,6 +36,7 @@ function RouterChrome(): React.ReactElement {
           path="/admin/brand-requests"
           element={<AdminBrandRequestsPage />}
         />
+        <Route path="/master" element={<MasterPage />} />
         <Route path="*" element={<Navigate to="/role-select" replace />} />
       </Routes>
     );
@@ -83,6 +85,7 @@ function RouterChrome(): React.ReactElement {
         path="/admin/brand-requests"
         element={<AdminBrandRequestsPage />}
       />
+      <Route path="/master" element={<MasterPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -28,7 +28,7 @@ export function RoleSelectPage(): React.ReactElement {
       `}
     >
       <Top
-        upperGap={32}
+        upperGap={24}
         title={
           <Top.TitleParagraph>
             오늘은 누가 사용하시나요?
@@ -45,6 +45,31 @@ export function RoleSelectPage(): React.ReactElement {
         }
       />
 
+      {/* App intro — what this app does */}
+      <div
+        css={css`
+          margin: 0 0 14px;
+          padding: 14px 16px;
+          background: ${adaptive.blue50};
+          border: 1.5px solid ${adaptive.blue200};
+          border-radius: 14px;
+          font-size: 13px;
+          color: ${adaptive.grey800};
+          line-height: 1.5;
+        `}
+      >
+        <span
+          css={css`
+            font-weight: 900;
+            color: ${adaptive.blue700};
+          `}
+        >
+          자판기 어렵지않아요
+        </span>
+        는 어르신이 직접 키오스크를 연습할 수 있는 앱이에요. 자녀분이
+        멀리서도 부모님 연습을 돕고 기록을 확인할 수 있어요.
+      </div>
+
       <div
         css={css`
           flex: 1;
@@ -52,24 +77,43 @@ export function RoleSelectPage(): React.ReactElement {
           display: flex;
           flex-direction: column;
           gap: clamp(12px, 3vw, 18px);
-          padding-top: 12px;
           overflow-y: auto;
         `}
       >
         <RoleCard
           emoji="👴"
           title="내가 연습할게요"
-          subtitle="키오스크 사용을 직접 연습해요."
+          subtitle="제 폰에서 직접 키오스크를 따라해볼게요. (어르신 본인)"
           accent={adaptive.blue500}
           onClick={() => choose("elderly")}
         />
         <RoleCard
           emoji="👨‍👩‍👧"
           title="부모님께 알려드릴게요"
-          subtitle="부모님의 연습을 도와주고 기록을 봐요."
+          subtitle="부모님 키오스크 연습을 돕고 기록을 봐요. (자녀)"
           accent="#e4002b"
           onClick={() => choose("guardian")}
         />
+
+        {/* Tester / guest — quick peek without committing to a role */}
+        <button
+          type="button"
+          onClick={() => choose("elderly")}
+          css={css`
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            color: ${adaptive.grey600};
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 12px;
+            -webkit-tap-highlight-color: transparent;
+          `}
+        >
+          그냥 둘러볼게요 →
+        </button>
       </div>
     </div>
   );
