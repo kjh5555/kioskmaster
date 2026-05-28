@@ -59,6 +59,50 @@ export function HomePage(): React.ReactElement {
         }
       />
 
+      {!primaryFav && (!stats || stats.total_attempts === 0) && (
+        <div
+          css={css`
+            margin: 0 clamp(12px, 4vw, 20px) 8px;
+            padding: 14px 16px;
+            background: ${adaptive.blue50};
+            border: 1.5px solid ${adaptive.blue200};
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+          `}
+        >
+          <span style={{ fontSize: 28 }}>👋</span>
+          <div
+            css={css`
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+            `}
+          >
+            <span
+              css={css`
+                font-size: var(--font-body);
+                font-weight: 800;
+                color: ${adaptive.blue700};
+              `}
+            >
+              처음 오셨네요!
+            </span>
+            <span
+              css={css`
+                font-size: 12px;
+                color: ${adaptive.grey600};
+                line-height: 1.4;
+              `}
+            >
+              아래에서 가게를 하나 골라 천천히 따라해보세요. 실수해도 괜찮아요.
+            </span>
+          </div>
+        </div>
+      )}
+
       {primaryFav && (
         <button
           type="button"

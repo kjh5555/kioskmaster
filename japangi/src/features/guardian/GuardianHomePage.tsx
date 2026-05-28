@@ -6,6 +6,47 @@ import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { useMyParents } from "../../hooks/useKioskQueries";
 
+function Step({ n, text }: { n: number; text: string }): React.ReactElement {
+  return (
+    <div
+      css={css`
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      `}
+    >
+      <span
+        css={css`
+          flex-shrink: 0;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: ${adaptive.blue500};
+          color: #ffffff;
+          font-size: 12px;
+          font-weight: 900;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        `}
+      >
+        {n}
+      </span>
+      <span
+        css={css`
+          font-size: 13px;
+          font-weight: 700;
+          color: ${adaptive.grey800};
+          line-height: 1.4;
+          padding-top: 3px;
+        `}
+      >
+        {text}
+      </span>
+    </div>
+  );
+}
+
 export function GuardianHomePage(): React.ReactElement {
   const navigate = useNavigate();
   const { externalId } = useCurrentUser();
@@ -53,6 +94,56 @@ export function GuardianHomePage(): React.ReactElement {
           overflow-y: auto;
         `}
       >
+        {/* Welcome / how-it-works (shown when no parent connected yet) */}
+        {!isLoading && parents.length === 0 && (
+          <div
+            css={css`
+              background: linear-gradient(135deg, #eaf2ff 0%, #f0e7ff 100%);
+              border: 1.5px solid ${adaptive.blue200};
+              border-radius: 18px;
+              padding: 18px;
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
+            `}
+          >
+            <div
+              css={css`
+                font-size: var(--font-button);
+                font-weight: 900;
+                color: ${adaptive.blue700};
+                line-height: 1.3;
+              `}
+            >
+              👨‍👩‍👧 부모님 키오스크 연습을 도와주세요
+            </div>
+            <div
+              css={css`
+                font-size: 13px;
+                color: ${adaptive.grey700};
+                line-height: 1.55;
+              `}
+            >
+              부모님이 자주 가시는 가게의 키오스크를 미리 연습할 수 있어요.
+              연결하면 부모님 연습 기록을 확인하고, 자주 가는 곳을 우선으로
+              보여드릴 수 있어요.
+            </div>
+
+            <div
+              css={css`
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                padding-top: 4px;
+              `}
+            >
+              <Step n={1} text="부모님 폰에 같은 앱을 깔아드리세요" />
+              <Step n={2} text="부모님 폰에서 '가족 연결' → 6자리 코드 확인" />
+              <Step n={3} text="아래 '부모님 추가하기'에 그 코드를 입력" />
+            </div>
+          </div>
+        )}
+
         {/* Add parent CTA */}
         <button
           type="button"
