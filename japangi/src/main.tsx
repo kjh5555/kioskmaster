@@ -5,6 +5,7 @@ import { createRoot } from "react-dom/client";
 
 import config from "../granite.config.ts";
 import App from "./App.tsx";
+import { CurrentUserProvider } from "./hooks/useCurrentUser.ts";
 import { FontSizeProvider } from "./hooks/useFontSize.ts";
 import { HighContrastProvider } from "./hooks/useHighContrast.ts";
 import { TtsProvider } from "./hooks/useTts.ts";
@@ -15,13 +16,15 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <TDSMobileAITProvider brandPrimaryColor={config.brand.primaryColor}>
       <QueryClientProvider client={queryClient}>
-        <FontSizeProvider>
-          <HighContrastProvider>
-            <TtsProvider>
-              <App />
-            </TtsProvider>
-          </HighContrastProvider>
-        </FontSizeProvider>
+        <CurrentUserProvider>
+          <FontSizeProvider>
+            <HighContrastProvider>
+              <TtsProvider>
+                <App />
+              </TtsProvider>
+            </HighContrastProvider>
+          </FontSizeProvider>
+        </CurrentUserProvider>
       </QueryClientProvider>
     </TDSMobileAITProvider>
   </StrictMode>,

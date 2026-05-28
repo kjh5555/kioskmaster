@@ -50,3 +50,37 @@ export const useDynamicGoal = (slug: string) =>
     staleTime: Infinity,
     gcTime: 30 * 60 * 1000,
   });
+
+export const useUserStats = (externalId: string) =>
+  useQuery({
+    queryKey: ["user-stats", externalId],
+    queryFn: () => api.getUserStats(externalId),
+    enabled: !!externalId,
+    staleTime: 30 * 1000,
+  });
+
+export const useParentFavorites = (parentExternalId: string) =>
+  useQuery({
+    queryKey: ["parent-favorites", parentExternalId],
+    queryFn: () => api.listParentFavorites(parentExternalId),
+    enabled: !!parentExternalId,
+    staleTime: 30 * 1000,
+  });
+
+export const useMyParents = (childExternalId: string) =>
+  useQuery({
+    queryKey: ["my-parents", childExternalId],
+    queryFn: () => api.listParents(childExternalId),
+    enabled: !!childExternalId,
+  });
+
+export const useParentReport = (
+  childExternalId: string,
+  parentExternalId: string,
+) =>
+  useQuery({
+    queryKey: ["parent-report", childExternalId, parentExternalId],
+    queryFn: () => api.getParentReport(childExternalId, parentExternalId),
+    enabled: !!childExternalId && !!parentExternalId,
+    staleTime: 30 * 1000,
+  });

@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import { adaptive } from "@toss/tds-colors";
 import { Top } from "@toss/tds-mobile";
+import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { BigButton } from "../../components/BigButton";
@@ -8,6 +9,8 @@ import { ErrorScreen } from "../../components/ErrorScreen";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { PracticeBadge } from "../../components/PracticeBadge";
 import { useBrand } from "../../hooks/useKioskQueries";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
+import { api } from "../../lib/api";
 import { queryClient } from "../../lib/queryClient";
 
 export function ScenarioCompletePage(): React.ReactElement {
@@ -17,6 +20,34 @@ export function ScenarioCompletePage(): React.ReactElement {
   }>();
   const navigate = useNavigate();
   const { data: brand, isLoading, error } = useBrand(brandId);
+  const { externalId } = useCurrentUser();
+  const recorded = useRef(false);
+
+  // Persist the successful attempt exactly once when this page mounts.
+  // Failures are swallowed — completion screen should never block on the
+  // analytics write.
+  useEffect(() => {
+    if (recorded.current) return;
+    if (!externalId || !brandId || !categoryId) return;
+    recorded.current = true;
+    void api
+      .submitAttempt({
+        external_id: externalId,
+        brand_slug: brandId,
+        category_slug: categoryId,
+        success: true,
+        mistakes: 0,
+        duration_seconds: 0,
+      })
+      .then(() => {
+        void queryClient.invalidateQueries({
+          queryKey: ["user-stats", externalId],
+        });
+      })
+      .catch(() => {
+        // ignore network errors
+      });
+  }, [externalId, brandId, categoryId]);
 
   if (isLoading) return <LoadingScreen />;
   if (error !== null)

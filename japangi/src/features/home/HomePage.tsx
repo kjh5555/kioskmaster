@@ -5,12 +5,15 @@ import { useNavigate } from "react-router-dom";
 
 import { ErrorScreen } from "../../components/ErrorScreen";
 import { LoadingScreen } from "../../components/LoadingScreen";
-import { useCategories } from "../../hooks/useKioskQueries";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
+import { useCategories, useUserStats } from "../../hooks/useKioskQueries";
 import { queryClient } from "../../lib/queryClient";
 
 export function HomePage(): React.ReactElement {
   const navigate = useNavigate();
   const { data: categories, isLoading, error } = useCategories();
+  const { externalId } = useCurrentUser();
+  const { data: stats } = useUserStats(externalId);
 
   if (isLoading) return <LoadingScreen />;
   if (error !== null)
@@ -49,6 +52,51 @@ export function HomePage(): React.ReactElement {
           </Top.RightButton>
         }
       />
+
+      {stats && stats.total_attempts > 0 && (
+        <div
+          css={css`
+            margin: 0 clamp(12px, 4vw, 20px) clamp(8px, 2vw, 14px);
+            padding: 14px 16px;
+            background: ${adaptive.blue50};
+            border: 1.5px solid ${adaptive.blue200};
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+          `}
+        >
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+              min-width: 0;
+            `}
+          >
+            <span
+              css={css`
+                font-size: var(--font-body);
+                font-weight: 800;
+                color: ${adaptive.blue700};
+              `}
+            >
+              이번 주 연습 {stats.this_week_count}번
+            </span>
+            <span
+              css={css`
+                font-size: 12px;
+                color: ${adaptive.grey600};
+                line-height: 1.3;
+              `}
+            >
+              지금까지 총 {stats.total_attempts}번 연습 · {stats.total_success}번 성공
+            </span>
+          </div>
+          <span style={{ fontSize: 32 }}>👍</span>
+        </div>
+      )}
 
       <div
         css={css`
