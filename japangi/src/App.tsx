@@ -3,12 +3,14 @@
 // If the WebView environment ever requires hash-based routing, swap to HashRouter.
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { AdminBrandRequestsPage } from "./features/admin/AdminBrandRequestsPage";
 import { GuardianCuratePage } from "./features/family/GuardianCuratePage";
 import { GuardianPairingPage } from "./features/family/GuardianPairingPage";
 import { ParentPairingPage } from "./features/family/ParentPairingPage";
 import { GuardianHomePage } from "./features/guardian/GuardianHomePage";
 import { GuardianParentReportPage } from "./features/guardian/GuardianParentReportPage";
 import { HomePage } from "./features/home/HomePage";
+import { BrandRequestPage } from "./features/requests/BrandRequestPage";
 import { RoleSelectPage } from "./features/role/RoleSelectPage";
 import { BrandSelectPage } from "./features/scenarios/BrandSelectPage";
 import { ScenarioCompletePage } from "./features/scenarios/ScenarioCompletePage";
@@ -23,12 +25,16 @@ function RouterChrome(): React.ReactElement {
   const { role, roleConfirmed } = useCurrentUser();
 
   // First-launch gate: until the user has explicitly picked a role we show
-  // the role-select page in place of the home routes. They can always
-  // change it from settings later.
+  // the role-select page in place of the home routes. Admin routes are
+  // exempt because operators may open them directly via URL.
   if (!roleConfirmed) {
     return (
       <Routes>
         <Route path="/role-select" element={<RoleSelectPage />} />
+        <Route
+          path="/admin/brand-requests"
+          element={<AdminBrandRequestsPage />}
+        />
         <Route path="*" element={<Navigate to="/role-select" replace />} />
       </Routes>
     );
@@ -71,6 +77,11 @@ function RouterChrome(): React.ReactElement {
       <Route
         path="/guardian/parent/:parentExternalId/curate"
         element={<GuardianCuratePage />}
+      />
+      <Route path="/requests" element={<BrandRequestPage />} />
+      <Route
+        path="/admin/brand-requests"
+        element={<AdminBrandRequestsPage />}
       />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

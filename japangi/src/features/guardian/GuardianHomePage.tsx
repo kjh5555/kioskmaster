@@ -102,6 +102,41 @@ export function GuardianHomePage(): React.ReactElement {
           </div>
         </button>
 
+        {/* Request kiosk addition */}
+        <button
+          type="button"
+          onClick={() => navigate("/requests")}
+          css={css`
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border: 1.5px solid ${adaptive.grey200};
+            border-radius: 14px;
+            background: #ffffff;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+            :active {
+              background: ${adaptive.grey100};
+            }
+          `}
+        >
+          <span style={{ fontSize: 24 }}>📨</span>
+          <span
+            css={css`
+              flex: 1;
+              font-size: var(--font-body);
+              font-weight: 800;
+              color: ${adaptive.grey900};
+            `}
+          >
+            키오스크 추가 요청하기
+          </span>
+          <span style={{ fontSize: 20, color: adaptive.grey400 }}>›</span>
+        </button>
+
         {/* Parent list */}
         {isLoading ? (
           <div
