@@ -253,7 +253,7 @@ export function LotteriaMenu({
         display: flex;
         flex-direction: column;
         width: 100%;
-        min-height: 100dvh;
+        min-height: 100%;
         background: #ffffff;
         font-family:
           system-ui,

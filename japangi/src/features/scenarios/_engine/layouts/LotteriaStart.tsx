@@ -30,7 +30,7 @@ export function LotteriaStart({
           display: flex;
           flex-direction: column;
           width: 100%;
-          min-height: 100dvh;
+          min-height: 100%;
           border: none;
           padding: 0;
           cursor: pointer;

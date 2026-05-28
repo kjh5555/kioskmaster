@@ -103,7 +103,7 @@ export function LotteriaPayMethod({
       css={css`
         position: relative;
         width: 100%;
-        min-height: 100dvh;
+        min-height: 100%;
         background: #f3e9e1;
         font-family:
           system-ui,

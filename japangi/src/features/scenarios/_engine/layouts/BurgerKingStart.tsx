@@ -30,7 +30,7 @@ export function BurgerKingStart({
           display: flex;
           flex-direction: column;
           width: 100%;
-          height: 100dvh;
+          height: 100%;
           border: none;
           padding: 0;
           cursor: pointer;

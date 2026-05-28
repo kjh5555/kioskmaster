@@ -27,7 +27,7 @@ export function KfcSetCustomize({
       css={css`
         position: relative;
         width: 100%;
-        min-height: 100dvh;
+        min-height: 100%;
         background: #ffffff;
         font-family:
           system-ui,

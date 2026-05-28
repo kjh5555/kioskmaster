@@ -46,6 +46,8 @@ function FastfoodStepPage({
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
+        overflow-x: hidden;
+        max-width: 100vw;
       `}
     >
       <div
@@ -233,6 +235,8 @@ function PlaceholderStepPage({
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
+        overflow-x: hidden;
+        max-width: 100vw;
       `}
     >
       <div

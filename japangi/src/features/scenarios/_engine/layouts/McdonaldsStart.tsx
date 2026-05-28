@@ -32,7 +32,7 @@ export function McdonaldsStart({
       css={css`
         display: flex;
         flex-direction: column;
-        height: 100dvh;
+        height: 100%;
         width: 100%;
         overflow: hidden;
         font-family:

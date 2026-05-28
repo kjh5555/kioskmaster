@@ -55,7 +55,7 @@ export function KfcStart({
         display: flex;
         flex-direction: column;
         width: 100%;
-        min-height: 100dvh;
+        min-height: 100%;
         background: #0a0a0a;
         font-family:
           system-ui,
