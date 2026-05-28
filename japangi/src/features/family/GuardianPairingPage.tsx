@@ -94,10 +94,11 @@ export function GuardianPairingPage(): React.ReactElement {
         {/* 6 boxes */}
         <div
           css={css`
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 6px;
+            display: flex;
+            justify-content: center;
+            gap: clamp(4px, 1.5vw, 8px);
             padding-top: 12px;
+            width: 100%;
           `}
         >
           {Array.from({ length: 6 }).map((_, i) => (
@@ -109,13 +110,17 @@ export function GuardianPairingPage(): React.ReactElement {
               value={code[i] ?? ""}
               onChange={(e) => {
                 setDigit(i, e.target.value);
-                // Auto-advance focus
                 const next = e.target.nextElementSibling as HTMLInputElement | null;
                 if (e.target.value && next) next.focus();
               }}
               css={css`
-                aspect-ratio: 1 / 1.1;
-                font-size: clamp(22px, 7vw, 32px);
+                flex: 1 1 0;
+                min-width: 0;
+                max-width: 56px;
+                width: 100%;
+                height: clamp(54px, 14vw, 64px);
+                padding: 0;
+                font-size: clamp(22px, 6vw, 28px);
                 font-weight: 900;
                 font-family:
                   "SF Mono",
@@ -123,11 +128,15 @@ export function GuardianPairingPage(): React.ReactElement {
                   "Consolas",
                   monospace;
                 text-align: center;
-                border: 2px solid ${code[i] ? adaptive.blue500 : adaptive.grey300};
-                border-radius: 12px;
+                border: 2px solid
+                  ${code[i] ? adaptive.blue500 : adaptive.grey300};
+                border-radius: 10px;
                 background: #ffffff;
                 color: ${adaptive.grey900};
                 outline: none;
+                -webkit-appearance: none;
+                appearance: none;
+                box-sizing: border-box;
                 transition: border-color 0.12s ease;
                 :focus {
                   border-color: ${adaptive.blue500};
