@@ -25,13 +25,14 @@ export function HomePage(): React.ReactElement {
   return (
     <div
       css={css`
-        min-height: 100dvh;
-        padding-top: calc(env(safe-area-inset-top, 0px) + 0px);
-        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+        height: 100dvh;
+        max-height: 100dvh;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
-        overflow-x: hidden;
+        overflow: hidden;
         max-width: 100%;
         width: 100%;
       `}
@@ -53,9 +54,10 @@ export function HomePage(): React.ReactElement {
         css={css`
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 16px;
+          gap: clamp(8px, 3vw, 16px);
           flex: 1;
-          padding: 0 20px 0 20px;
+          min-height: 0;
+          padding: 0 clamp(12px, 4vw, 20px);
         `}
       >
         {(categories ?? []).map((category) => (
@@ -67,13 +69,13 @@ export function HomePage(): React.ReactElement {
               flex-direction: column;
               align-items: center;
               justify-content: center;
-              gap: 8px;
-              padding: 20px;
+              gap: clamp(4px, 1.5vw, 8px);
+              padding: clamp(10px, 3vw, 20px);
               background-color: ${adaptive.greyBackground};
               border: none;
-              border-radius: 20px;
+              border-radius: clamp(14px, 4vw, 20px);
               cursor: pointer;
-              min-height: 140px;
+              min-height: clamp(110px, 18dvh, 160px);
               text-align: center;
               -webkit-tap-highlight-color: transparent;
               transition:
@@ -85,7 +87,7 @@ export function HomePage(): React.ReactElement {
               }
             `}
           >
-            <span style={{ fontSize: 64, lineHeight: 1 }}>
+            <span style={{ fontSize: "clamp(40px, 9vw, 64px)", lineHeight: 1 }}>
               {category.emoji}
             </span>
             <Paragraph.Text
@@ -99,7 +101,7 @@ export function HomePage(): React.ReactElement {
             </Paragraph.Text>
             <Paragraph.Text
               css={css`
-                font-size: 14px;
+                font-size: clamp(11px, 3vw, 14px);
                 color: ${adaptive.grey500};
                 line-height: 1.4;
               `}
