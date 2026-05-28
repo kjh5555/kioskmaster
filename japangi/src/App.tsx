@@ -23,7 +23,7 @@ import { useHardwareBack } from "./hooks/useHardwareBack";
 
 function RouterChrome(): React.ReactElement {
   useHardwareBack();
-  const { role, roleConfirmed } = useCurrentUser();
+  const { roleConfirmed } = useCurrentUser();
 
   // First-launch gate: until the user has explicitly picked a role we show
   // the role-select page in place of the home routes. Admin routes are
@@ -44,16 +44,9 @@ function RouterChrome(): React.ReactElement {
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          role === "guardian" ? (
-            <Navigate to="/guardian" replace />
-          ) : (
-            <HomePage />
-          )
-        }
-      />
+      {/* `/` is always the elderly home. Guardians explicitly navigate to
+          /guardian (e.g. from settings, the master page, or a deep link). */}
+      <Route path="/" element={<HomePage />} />
       <Route path="/role-select" element={<RoleSelectPage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/scenario/:categoryId/brand" element={<BrandSelectPage />} />

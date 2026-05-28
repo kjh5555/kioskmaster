@@ -228,6 +228,58 @@ export function GuardianHomePage(): React.ReactElement {
           <span style={{ fontSize: 20, color: adaptive.grey400 }}>›</span>
         </button>
 
+        {/* Peek at the elderly home — useful for spouses/operators who
+            want to see what the parent sees, without flipping their role. */}
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          css={css`
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            border: 1.5px solid ${adaptive.grey200};
+            border-radius: 14px;
+            background: #ffffff;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+            :active {
+              background: ${adaptive.grey100};
+            }
+          `}
+        >
+          <span style={{ fontSize: 24 }}>👴</span>
+          <div
+            css={css`
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+            `}
+          >
+            <span
+              css={css`
+                font-size: var(--font-body);
+                font-weight: 800;
+                color: ${adaptive.grey900};
+              `}
+            >
+              부모님 화면 미리보기
+            </span>
+            <span
+              css={css`
+                font-size: 11px;
+                color: ${adaptive.grey500};
+              `}
+            >
+              어르신 모드로 잠깐 들어가 보기
+            </span>
+          </div>
+          <span style={{ fontSize: 20, color: adaptive.grey400 }}>›</span>
+        </button>
+
         {/* Parent list */}
         {isLoading ? (
           <div
