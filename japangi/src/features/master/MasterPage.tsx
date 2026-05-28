@@ -1,17 +1,50 @@
 import { css } from "@emotion/react";
 import { adaptive } from "@toss/tds-colors";
 import { Top } from "@toss/tds-mobile";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useCurrentUser } from "../../hooks/useCurrentUser";
+import { api } from "../../lib/api";
+import { queryClient } from "../../lib/queryClient";
 
 export function MasterPage(): React.ReactElement {
   const navigate = useNavigate();
   const { externalId, role, roleConfirmed, setRole } = useCurrentUser();
+  const [seedBusy, setSeedBusy] = useState(false);
+  const [seedMsg, setSeedMsg] = useState<string | null>(null);
 
   async function switchRoleAndGo(to: "elderly" | "guardian") {
     await setRole(to);
     navigate(to === "elderly" ? "/" : "/guardian");
+  }
+
+  async function seedTestFamily() {
+    setSeedBusy(true);
+    setSeedMsg(null);
+    try {
+      // Make sure the current device is registered as a guardian first.
+      if (role !== "guardian") {
+        await setRole("guardian");
+      }
+      const res = await api.devSeedFamily({
+        child_external_id: externalId,
+        parent_display_name: "테스트 부모",
+        nickname: "어머니",
+      });
+      await queryClient.invalidateQueries({
+        queryKey: ["my-parents", externalId],
+      });
+      setSeedMsg(
+        `✅ 가짜 부모 '${res.nickname}' 연결 완료. 시도 ${res.attempts_created}개 생성됨.`,
+      );
+    } catch (e) {
+      setSeedMsg(
+        `❌ 실패: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    } finally {
+      setSeedBusy(false);
+    }
   }
 
   function resetAll() {
@@ -145,6 +178,43 @@ export function MasterPage(): React.ReactElement {
               </NavBtn>
             ))}
           </Grid>
+        </Section>
+
+        {/* Seed test family */}
+        <Section title="테스트 도구">
+          <ActionBtn
+            variant="primary"
+            onClick={seedTestFamily}
+            // @ts-expect-error disabled prop pass-through is fine here
+            disabled={seedBusy}
+          >
+            {seedBusy
+              ? "만드는 중..."
+              : "🧪 테스트 부모 즉시 연결 (가짜 기록 5개 포함)"}
+          </ActionBtn>
+          {seedMsg && (
+            <div
+              css={css`
+                font-size: 12px;
+                font-weight: 700;
+                color: ${seedMsg.startsWith("✅") ? "#4ade80" : "#ff8a80"};
+                line-height: 1.4;
+              `}
+            >
+              {seedMsg}
+            </div>
+          )}
+          <div
+            css={css`
+              font-size: 11px;
+              color: #8b95a1;
+              line-height: 1.4;
+            `}
+          >
+            현재 device를 자식 모드로 두고, 가짜 부모 user를 만들어 즉시
+            연결합니다. 자식 홈에서 부모 카드/보고서/즐겨찾기 화면 모두
+            확인 가능.
+          </div>
         </Section>
 
         {/* Reset */}

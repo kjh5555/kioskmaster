@@ -293,4 +293,17 @@ export const api = {
   }) => jpost<ApiBrandRequest>("/api/brand-requests/", payload),
   listMyBrandRequests: (externalId: string) =>
     jget<ApiBrandRequest[]>(`/api/brand-requests/mine/${externalId}`),
+
+  // Dev / tester helpers
+  devSeedFamily: (payload: {
+    child_external_id: string;
+    parent_display_name?: string | null;
+    nickname?: string | null;
+  }) =>
+    jpost<{
+      parent_external_id: string;
+      parent_display_name: string;
+      nickname: string;
+      attempts_created: number;
+    }>("/api/dev/seed-family", payload),
 };

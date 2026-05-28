@@ -155,6 +155,42 @@ def list_my_parents(
     return out
 
 
+class ChildLinkOut(BaseModel):
+    id: int
+    child_external_id: str
+    child_display_name: Optional[str]
+    nickname: Optional[str]  # how the child set the parent's nickname; here it's the same row
+    created_at: datetime
+
+
+@router.get(
+    "/children/{parent_external_id}", response_model=list[ChildLinkOut]
+)
+def list_my_children(
+    parent_external_id: str, session: Session = Depends(get_session)
+) -> list[ChildLinkOut]:
+    """Parent-side view: who's connected to me as a guardian?"""
+    parent = _resolve_user(parent_external_id, session)
+    rows = session.exec(
+        select(FamilyLink).where(FamilyLink.parent_user_id == parent.id)
+    ).all()
+    out: list[ChildLinkOut] = []
+    for r in rows:
+        c = session.get(User, r.child_user_id)
+        if c is None:
+            continue
+        out.append(
+            ChildLinkOut(
+                id=r.id,
+                child_external_id=c.external_id,
+                child_display_name=c.display_name,
+                nickname=r.nickname,
+                created_at=r.created_at,
+            )
+        )
+    return out
+
+
 class ParentReportOut(BaseModel):
     parent_external_id: str
     parent_display_name: Optional[str]
