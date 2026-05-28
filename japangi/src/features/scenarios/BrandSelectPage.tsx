@@ -68,11 +68,13 @@ export function BrandSelectPage(): React.ReactElement {
         css={css`
           display: grid;
           grid-template-columns: 1fr 1fr;
+          grid-auto-rows: clamp(120px, 18dvh, 170px);
           gap: clamp(8px, 3vw, 16px);
           flex: 1;
           min-height: 0;
           padding: 0 clamp(12px, 4vw, 20px);
           overflow-y: auto;
+          align-content: start;
         `}
       >
         {category.brands.map((brand) => (
