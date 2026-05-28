@@ -4,6 +4,7 @@ import { Top } from "@toss/tds-mobile";
 
 import { BackButton } from "../../components/BackButton";
 import { useFontSize } from "../../hooks/useFontSize";
+import { useTts } from "../../hooks/useTts";
 import {
   FONT_SIZE_LABELS,
   FONT_SIZE_TOKENS,
@@ -14,6 +15,7 @@ const LEVELS: FontSizeLevel[] = ["normal", "large", "xlarge"];
 
 export function SettingsPage(): React.ReactElement {
   const { level, setLevel } = useFontSize();
+  const { enabled: ttsEnabled, setEnabled: setTtsEnabled, available: ttsAvailable, speak } = useTts();
 
   return (
     <div
@@ -130,6 +132,129 @@ export function SettingsPage(): React.ReactElement {
         >
           이렇게 보입니다
         </p>
+      </div>
+
+      {/* ── 음성 안내 (TTS) ─────────────────────────────────────── */}
+      <Top
+        upperGap={32}
+        title={<Top.TitleParagraph>음성 안내</Top.TitleParagraph>}
+      />
+
+      <div
+        css={css`
+          padding: 0 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        `}
+      >
+        <button
+          type="button"
+          onClick={() => setTtsEnabled(!ttsEnabled)}
+          disabled={!ttsAvailable}
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 20px;
+            background-color: ${ttsEnabled
+              ? adaptive.blue50
+              : adaptive.greyBackground};
+            border: 2px solid
+              ${ttsEnabled ? adaptive.blue500 : "transparent"};
+            border-radius: 20px;
+            cursor: pointer;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+            opacity: ${ttsAvailable ? 1 : 0.4};
+            transition: all 0.12s ease;
+            &:active {
+              transform: scale(0.98);
+            }
+          `}
+        >
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              min-width: 0;
+            `}
+          >
+            <span
+              css={css`
+                font-size: var(--font-button);
+                font-weight: 700;
+                color: ${ttsEnabled ? adaptive.blue700 : adaptive.grey900};
+                line-height: 1.3;
+              `}
+            >
+              🔊 안내 음성 자동 재생
+            </span>
+            <span
+              css={css`
+                font-size: var(--font-body);
+                color: ${adaptive.grey600};
+                line-height: 1.4;
+              `}
+            >
+              {ttsAvailable
+                ? "단계가 바뀔 때마다 안내를 읽어줘요."
+                : "이 기기에서는 사용할 수 없어요."}
+            </span>
+          </div>
+          <span
+            css={css`
+              flex-shrink: 0;
+              width: 56px;
+              height: 32px;
+              border-radius: 999px;
+              background-color: ${ttsEnabled
+                ? adaptive.blue500
+                : adaptive.grey300};
+              position: relative;
+              transition: background-color 0.18s ease;
+            `}
+          >
+            <span
+              css={css`
+                position: absolute;
+                top: 3px;
+                left: ${ttsEnabled ? 26 : 3}px;
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                background: #ffffff;
+                transition: left 0.18s ease;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+              `}
+            />
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => speak("안녕하세요. 자판기 어렵지않아요 음성 안내 예시입니다.")}
+          disabled={!ttsAvailable}
+          css={css`
+            padding: 14px 16px;
+            background-color: ${adaptive.greyBackground};
+            border: 1px solid ${adaptive.grey300};
+            border-radius: 14px;
+            font-size: var(--font-body);
+            font-weight: 700;
+            color: ${adaptive.grey900};
+            cursor: pointer;
+            opacity: ${ttsAvailable ? 1 : 0.4};
+            -webkit-tap-highlight-color: transparent;
+            &:active {
+              transform: scale(0.98);
+            }
+          `}
+        >
+          🔊 음성 들어보기
+        </button>
       </div>
     </div>
   );

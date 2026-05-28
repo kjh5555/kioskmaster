@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { HelpOverlay } from "../../../components/HelpOverlay";
 import { useConfetti } from "../../../hooks/useConfetti";
 import { useSFX } from "../../../hooks/useSFX";
+import { useTts } from "../../../hooks/useTts";
 import { getCustomLayout } from "./layouts/index";
 import { idlePulse, IDLE_PULSE_CLASS_FRAGMENT } from "./layouts/types";
 import type { BrandTheme, Choice, ScenarioScript, Step } from "./types";
@@ -331,6 +332,75 @@ function ListLayout({
   );
 }
 
+// ── Accessibility instruction bar ─────────────────────────────────────────────
+// A big, high-contrast row above every kiosk layout that always shows the
+// current step's instruction in extra-readable text. Includes a TTS replay
+// button so elderly users can re-hear the guidance whenever they want.
+
+function InstructionBar({
+  instruction,
+  onReplay,
+  ttsAvailable,
+}: {
+  instruction: string;
+  onReplay: () => void;
+  ttsAvailable: boolean;
+}): React.ReactElement {
+  return (
+    <div
+      css={css`
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #fff9db;
+        border: 2px solid #ffd43b;
+        border-radius: 14px;
+        padding: 12px 14px;
+      `}
+    >
+      <span style={{ fontSize: 22, flexShrink: 0 }} aria-hidden>
+        👉
+      </span>
+      <span
+        css={css`
+          flex: 1;
+          font-size: 18px;
+          font-weight: 800;
+          color: #2a1408;
+          line-height: 1.35;
+          letter-spacing: -0.01em;
+        `}
+      >
+        {instruction}
+      </span>
+      {ttsAvailable && (
+        <button
+          type="button"
+          aria-label="안내 다시 듣기"
+          onClick={onReplay}
+          css={css`
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1.5px solid #2a1408;
+            background: #ffffff;
+            color: #2a1408;
+            font-size: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            :active {
+              background: #f6f7f9;
+            }
+          `}
+        >
+          🔊
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ── StepEngine ────────────────────────────────────────────────────────────────
 
 const IDLE_HINT_DELAY_MS = 5000;
@@ -425,6 +495,7 @@ export function StepEngine({
   // useToast() is provided by TDSMobileAITProvider (already wrapping the app in main.tsx).
   // API confirmed from types: openToast(message: string, options?: OpenToastOptions) => void
   const { openToast } = useToast();
+  const tts = useTts();
 
   function handleBack(): void {
     if (history.length > 0) {
@@ -455,6 +526,17 @@ export function StepEngine({
   const step = scenario.steps[stepIndex];
   const totalSteps = scenario.steps.length;
   const progressPct = ((stepIndex + 1) / totalSteps) * 100;
+
+  // Auto-read the step instruction when TTS is enabled. We re-trigger on
+  // stepIndex change (not on the toggle) so flipping TTS on mid-scenario
+  // doesn't suddenly speak the current step; the next step will pick it up.
+  useEffect(() => {
+    if (!tts.enabled) return;
+    tts.speak(step.instruction);
+    // Stop speech when leaving the step or the engine unmounts.
+    return () => tts.cancel();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stepIndex]);
 
   const correctChoice = step.choices.find((c) => c.id === step.correctChoiceId);
   const correctLabel =
@@ -707,6 +789,14 @@ export function StepEngine({
         >
           {backButton}
           {goalHint}
+          {/* Big-text instruction bar — visible regardless of the kiosk
+              layout below, so users always have a "what should I do now?"
+              cue in extra-large readable text + a TTS replay button. */}
+          <InstructionBar
+            instruction={step.instruction}
+            onReplay={() => tts.speak(step.instruction)}
+            ttsAvailable={tts.available}
+          />
         </div>
         {/* Card frame for custom kiosk layouts: rounded corners,
             shadow, and clipped overflow so each screen paints inside
