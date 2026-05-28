@@ -211,6 +211,17 @@ export interface ApiBrandRequest {
   updated_at: string;
 }
 
+export interface ApiFeedback {
+  id: number;
+  category: string;
+  message: string;
+  contact: string | null;
+  status: string;
+  operator_note: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export const api = {
   getCategories: () => jget<ApiCategory[]>("/api/categories"),
   getCategory: (slug: string) =>
@@ -306,4 +317,14 @@ export const api = {
       nickname: string;
       attempts_created: number;
     }>("/api/dev/seed-family", payload),
+
+  // Feedback
+  submitFeedback: (payload: {
+    external_id: string;
+    category: "bug" | "feature" | "other";
+    message: string;
+    contact?: string | null;
+  }) => jpost<ApiFeedback>("/api/feedback/", payload),
+  listMyFeedback: (externalId: string) =>
+    jget<ApiFeedback[]>(`/api/feedback/mine/${externalId}`),
 };

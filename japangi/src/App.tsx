@@ -5,6 +5,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { AdminBrandRequestsPage } from "./features/admin/AdminBrandRequestsPage";
 import { MasterPage } from "./features/master/MasterPage";
+import { FeedbackPage } from "./features/feedback/FeedbackPage";
 import { GuardianCuratePage } from "./features/family/GuardianCuratePage";
 import { GuardianPairingPage } from "./features/family/GuardianPairingPage";
 import { ParentPairingPage } from "./features/family/ParentPairingPage";
@@ -74,6 +75,7 @@ function RouterChrome(): React.ReactElement {
         element={<GuardianCuratePage />}
       />
       <Route path="/requests" element={<BrandRequestPage />} />
+      <Route path="/feedback" element={<FeedbackPage />} />
       <Route
         path="/admin/brand-requests"
         element={<AdminBrandRequestsPage />}

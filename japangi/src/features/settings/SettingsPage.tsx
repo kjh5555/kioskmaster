@@ -291,6 +291,66 @@ export function SettingsPage(): React.ReactElement {
         </button>
       </div>
 
+      {/* ── 의견 보내기 ─────────────────────────────────────────── */}
+      <Top
+        upperGap={32}
+        title={<Top.TitleParagraph>의견 보내기</Top.TitleParagraph>}
+      />
+
+      <div css={css`padding: 0 20px;`}>
+        <button
+          type="button"
+          onClick={() => navigate("/feedback")}
+          css={css`
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 18px 18px;
+            border: 1.5px solid ${adaptive.grey200};
+            border-radius: 16px;
+            background: #ffffff;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+            :active {
+              background: ${adaptive.grey100};
+            }
+          `}
+        >
+          <span style={{ fontSize: 28 }}>💬</span>
+          <div
+            css={css`
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+            `}
+          >
+            <span
+              css={css`
+                font-size: var(--font-button);
+                font-weight: 800;
+                color: ${adaptive.grey900};
+              `}
+            >
+              불편한 점·바라는 기능 보내기
+            </span>
+            <span
+              css={css`
+                font-size: var(--font-body);
+                color: ${adaptive.grey600};
+                line-height: 1.4;
+              `}
+            >
+              버그·기능 요청·칭찬 모두 환영해요.
+            </span>
+          </div>
+          <span style={{ fontSize: 22, color: adaptive.grey400 }}>›</span>
+        </button>
+      </div>
+
       {/* ── 사용자 모드 ─────────────────────────────────────────── */}
       <Top
         upperGap={32}
