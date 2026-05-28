@@ -45,3 +45,35 @@ html, body {
     box-shadow: 0 0 24px rgba(0, 0, 0, 0.08);
   }
 }
+
+/* ── High-contrast mode ──────────────────────────────────────────────
+   Triggered by useHighContrast → <html data-high-contrast="on">.
+   Stronger color contrast + thicker borders + bolder font weights
+   for low-vision / color-blind users. */
+html[data-high-contrast="on"] {
+  /* Bump text weights and slightly larger base. */
+  --font-body: clamp(16px, 4.5vw, 19px);
+  --font-button: clamp(18px, 5.3vw, 24px);
+  --font-header: clamp(24px, 7vw, 30px);
+}
+
+html[data-high-contrast="on"] body {
+  color: #000000;
+  background: #ffffff;
+}
+
+html[data-high-contrast="on"] button,
+html[data-high-contrast="on"] a {
+  font-weight: 800;
+}
+
+/* Boost any neutral grey containers to pitch black on white. */
+html[data-high-contrast="on"] *:not(input):not(textarea) {
+  text-shadow: none;
+}
+
+/* Force kiosk-card-style elements to add a visible black border so cards
+   never blend into the background under high contrast. */
+html[data-high-contrast="on"] button[type="button"] {
+  outline-offset: 1px;
+}

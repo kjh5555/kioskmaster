@@ -4,6 +4,7 @@ import { Top } from "@toss/tds-mobile";
 
 import { BackButton } from "../../components/BackButton";
 import { useFontSize } from "../../hooks/useFontSize";
+import { useHighContrast } from "../../hooks/useHighContrast";
 import { useTts } from "../../hooks/useTts";
 import {
   FONT_SIZE_LABELS,
@@ -16,6 +17,7 @@ const LEVELS: FontSizeLevel[] = ["normal", "large", "xlarge"];
 export function SettingsPage(): React.ReactElement {
   const { level, setLevel } = useFontSize();
   const { enabled: ttsEnabled, setEnabled: setTtsEnabled, available: ttsAvailable, speak } = useTts();
+  const { enabled: hcEnabled, setEnabled: setHcEnabled } = useHighContrast();
 
   return (
     <div
@@ -259,6 +261,100 @@ export function SettingsPage(): React.ReactElement {
           `}
         >
           🔊 음성 들어보기
+        </button>
+      </div>
+
+      {/* ── 고대비 모드 ─────────────────────────────────────────── */}
+      <Top
+        upperGap={32}
+        title={<Top.TitleParagraph>고대비 모드</Top.TitleParagraph>}
+      />
+
+      <div
+        css={css`
+          padding: 0 20px;
+        `}
+      >
+        <button
+          type="button"
+          onClick={() => setHcEnabled(!hcEnabled)}
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 20px;
+            background-color: ${hcEnabled
+              ? adaptive.blue50
+              : adaptive.greyBackground};
+            border: 2px solid
+              ${hcEnabled ? adaptive.blue500 : "transparent"};
+            border-radius: 20px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.12s ease;
+            &:active {
+              transform: scale(0.98);
+            }
+          `}
+        >
+          <div
+            css={css`
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              min-width: 0;
+            `}
+          >
+            <span
+              css={css`
+                font-size: var(--font-button);
+                font-weight: 700;
+                color: ${hcEnabled ? adaptive.blue700 : adaptive.grey900};
+                line-height: 1.3;
+              `}
+            >
+              👀 글자 진하게 보기
+            </span>
+            <span
+              css={css`
+                font-size: var(--font-body);
+                color: ${adaptive.grey600};
+                line-height: 1.4;
+              `}
+            >
+              눈이 잘 안 보이실 때 켜주세요. 글씨가 더 굵고 진해져요.
+            </span>
+          </div>
+          <span
+            css={css`
+              flex-shrink: 0;
+              width: 56px;
+              height: 32px;
+              border-radius: 999px;
+              background-color: ${hcEnabled
+                ? adaptive.blue500
+                : adaptive.grey300};
+              position: relative;
+              transition: background-color 0.18s ease;
+            `}
+          >
+            <span
+              css={css`
+                position: absolute;
+                top: 3px;
+                left: ${hcEnabled ? 26 : 3}px;
+                width: 26px;
+                height: 26px;
+                border-radius: 50%;
+                background: #ffffff;
+                transition: left 0.18s ease;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+              `}
+            />
+          </span>
         </button>
       </div>
     </div>

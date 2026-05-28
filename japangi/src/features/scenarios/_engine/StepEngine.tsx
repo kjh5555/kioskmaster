@@ -339,63 +339,122 @@ function ListLayout({
 
 function InstructionBar({
   instruction,
+  hintMessage,
   onReplay,
+  onHint,
   ttsAvailable,
 }: {
   instruction: string;
+  hintMessage?: string;
   onReplay: () => void;
+  onHint: (text: string) => void;
   ttsAvailable: boolean;
 }): React.ReactElement {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <div
       css={css`
-        display: flex;
-        align-items: center;
-        gap: 10px;
         background: #fff9db;
         border: 2px solid #ffd43b;
         border-radius: 14px;
         padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       `}
     >
-      <span style={{ fontSize: 22, flexShrink: 0 }} aria-hidden>
-        👉
-      </span>
-      <span
+      <div
         css={css`
-          flex: 1;
-          font-size: 18px;
-          font-weight: 800;
-          color: #2a1408;
-          line-height: 1.35;
-          letter-spacing: -0.01em;
+          display: flex;
+          align-items: center;
+          gap: 10px;
         `}
       >
-        {instruction}
-      </span>
-      {ttsAvailable && (
-        <button
-          type="button"
-          aria-label="안내 다시 듣기"
-          onClick={onReplay}
+        <span style={{ fontSize: 22, flexShrink: 0 }} aria-hidden>
+          👉
+        </span>
+        <span
           css={css`
-            flex-shrink: 0;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 1.5px solid #2a1408;
-            background: #ffffff;
+            flex: 1;
+            font-size: 18px;
+            font-weight: 800;
             color: #2a1408;
-            font-size: 20px;
-            cursor: pointer;
-            font-family: inherit;
-            :active {
-              background: #f6f7f9;
-            }
+            line-height: 1.35;
+            letter-spacing: -0.01em;
           `}
         >
-          🔊
-        </button>
+          {instruction}
+        </span>
+        {hintMessage != null && hintMessage.length > 0 && (
+          <button
+            type="button"
+            aria-label="도움말 보기"
+            onClick={() => {
+              const next = !expanded;
+              setExpanded(next);
+              if (next) onHint(hintMessage);
+            }}
+            css={css`
+              flex-shrink: 0;
+              width: 44px;
+              height: 44px;
+              border-radius: 50%;
+              border: 1.5px solid ${expanded ? "#e4002b" : "#2a1408"};
+              background: ${expanded ? "#fff0f0" : "#ffffff"};
+              color: #2a1408;
+              font-size: 20px;
+              cursor: pointer;
+              font-family: inherit;
+              :active {
+                background: #f6f7f9;
+              }
+            `}
+          >
+            💡
+          </button>
+        )}
+        {ttsAvailable && (
+          <button
+            type="button"
+            aria-label="안내 다시 듣기"
+            onClick={onReplay}
+            css={css`
+              flex-shrink: 0;
+              width: 44px;
+              height: 44px;
+              border-radius: 50%;
+              border: 1.5px solid #2a1408;
+              background: #ffffff;
+              color: #2a1408;
+              font-size: 20px;
+              cursor: pointer;
+              font-family: inherit;
+              :active {
+                background: #f6f7f9;
+              }
+            `}
+          >
+            🔊
+          </button>
+        )}
+      </div>
+
+      {expanded && hintMessage != null && hintMessage.length > 0 && (
+        <div
+          css={css`
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #2a1408;
+            line-height: 1.5;
+            border: 1px dashed #ffd43b;
+          `}
+        >
+          {hintMessage}
+        </div>
       )}
     </div>
   );
@@ -794,7 +853,9 @@ export function StepEngine({
               cue in extra-large readable text + a TTS replay button. */}
           <InstructionBar
             instruction={step.instruction}
+            hintMessage={step.hintMessage}
             onReplay={() => tts.speak(step.instruction)}
+            onHint={(text) => tts.speak(text)}
             ttsAvailable={tts.available}
           />
         </div>
