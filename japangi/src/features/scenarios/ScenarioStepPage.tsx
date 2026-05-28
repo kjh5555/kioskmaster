@@ -66,9 +66,15 @@ function FastfoodStepPage({
       <StepEngine
         scenario={scenario}
         onScenarioComplete={() =>
-          navigate(`/scenario/${categoryId}/${brandId}/complete`)
+          navigate(`/scenario/${categoryId}/${brandId}/complete`, {
+            replace: true,
+          })
         }
-        onExit={() => navigate(`/scenario/${categoryId}/${brandId}/intro`)}
+        onExit={() =>
+          navigate(`/scenario/${categoryId}/${brandId}/intro`, {
+            replace: true,
+          })
+        }
       />
 
       {!onboardingDone && (

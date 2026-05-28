@@ -124,11 +124,18 @@ export function ScenarioCompletePage(): React.ReactElement {
         `}
       >
         <BigButton
-          onClick={() => navigate(`/scenario/${categoryId}/${brandId}/intro`)}
+          onClick={() =>
+            navigate(`/scenario/${categoryId}/${brandId}/intro`, {
+              replace: true,
+            })
+          }
         >
           다시 한 번 해볼래요
         </BigButton>
-        <BigButton variant="weak" onClick={() => navigate("/")}>
+        <BigButton
+          variant="weak"
+          onClick={() => navigate("/", { replace: true })}
+        >
           다른 키오스크 연습할래요
         </BigButton>
       </div>
