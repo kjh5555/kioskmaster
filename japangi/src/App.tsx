@@ -3,6 +3,9 @@
 // If the WebView environment ever requires hash-based routing, swap to HashRouter.
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { GuardianCuratePage } from "./features/family/GuardianCuratePage";
+import { GuardianPairingPage } from "./features/family/GuardianPairingPage";
+import { ParentPairingPage } from "./features/family/ParentPairingPage";
 import { GuardianHomePage } from "./features/guardian/GuardianHomePage";
 import { GuardianParentReportPage } from "./features/guardian/GuardianParentReportPage";
 import { HomePage } from "./features/home/HomePage";
@@ -58,10 +61,16 @@ function RouterChrome(): React.ReactElement {
         path="/scenario/:categoryId/:brandId/complete"
         element={<ScenarioCompletePage />}
       />
+      <Route path="/pair" element={<ParentPairingPage />} />
       <Route path="/guardian" element={<GuardianHomePage />} />
+      <Route path="/guardian/pair" element={<GuardianPairingPage />} />
       <Route
         path="/guardian/parent/:parentExternalId"
         element={<GuardianParentReportPage />}
+      />
+      <Route
+        path="/guardian/parent/:parentExternalId/curate"
+        element={<GuardianCuratePage />}
       />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

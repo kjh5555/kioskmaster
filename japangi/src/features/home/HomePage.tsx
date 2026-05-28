@@ -6,7 +6,11 @@ import { useNavigate } from "react-router-dom";
 import { ErrorScreen } from "../../components/ErrorScreen";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { useCurrentUser } from "../../hooks/useCurrentUser";
-import { useCategories, useUserStats } from "../../hooks/useKioskQueries";
+import {
+  useCategories,
+  useParentFavorites,
+  useUserStats,
+} from "../../hooks/useKioskQueries";
 import { queryClient } from "../../lib/queryClient";
 
 export function HomePage(): React.ReactElement {
@@ -14,6 +18,8 @@ export function HomePage(): React.ReactElement {
   const { data: categories, isLoading, error } = useCategories();
   const { externalId } = useCurrentUser();
   const { data: stats } = useUserStats(externalId);
+  const { data: favorites = [] } = useParentFavorites(externalId);
+  const primaryFav = favorites.find((f) => f.priority === 0) ?? favorites[0];
 
   if (isLoading) return <LoadingScreen />;
   if (error !== null)
@@ -47,11 +53,80 @@ export function HomePage(): React.ReactElement {
           </Top.TitleParagraph>
         }
         right={
-          <Top.RightButton onClick={() => navigate("/settings")}>
-            글씨 크기
+          <Top.RightButton onClick={() => navigate("/pair")}>
+            가족 연결
           </Top.RightButton>
         }
       />
+
+      {primaryFav && (
+        <button
+          type="button"
+          onClick={() =>
+            navigate(
+              `/scenario/${primaryFav.category_slug}/${primaryFav.brand_slug}/intro`,
+            )
+          }
+          css={css`
+            margin: 0 clamp(12px, 4vw, 20px) 8px;
+            padding: 16px 18px;
+            background: #fff9db;
+            border: 2px solid #ffd43b;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            -webkit-tap-highlight-color: transparent;
+            :active {
+              transform: scale(0.99);
+            }
+          `}
+        >
+          <span style={{ fontSize: 36 }}>⭐</span>
+          <div
+            css={css`
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+            `}
+          >
+            <span
+              css={css`
+                font-size: 11px;
+                font-weight: 800;
+                color: #c1840d;
+              `}
+            >
+              가족이 골라준 1순위
+            </span>
+            <span
+              css={css`
+                font-size: var(--font-button);
+                font-weight: 900;
+                color: #2a1408;
+              `}
+            >
+              {primaryFav.brand_slug}
+            </span>
+            {primaryFav.note && (
+              <span
+                css={css`
+                  font-size: 12px;
+                  color: #5e4500;
+                  padding-top: 2px;
+                `}
+              >
+                {primaryFav.note}
+              </span>
+            )}
+          </div>
+          <span style={{ fontSize: 22, color: "#c1840d" }}>›</span>
+        </button>
+      )}
 
       {stats && stats.total_attempts > 0 && (
         <div
