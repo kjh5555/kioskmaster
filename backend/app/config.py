@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     # Gemini can't pick choices the layout doesn't support yet.
     # Set USE_LLM=true in env to re-enable.
     use_llm: bool = False
+    # Set ADMIN_TOKEN env var to enable admin endpoints (brand request review).
+    # Pass it back as the `X-Admin-Token` header from the admin panel.
+    admin_token: Optional[str] = None
 
     @property
     def cors_origins_list(self) -> list[str]:
