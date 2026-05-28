@@ -2,7 +2,10 @@ import { css } from "@emotion/react";
 import { adaptive } from "@toss/tds-colors";
 import { Top } from "@toss/tds-mobile";
 
+import { useNavigate } from "react-router-dom";
+
 import { BackButton } from "../../components/BackButton";
+import { useCurrentUser } from "../../hooks/useCurrentUser";
 import { useFontSize } from "../../hooks/useFontSize";
 import { useHighContrast } from "../../hooks/useHighContrast";
 import { useTts } from "../../hooks/useTts";
@@ -14,10 +17,34 @@ import {
 
 const LEVELS: FontSizeLevel[] = ["normal", "large", "xlarge"];
 
+function roleBtn(active: boolean) {
+  return css`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 16px 10px;
+    background: ${active ? adaptive.blue50 : adaptive.greyBackground};
+    border: 2px solid ${active ? adaptive.blue500 : "transparent"};
+    border-radius: 16px;
+    font-size: var(--font-body);
+    font-weight: 800;
+    color: ${active ? adaptive.blue700 : adaptive.grey900};
+    cursor: pointer;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+    :active {
+      transform: scale(0.98);
+    }
+  `;
+}
+
 export function SettingsPage(): React.ReactElement {
   const { level, setLevel } = useFontSize();
   const { enabled: ttsEnabled, setEnabled: setTtsEnabled, available: ttsAvailable, speak } = useTts();
   const { enabled: hcEnabled, setEnabled: setHcEnabled } = useHighContrast();
+  const { role, setRole } = useCurrentUser();
+  const navigate = useNavigate();
 
   return (
     <div
@@ -262,6 +289,52 @@ export function SettingsPage(): React.ReactElement {
         >
           🔊 음성 들어보기
         </button>
+      </div>
+
+      {/* ── 사용자 모드 ─────────────────────────────────────────── */}
+      <Top
+        upperGap={32}
+        title={<Top.TitleParagraph>누가 사용하나요?</Top.TitleParagraph>}
+      />
+
+      <div
+        css={css`
+          padding: 0 20px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        `}
+      >
+        <div
+          css={css`
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+          `}
+        >
+          <button
+            type="button"
+            onClick={async () => {
+              await setRole("elderly");
+              navigate("/");
+            }}
+            css={roleBtn(role === "elderly")}
+          >
+            <span style={{ fontSize: 28 }}>👴</span>
+            <span>내가 연습</span>
+          </button>
+          <button
+            type="button"
+            onClick={async () => {
+              await setRole("guardian");
+              navigate("/guardian");
+            }}
+            css={roleBtn(role === "guardian")}
+          >
+            <span style={{ fontSize: 28 }}>👨‍👩‍👧</span>
+            <span>부모님 도움</span>
+          </button>
+        </div>
       </div>
 
       {/* ── 고대비 모드 ─────────────────────────────────────────── */}

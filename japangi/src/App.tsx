@@ -3,19 +3,47 @@
 // If the WebView environment ever requires hash-based routing, swap to HashRouter.
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { GuardianHomePage } from "./features/guardian/GuardianHomePage";
+import { GuardianParentReportPage } from "./features/guardian/GuardianParentReportPage";
 import { HomePage } from "./features/home/HomePage";
+import { RoleSelectPage } from "./features/role/RoleSelectPage";
 import { BrandSelectPage } from "./features/scenarios/BrandSelectPage";
 import { ScenarioCompletePage } from "./features/scenarios/ScenarioCompletePage";
 import { ScenarioIntroPage } from "./features/scenarios/ScenarioIntroPage";
 import { ScenarioStepPage } from "./features/scenarios/ScenarioStepPage";
 import { SettingsPage } from "./features/settings/SettingsPage";
+import { useCurrentUser } from "./hooks/useCurrentUser";
 import { useHardwareBack } from "./hooks/useHardwareBack";
 
 function RouterChrome(): React.ReactElement {
   useHardwareBack();
+  const { role, roleConfirmed } = useCurrentUser();
+
+  // First-launch gate: until the user has explicitly picked a role we show
+  // the role-select page in place of the home routes. They can always
+  // change it from settings later.
+  if (!roleConfirmed) {
+    return (
+      <Routes>
+        <Route path="/role-select" element={<RoleSelectPage />} />
+        <Route path="*" element={<Navigate to="/role-select" replace />} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route
+        path="/"
+        element={
+          role === "guardian" ? (
+            <Navigate to="/guardian" replace />
+          ) : (
+            <HomePage />
+          )
+        }
+      />
+      <Route path="/role-select" element={<RoleSelectPage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/scenario/:categoryId/brand" element={<BrandSelectPage />} />
       <Route
@@ -29,6 +57,11 @@ function RouterChrome(): React.ReactElement {
       <Route
         path="/scenario/:categoryId/:brandId/complete"
         element={<ScenarioCompletePage />}
+      />
+      <Route path="/guardian" element={<GuardianHomePage />} />
+      <Route
+        path="/guardian/parent/:parentExternalId"
+        element={<GuardianParentReportPage />}
       />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

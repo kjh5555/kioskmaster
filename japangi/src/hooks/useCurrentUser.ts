@@ -4,6 +4,7 @@ import { api, type ApiUser } from "../lib/api";
 
 const STORAGE_DEVICE_ID = "japangi:deviceId";
 const STORAGE_ROLE = "japangi:role";
+const STORAGE_ROLE_CONFIRMED = "japangi:roleConfirmed";
 
 export type UserRole = "elderly" | "guardian";
 
@@ -44,9 +45,26 @@ function writeStoredRole(v: UserRole): void {
   }
 }
 
+function readRoleConfirmed(): boolean {
+  try {
+    return localStorage.getItem(STORAGE_ROLE_CONFIRMED) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function writeRoleConfirmed(v: boolean): void {
+  try {
+    localStorage.setItem(STORAGE_ROLE_CONFIRMED, String(v));
+  } catch {
+    // ignore
+  }
+}
+
 interface CurrentUserContextValue {
   externalId: string;
   role: UserRole;
+  roleConfirmed: boolean;
   user: ApiUser | null;
   loading: boolean;
   error: string | null;
@@ -61,6 +79,9 @@ export const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [externalId] = useState<string>(getOrCreateDeviceId);
   const [role, setRoleState] = useState<UserRole>(readStoredRole);
+  const [roleConfirmed, setRoleConfirmedState] = useState<boolean>(
+    readRoleConfirmed,
+  );
   const [user, setUser] = useState<ApiUser | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -91,7 +112,9 @@ export const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
   const setRole = useCallback(
     async (next: UserRole) => {
       writeStoredRole(next);
+      writeRoleConfirmed(true);
       setRoleState(next);
+      setRoleConfirmedState(true);
       await ensure(next);
     },
     [ensure],
@@ -103,7 +126,18 @@ export const CurrentUserProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return React.createElement(
     CurrentUserContext.Provider,
-    { value: { externalId, role, user, loading, error, setRole, refresh } },
+    {
+      value: {
+        externalId,
+        role,
+        roleConfirmed,
+        user,
+        loading,
+        error,
+        setRole,
+        refresh,
+      },
+    },
     children,
   );
 };
