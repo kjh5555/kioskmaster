@@ -33,12 +33,16 @@ export function BrandSelectPage(): React.ReactElement {
   return (
     <div
       css={css`
-        min-height: 100dvh;
-        padding-top: calc(env(safe-area-inset-top, 0px) + 0px);
-        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+        height: 100dvh;
+        max-height: 100dvh;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
       `}
     >
       <div
@@ -64,9 +68,11 @@ export function BrandSelectPage(): React.ReactElement {
         css={css`
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 16px;
+          gap: clamp(8px, 3vw, 16px);
           flex: 1;
-          padding: 0 20px;
+          min-height: 0;
+          padding: 0 clamp(12px, 4vw, 20px);
+          overflow-y: auto;
         `}
       >
         {category.brands.map((brand) => (
@@ -80,13 +86,13 @@ export function BrandSelectPage(): React.ReactElement {
               flex-direction: column;
               align-items: center;
               justify-content: center;
-              gap: 12px;
-              padding: 20px;
+              gap: clamp(6px, 2vw, 12px);
+              padding: clamp(10px, 3vw, 20px);
               background-color: ${adaptive.greyBackground};
               border: none;
-              border-radius: 20px;
+              border-radius: clamp(14px, 4vw, 20px);
               cursor: pointer;
-              min-height: 140px;
+              min-height: clamp(110px, 18dvh, 160px);
               text-align: center;
               -webkit-tap-highlight-color: transparent;
               transition:
@@ -110,15 +116,15 @@ export function BrandSelectPage(): React.ReactElement {
                   if (sib !== null) sib.style.display = "inline-block";
                 }}
                 css={css`
-                  width: 72px;
-                  height: 72px;
+                  width: clamp(48px, 14vw, 72px);
+                  height: clamp(48px, 14vw, 72px);
                   object-fit: contain;
                 `}
               />
             ) : null}
             <span
               css={css`
-                font-size: 64px;
+                font-size: clamp(40px, 12vw, 64px);
                 line-height: 1;
                 display: ${brand.image_url != null && brand.image_url !== ""
                   ? "none"

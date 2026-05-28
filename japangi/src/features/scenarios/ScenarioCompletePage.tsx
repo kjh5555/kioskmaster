@@ -36,14 +36,18 @@ export function ScenarioCompletePage(): React.ReactElement {
   return (
     <div
       css={css`
-        min-height: 100dvh;
-        padding-top: calc(env(safe-area-inset-top, 0px) + 0px);
-        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
-        padding-left: 20px;
-        padding-right: 20px;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+        padding-left: clamp(12px, 4vw, 20px);
+        padding-right: clamp(12px, 4vw, 20px);
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
       `}
     >
       <div
@@ -78,7 +82,7 @@ export function ScenarioCompletePage(): React.ReactElement {
           justify-content: center;
         `}
       >
-        <span style={{ fontSize: 96, lineHeight: 1 }}>✅</span>
+        <span style={{ fontSize: "clamp(72px, 22vw, 96px)", lineHeight: 1 }}>✅</span>
       </div>
 
       <div

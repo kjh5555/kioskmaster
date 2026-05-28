@@ -16,22 +16,25 @@ html, body {
   margin: 0;
   padding: 0;
   min-width: 320px;
-  min-height: 100vh;
+  height: 100dvh;
   font-size: var(--font-body);
-  overflow-x: hidden;
+  overflow: hidden;
   width: 100%;
   max-width: 100vw;
 }
 
 /* Mobile-first app: constrain to mobile viewport width even when viewed in a
    wider desktop browser, so the layout matches what users will see inside
-   the Toss WebView (~390px). On actual mobile/Toss, this is a no-op. */
+   the Toss WebView (~390px). On actual mobile/Toss, this is a no-op.
+   Pages opt into their own internal scrolling region. */
 #root {
   max-width: 480px;
   margin: 0 auto;
-  min-height: 100vh;
+  height: 100dvh;
   background-color: #fff;
-  overflow-x: hidden;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (min-width: 481px) {

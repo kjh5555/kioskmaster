@@ -20,12 +20,17 @@ export function SettingsPage(): React.ReactElement {
   return (
     <div
       css={css`
-        min-height: 100dvh;
-        padding-top: calc(env(safe-area-inset-top, 0px) + 0px);
-        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+        height: 100dvh;
+        max-height: 100dvh;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
+        overflow-y: auto;
+        overflow-x: hidden;
+        width: 100%;
+        max-width: 100%;
       `}
     >
       <div

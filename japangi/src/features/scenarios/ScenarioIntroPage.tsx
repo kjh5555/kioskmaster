@@ -45,14 +45,18 @@ export function ScenarioIntroPage(): React.ReactElement {
   return (
     <div
       css={css`
-        min-height: 100dvh;
-        padding-top: calc(env(safe-area-inset-top, 0px) + 0px);
-        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
-        padding-left: 20px;
-        padding-right: 20px;
+        height: 100dvh;
+        max-height: 100dvh;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+        padding-left: clamp(12px, 4vw, 20px);
+        padding-right: clamp(12px, 4vw, 20px);
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
+        overflow: hidden;
+        width: 100%;
+        max-width: 100%;
       `}
     >
       <div
@@ -105,15 +109,15 @@ export function ScenarioIntroPage(): React.ReactElement {
               if (sib !== null) sib.style.display = "inline-block";
             }}
             css={css`
-              width: 200px;
-              height: 200px;
+              width: clamp(140px, 40vw, 200px);
+              height: clamp(140px, 40vw, 200px);
               object-fit: contain;
             `}
           />
         ) : null}
         <span
           style={{
-            fontSize: 96,
+            fontSize: "clamp(72px, 22vw, 96px)",
             lineHeight: 1,
             display:
               brand.image_url != null && brand.image_url !== "" ? "none" : "inline-block",
