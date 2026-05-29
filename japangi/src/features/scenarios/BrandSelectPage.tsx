@@ -72,9 +72,10 @@ export function BrandSelectPage(): React.ReactElement {
           gap: clamp(8px, 3vw, 16px);
           flex: 1;
           min-height: 0;
-          padding: 0 clamp(12px, 4vw, 20px);
+          padding: clamp(12px, 4vw, 20px);
           overflow-y: auto;
-          align-content: start;
+          align-content: center;
+          justify-content: center;
         `}
       >
         {category.brands.map((brand) => (

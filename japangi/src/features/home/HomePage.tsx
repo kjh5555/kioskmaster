@@ -226,9 +226,8 @@ export function HomePage(): React.ReactElement {
           gap: clamp(8px, 3vw, 16px);
           flex: 1;
           min-height: 0;
-          padding: 0 clamp(12px, 4vw, 20px);
-          overflow-y: auto;
-          align-content: start;
+          padding: clamp(8px, 2vw, 14px) clamp(12px, 4vw, 20px);
+          align-content: center;
         `}
       >
         {(categories ?? []).map((category) => (
