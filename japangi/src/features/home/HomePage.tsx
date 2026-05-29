@@ -41,8 +41,7 @@ export function HomePage(): React.ReactElement {
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
-        overflow-y: auto;
-        overflow-x: hidden;
+        overflow: hidden;
         max-width: 100%;
         width: 100%;
       `}
@@ -228,6 +227,7 @@ export function HomePage(): React.ReactElement {
           min-height: 0;
           padding: clamp(8px, 2vw, 14px) clamp(12px, 4vw, 20px);
           align-content: center;
+          overflow-y: auto;
         `}
       >
         {(categories ?? []).map((category) => (
