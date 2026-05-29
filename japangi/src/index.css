@@ -10,6 +10,18 @@
 * {
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
+  /* Hide scrollbar visuals everywhere — scrolling itself still works. The
+     app already constrains pages to 100dvh, so any leftover overflow uses
+     a touch-scroll without a visible scrollbar that would otherwise look
+     like a glitch on home/list screens. */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 html, body {

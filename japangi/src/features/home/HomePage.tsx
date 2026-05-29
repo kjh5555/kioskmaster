@@ -41,7 +41,8 @@ export function HomePage(): React.ReactElement {
         display: flex;
         flex-direction: column;
         background: ${adaptive.background};
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
         max-width: 100%;
         width: 100%;
       `}
