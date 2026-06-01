@@ -32,6 +32,14 @@ import { LotteriaReceiptPrompt } from "./LotteriaReceiptPrompt";
 import { LotteriaSetPopup } from "./LotteriaSetPopup";
 import { LotteriaSideSelect } from "./LotteriaSideSelect";
 import { LotteriaStart } from "./LotteriaStart";
+import { GeneralComplete } from "./GeneralComplete";
+import { GeneralConfirm } from "./GeneralConfirm";
+import { GeneralDepartment } from "./GeneralDepartment";
+import { GeneralDoctor } from "./GeneralDoctor";
+import { GeneralMode } from "./GeneralMode";
+import { GeneralSsn } from "./GeneralSsn";
+import { GeneralStart } from "./GeneralStart";
+import { GeneralSummary } from "./GeneralSummary";
 import { CafeGenericCardInsert } from "./CafeGenericCardInsert";
 import { CafeGenericCart } from "./CafeGenericCart";
 import { CafeGenericCategory } from "./CafeGenericCategory";
@@ -171,6 +179,14 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "cafe-generic-pay-method": CafeGenericPayMethod,
   "cafe-generic-card-insert": CafeGenericCardInsert,
   "cafe-generic-order-complete": CafeGenericOrderComplete,
+  "general-start": GeneralStart,
+  "general-mode": GeneralMode,
+  "general-ssn": GeneralSsn,
+  "general-confirm": GeneralConfirm,
+  "general-department": GeneralDepartment,
+  "general-doctor": GeneralDoctor,
+  "general-summary": GeneralSummary,
+  "general-complete": GeneralComplete,
 };
 
 export function getCustomLayout(id: string): CustomLayoutComponent | undefined {

@@ -320,9 +320,13 @@ export function ScenarioStepPage(): React.ReactElement {
   }>();
 
   // FastfoodStepPageLoader 는 이름과 달리 useDynamicGoal 로 카테고리 무관하게
-  // scenario_json 을 읽어 StepEngine 에 전달한다. 카페도 동일 path 사용.
-  // (병원/기차는 아직 시드 없음 → placeholder 유지)
-  if (categoryId === "fastfood" || categoryId === "cafe") {
+  // scenario_json 을 읽어 StepEngine 에 전달한다. 카페·병원도 동일 path 사용.
+  // (기차는 아직 시드 없음 → placeholder 유지)
+  if (
+    categoryId === "fastfood" ||
+    categoryId === "cafe" ||
+    categoryId === "hospital"
+  ) {
     return <FastfoodStepPageLoader categoryId={categoryId} brandId={brandId} />;
   }
 

@@ -1542,6 +1542,139 @@ EDIYA_SCENARIO = {
 }
 
 
+GENERAL_HOSPITAL_SCENARIO = {
+    "id": "hospital:general",
+    "goalSummary": "오늘은 내과 진료를 접수해볼게요.",
+    "theme": {
+        "name": "종합병원",
+        "primary": "#0067A6",
+        "secondary": "#E8F2FA",
+        "onPrimary": "#FFFFFF",
+        "accent": "#0067A6",
+    },
+    "onboarding": [
+        {"emoji": "👋", "title": "안녕하세요!", "body": "병원 무인 접수기 연습이에요. 실수해도 괜찮아요."},
+        {"emoji": "🔒", "title": "연습이라 저장 안 돼요", "body": "주민번호도 진짜로 저장되지 않아요. 마음 편히 눌러보세요."},
+        {"emoji": "❓", "title": "막히면 ?를 눌러요", "body": "오른쪽 위 ? 버튼을 누르면 친절한 설명이 나와요."},
+        {"emoji": "🩺", "title": "오늘의 목표", "body": "내과 진료를 접수해볼게요. 시작!"},
+    ],
+    "steps": [
+        {
+            "id": "start",
+            "instruction": "접수를 시작하려면 화면을 눌러요",
+            "helpText": "병원 무인 접수기는 처음에 안내 화면이 떠 있어요. 가운데 큰 '접수하기' 버튼을 한 번 눌러주세요.",
+            "layout": "start",
+            "customLayoutId": "general-start",
+            "choices": [
+                {"id": "register", "label": "접수하기", "emoji": "📋"},
+            ],
+            "correctChoiceId": "register",
+            "successMessage": "잘하셨어요! 접수를 시작할게요.",
+            "hintMessage": "가운데 큰 파란색 '접수하기' 버튼을 눌러보세요.",
+        },
+        {
+            "id": "mode",
+            "instruction": "'오늘 처음 오신 분'을 골라요",
+            "helpText": "예약 안 하시고 그냥 오셨으면 '오늘 처음 오신 분 (당일접수)'을 눌러요. 어제까지 전화나 앱으로 미리 예약하셨으면 '예약하신 분'을 눌러요. 오늘은 당일접수예요.",
+            "layout": "duo",
+            "customLayoutId": "general-mode",
+            "choices": [
+                {"id": "today", "label": "오늘 처음 오신 분", "emoji": "📋", "sublabel": "당일접수 — 예약 안 하신 분"},
+                {"id": "appointment", "label": "예약하신 분", "emoji": "📅", "sublabel": "어제까지 미리 예약하신 분"},
+            ],
+            "correctChoiceId": "today",
+            "successMessage": "잘하셨어요. 당일접수로 진행해요.",
+            "hintMessage": "왼쪽 '오늘 처음 오신 분' 카드를 눌러주세요.",
+        },
+        {
+            "id": "ssn",
+            "instruction": "주민등록번호 13자리를 모두 입력해요",
+            "helpText": "주민번호 앞 6자리(생년월일)와 뒤 7자리를 차례로 눌러주세요. 잘못 누르셨으면 큰 '한 글자 지우기'를 누르세요. 연습이라 저장되지 않아요. 13자리 다 입력하면 자동으로 넘어가요.",
+            "layout": "start",
+            "customLayoutId": "general-ssn",
+            "choices": [
+                {"id": "next", "label": "다음", "emoji": "▶️"},
+            ],
+            "correctChoiceId": "next",
+            "successMessage": "주민번호 입력 완료. 본인 확인할게요.",
+            "hintMessage": "키패드로 13자리를 모두 누르면 자동으로 넘어가요.",
+        },
+        {
+            "id": "confirm",
+            "instruction": "내 정보가 맞으면 '맞아요'를 눌러요",
+            "helpText": "화면에 이름·생년월일이 나와요. 본인이 맞으면 큰 초록색 '맞아요' 버튼을 눌러요. 다른 사람이거나 잘못 입력했으면 '다시 입력할게요'.",
+            "layout": "duo",
+            "customLayoutId": "general-confirm",
+            "choices": [
+                {"id": "yes", "label": "맞아요", "emoji": "✅"},
+                {"id": "no", "label": "다시 입력할게요", "emoji": "↺"},
+            ],
+            "correctChoiceId": "yes",
+            "successMessage": "본인 확인 완료. 진료과를 골라봐요.",
+            "hintMessage": "왼쪽 초록색 '맞아요' 버튼을 눌러주세요.",
+        },
+        {
+            "id": "department",
+            "instruction": "'내과'를 골라요",
+            "helpText": "오늘 어디가 아프신지에 따라 진료과를 골라요. 배가 아프거나 감기·소화는 '내과'예요. 뼈·관절은 '정형외과', 눈은 '안과', 귀·코·목은 '이비인후과'.",
+            "layout": "grid",
+            "customLayoutId": "general-department",
+            "choices": [
+                {"id": "internal", "label": "내과", "sublabel": "배·소화·감기", "emoji": "🩺"},
+                {"id": "ortho", "label": "정형외과", "sublabel": "뼈·관절·근육", "emoji": "🦴"},
+                {"id": "eye", "label": "안과", "sublabel": "눈", "emoji": "👁️"},
+                {"id": "ent", "label": "이비인후과", "sublabel": "귀·코·목", "emoji": "👂"},
+            ],
+            "correctChoiceId": "internal",
+            "successMessage": "내과 선생님을 골라봐요.",
+            "hintMessage": "왼쪽 위 첫 번째 '내과' 카드를 눌러주세요.",
+        },
+        {
+            "id": "doctor",
+            "instruction": "'김민수 선생님'을 골라요",
+            "helpText": "오늘 진료 가능한 의사 선생님 목록이에요. '김민수 선생님 (오늘 진료 가능)'을 골라주세요. 한 분만 골라도 충분해요.",
+            "layout": "list",
+            "customLayoutId": "general-doctor",
+            "choices": [
+                {"id": "kim", "label": "김민수 선생님", "sublabel": "오늘 진료 가능 · 대기 3명", "emoji": "👨‍⚕️"},
+                {"id": "lee", "label": "이영희 선생님", "sublabel": "오늘 진료 가능 · 대기 5명", "emoji": "👩‍⚕️"},
+                {"id": "park", "label": "박철수 선생님", "sublabel": "예약만 가능", "emoji": "👨‍⚕️"},
+            ],
+            "correctChoiceId": "kim",
+            "successMessage": "김민수 선생님으로 골랐어요.",
+            "hintMessage": "맨 위 '김민수 선생님' 카드를 눌러주세요.",
+        },
+        {
+            "id": "summary",
+            "instruction": "'접수하기'를 눌러 마무리해요",
+            "helpText": "내가 고른 진료과·의사를 확인해요. 맞으면 아래 큰 파란색 '접수하기' 버튼을 눌러주세요. 다른 곳을 가시려면 '다시 고르기'.",
+            "layout": "duo",
+            "customLayoutId": "general-summary",
+            "choices": [
+                {"id": "confirm", "label": "접수하기", "emoji": "✅"},
+                {"id": "back", "label": "다시 고르기", "emoji": "↺"},
+            ],
+            "correctChoiceId": "confirm",
+            "successMessage": "접수가 완료되었어요!",
+            "hintMessage": "아래 큰 파란색 '접수하기' 버튼을 눌러주세요.",
+        },
+        {
+            "id": "complete",
+            "instruction": "대기번호를 확인하고 진료실 앞에서 기다려요",
+            "helpText": "대기번호가 나왔어요. 이 번호가 진료실 앞 모니터에 뜨면 들어가시면 돼요. 잘하셨어요!",
+            "layout": "start",
+            "customLayoutId": "general-complete",
+            "choices": [
+                {"id": "done", "label": "완료", "emoji": "✅"},
+            ],
+            "correctChoiceId": "done",
+            "successMessage": "병원 접수 완료! 잘하셨어요 🎉",
+            "hintMessage": "대기번호를 확인하고 완료 버튼을 눌러주세요.",
+        },
+    ],
+}
+
+
 # category_slug -> list of brand dicts
 BRANDS = {
     "fastfood": [
@@ -1565,7 +1698,7 @@ BRANDS = {
          "image_url": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80"},
     ],
     "hospital": [
-        {"slug": "general", "name": "종합병원", "emoji": "🏥", "goal_summary": "", "scenario_json": None, "order": 0},
+        {"slug": "general", "name": "종합병원", "emoji": "🏥", "goal_summary": "오늘은 내과 진료를 접수해볼게요.", "scenario_json": GENERAL_HOSPITAL_SCENARIO, "order": 0},
         {"slug": "clinic", "name": "동네 의원", "emoji": "🩺", "goal_summary": "", "scenario_json": None, "order": 1},
     ],
     "train": [
