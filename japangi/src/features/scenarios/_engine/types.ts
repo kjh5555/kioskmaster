@@ -3,6 +3,9 @@ export interface Choice {
   label: string;
   sublabel?: string;
   emoji?: string;
+  /** 실제 매장 사진 URL (스타벅스 image.istarbucks.co.kr 등). 있으면 카드에
+   * emoji 대신 이미지를 표시 — 시각 모사 우선 룰을 위해 시드에서 채운다. */
+  imageUrl?: string;
 }
 
 export type StepLayout = "start" | "duo" | "list" | "grid";
