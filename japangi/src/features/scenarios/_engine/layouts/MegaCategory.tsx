@@ -1,4 +1,5 @@
 import { css, keyframes } from "@emotion/react";
+import { useState } from "react";
 
 import { idlePulse, type CustomLayoutProps } from "./types";
 
@@ -27,6 +28,16 @@ export function MegaCategory({
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const correctId = step.correctChoiceId;
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const previewLabel = step.choices.find((c) => c.id === previewId)?.label;
+
+  function handleTabClick(id: string) {
+    if (id === correctId) {
+      onChoice(id);
+    } else {
+      setPreviewId(id);
+    }
+  }
   return (
     <div
       css={css`
@@ -62,12 +73,12 @@ export function MegaCategory({
           MENU
         </div>
         {step.choices.map((c) => {
-          const active = c.id === correctId;
+          const active = previewId === null ? c.id === correctId : c.id === previewId;
           return (
             <button
               key={c.id}
               type="button"
-              onClick={() => onChoice(c.id)}
+              onClick={() => handleTabClick(c.id)}
               css={[
                 css`
                   padding: 12px 16px;
@@ -88,7 +99,7 @@ export function MegaCategory({
                   }
                 `,
                 shakeWhen(rejectedChoiceId, c.id),
-                idlePulse(idleHintActive, c.id === correctId),
+                idlePulse(idleHintActive, c.id === correctId && previewId === null),
               ]}
             >
               {c.emoji} {c.label}
@@ -108,18 +119,37 @@ export function MegaCategory({
           gap: 16px;
         `}
       >
-        <div style={{ fontSize: 56 }}>👆</div>
-        <div
-          css={css`
-            font-size: 18px;
-            font-weight: 800;
-            color: #000000;
-            line-height: 1.4;
-          `}
-        >
-          위쪽 메뉴 탭에서<br />
-          '음료'를 한 번 눌러주세요
-        </div>
+        {previewId === null ? (
+          <>
+            <div style={{ fontSize: 56 }}>👆</div>
+            <div
+              css={css`
+                font-size: 18px;
+                font-weight: 800;
+                color: #000000;
+                line-height: 1.4;
+              `}
+            >
+              위쪽 메뉴 탭에서<br />
+              '음료'를 한 번 눌러주세요
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: 56 }}>☕</div>
+            <div
+              css={css`
+                font-size: 18px;
+                font-weight: 800;
+                color: #000000;
+                line-height: 1.4;
+              `}
+            >
+              <strong>{previewLabel}</strong>은 오늘 연습에 없어요.<br />
+              위쪽에서 <strong>'음료'</strong>를 눌러주세요.
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

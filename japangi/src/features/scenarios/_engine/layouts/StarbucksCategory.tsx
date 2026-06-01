@@ -1,4 +1,5 @@
 import { css, keyframes } from "@emotion/react";
+import { useState } from "react";
 
 import { idlePulse, type CustomLayoutProps } from "./types";
 
@@ -27,6 +28,18 @@ export function StarbucksCategory({
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const correctId = step.correctChoiceId;
+  // 비-정답 탭 클릭 시 시나리오를 거부하지 않고 컴포넌트 내부에서 미리보기.
+  // 사용자가 자연스럽게 다른 카테고리를 둘러보다 정답 탭을 누르면 진행.
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const previewLabel = step.choices.find((c) => c.id === previewId)?.label;
+
+  function handleTabClick(id: string) {
+    if (id === correctId) {
+      onChoice(id);
+    } else {
+      setPreviewId(id);
+    }
+  }
 
   return (
     <div
@@ -64,12 +77,13 @@ export function StarbucksCategory({
           MENU
         </div>
         {step.choices.map((c) => {
-          const active = c.id === correctId;
+          // 활성 탭 = 정답(음료) 또는 현재 사용자가 미리보고 있는 탭
+          const active = previewId === null ? c.id === correctId : c.id === previewId;
           return (
             <button
               key={c.id}
               type="button"
-              onClick={() => onChoice(c.id)}
+              onClick={() => handleTabClick(c.id)}
               css={[
                 css`
                   padding: 12px 16px;
@@ -90,7 +104,7 @@ export function StarbucksCategory({
                   }
                 `,
                 shakeWhen(rejectedChoiceId, c.id),
-                idlePulse(idleHintActive, c.id === correctId),
+                idlePulse(idleHintActive, c.id === correctId && previewId === null),
               ]}
             >
               {c.emoji} {c.label}
@@ -99,7 +113,7 @@ export function StarbucksCategory({
         })}
       </div>
 
-      {/* Body — guidance */}
+      {/* Body — 정답 안내 (초기) 또는 다른 카테고리 미리보기 */}
       <div
         css={css`
           flex: 1;
@@ -112,18 +126,37 @@ export function StarbucksCategory({
           gap: 16px;
         `}
       >
-        <div style={{ fontSize: 56 }}>👆</div>
-        <div
-          css={css`
-            font-size: 18px;
-            font-weight: 800;
-            color: #1e3932;
-            line-height: 1.4;
-          `}
-        >
-          위쪽 메뉴 탭에서<br />
-          '음료'를 한 번 눌러주세요
-        </div>
+        {previewId === null ? (
+          <>
+            <div style={{ fontSize: 56 }}>👆</div>
+            <div
+              css={css`
+                font-size: 18px;
+                font-weight: 800;
+                color: #1e3932;
+                line-height: 1.4;
+              `}
+            >
+              위쪽 메뉴 탭에서<br />
+              '음료'를 한 번 눌러주세요
+            </div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: 56 }}>☕</div>
+            <div
+              css={css`
+                font-size: 18px;
+                font-weight: 800;
+                color: #1e3932;
+                line-height: 1.4;
+              `}
+            >
+              <strong>{previewLabel}</strong>은 오늘 연습에 없어요.<br />
+              위쪽에서 <strong>'음료'</strong>를 눌러주세요.
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
