@@ -53,8 +53,8 @@ export function HomePage(): React.ReactElement {
           </Top.TitleParagraph>
         }
         right={
-          <Top.RightButton onClick={() => navigate("/pair")}>
-            가족 연결
+          <Top.RightButton onClick={() => navigate("/settings")}>
+            설정
           </Top.RightButton>
         }
       />
@@ -221,13 +221,15 @@ export function HomePage(): React.ReactElement {
         css={css`
           display: grid;
           grid-template-columns: 1fr 1fr;
-          grid-auto-rows: clamp(120px, 20dvh, 180px);
+          /* 남은 세로 공간을 정확히 2행으로 분할 (모바일 viewport 안에 강제 fit).
+             min: 100px 보장으로 컨텐츠 압축 시에도 카드가 너무 작아지지 않게. */
+          grid-template-rows: minmax(100px, 1fr) minmax(100px, 1fr);
           gap: clamp(8px, 3vw, 16px);
           flex: 1;
           min-height: 0;
           padding: clamp(8px, 2vw, 14px) clamp(12px, 4vw, 20px);
-          align-content: center;
-          overflow-y: auto;
+          align-content: stretch;
+          overflow: hidden;
         `}
       >
         {(categories ?? []).map((category) => (
@@ -245,7 +247,9 @@ export function HomePage(): React.ReactElement {
               border: none;
               border-radius: clamp(14px, 4vw, 20px);
               cursor: pointer;
-              min-height: clamp(110px, 18dvh, 160px);
+              /* min-height 제거 — 부모 grid cell(minmax 100px,1fr)이 크기 책임. */
+              min-height: 0;
+              overflow: hidden;
               text-align: center;
               -webkit-tap-highlight-color: transparent;
               transition:

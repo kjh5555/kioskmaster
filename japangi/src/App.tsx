@@ -19,30 +19,14 @@ import { ScenarioCompletePage } from "./features/scenarios/ScenarioCompletePage"
 import { ScenarioIntroPage } from "./features/scenarios/ScenarioIntroPage";
 import { ScenarioStepPage } from "./features/scenarios/ScenarioStepPage";
 import { SettingsPage } from "./features/settings/SettingsPage";
-import { useCurrentUser } from "./hooks/useCurrentUser";
 import { useHardwareBack } from "./hooks/useHardwareBack";
 
 function RouterChrome(): React.ReactElement {
   useHardwareBack();
-  const { roleConfirmed } = useCurrentUser();
 
-  // First-launch gate: until the user has explicitly picked a role we show
-  // the role-select page in place of the home routes. Admin routes are
-  // exempt because operators may open them directly via URL.
-  if (!roleConfirmed) {
-    return (
-      <Routes>
-        <Route path="/role-select" element={<RoleSelectPage />} />
-        <Route
-          path="/admin/brand-requests"
-          element={<AdminBrandRequestsPage />}
-        />
-        <Route path="/master" element={<MasterPage />} />
-        <Route path="*" element={<Navigate to="/role-select" replace />} />
-      </Routes>
-    );
-  }
-
+  // PRD N9 (2026-06-01): 노인 본인 단독 사용 전제로 회귀. 첫 진입은 무조건
+  // 노인 홈(/). RoleSelect 게이트는 제거되었고, /role-select 는 deep link 로만
+  // 보호자가 직접 진입할 때 사용한다.
   return (
     <Routes>
       {/* `/` is always the elderly home. Guardians explicitly navigate to
