@@ -179,6 +179,24 @@ def _seed_brand_menu(
 
     session.flush()
 
+    # Stale 카테고리·아이템 정리 — 시드 데이터에 없는(이전 시드의 잔재) 카테고리는
+    # 함께 들어있던 메뉴 아이템과 함께 삭제. idempotent upsert 만 하면 이전 카테고리
+    # 슬러그가 DB 에 영구히 남아 카테고리 list 가 부풀어 오른다.
+    valid_slugs = set(category_order)
+    stale_cats = session.exec(
+        select(MenuCategory).where(MenuCategory.brand_id == brand.id)
+    ).all()
+    for cat in stale_cats:
+        if cat.slug in valid_slugs:
+            continue
+        stale_items = session.exec(
+            select(MenuItem).where(MenuItem.menu_category_id == cat.id)
+        ).all()
+        for it in stale_items:
+            session.delete(it)
+        session.delete(cat)
+    session.flush()
+
     # Belt-and-suspenders: also force image_url updates via raw SQL.
     # The ORM update path was leaving image_url=NULL on every menu item
     # even though the data dict carried the URL — probably stale SQLAlchemy
