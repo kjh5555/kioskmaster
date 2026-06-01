@@ -30,12 +30,13 @@ EDIYA_CATEGORY_ORDER = [
 
 EDIYA_CATEGORY_ITEMS = {
     "drink": [
+        # 목표 메뉴 - 첫 번째 위치
+        {"id": "iced-americano", "name": "(L) ICED 카페 아메리카노", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1671581786293.png"},
+        {"id": "cafe-latte", "name": "(L) ICED 카페 라떼", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1671582134737.png"},
         {"id": "caramel-macchiato", "name": "(L) ICED 카라멜 마끼아또", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1671585861402.png"},
         {"id": "vanilla-latte", "name": "(L) ICED 바닐라 라떼", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1764057139672.png"},
-        {"id": "nuts-cream-latte", "name": "(L) ICED 넛츠 크림 라떼", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1671587873712.png"},
-        {"id": "white-choco-mocha", "name": "(L) ICED 화이트 초콜릿 모카", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1671587593517.png"},
+        {"id": "cafe-mocha", "name": "(L) ICED 카페 모카", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1671586141487.png"},
         {"id": "condensed-latte", "name": "(L) ICED 연유 카페 라떼", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1671585023298.png"},
-        {"id": "mint-mocha", "name": "(L) ICED 민트 모카", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1671588274664.png"},
     ],
     "beverage": [
         {"id": "matcha-latte", "name": "(L) ICED 말차라떼", "price": "", "kcal": "", "emoji": "🧊", "isNew": False, "imageUrl": "https://ediya.com/files/menu/IMG_1765781949718.png"},
