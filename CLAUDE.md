@@ -65,3 +65,20 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+---
+
+## 하네스: 「자판기 어렵지않아요」 (노인용 키오스크 연습 미니앱)
+
+**목표:** 5명 전문 에이전트 팀(scenario-author / tds-stylist / fastapi-builder / karpathy-reviewer / integration-qa)이 시나리오 추가, 백엔드 API, 풀스택 기능, 노인 접근성 검수를 협업으로 처리한다. Karpathy 4원칙은 karpathy-reviewer가 항상 강제한다.
+
+**트리거:** 키오스크 시나리오/단계 추가·수정, FastAPI 모델/엔드포인트 추가, TDS 스타일링·노인 접근성 작업, 풀스택 기능, "다시/재실행/수정/보완" 같은 후속 요청 시 `kiosk-workflow` 스킬을 사용하라. 단순 질문(설명·탐색)은 직접 응답.
+
+**변경 이력:**
+| 날짜 | 변경 내용 | 대상 | 사유 |
+|------|----------|------|------|
+| 2026-06-01 | 초기 구성 (에이전트 5 + 스킬 6) | 전체 | 시나리오 4종/풀스택 운영 모듈/노인 접근성 강제를 위한 하네스 구축 |
+| 2026-06-01 | PRD 재정렬 — N9 신설 (보호자 기능 v2 후퇴) | docs/PRD.md | 보호자·자녀 페어링이 검증된 사용자 요구 없이 추가되어 IA가 분열되고 노인 본인 진입 흐름이 흐려짐. MVP는 노인 단독 사용 전제로 회귀. 코드는 보존하고 라우터에서만 분리 예정 |
+| 2026-06-01 | Navigation flow regression 룰 추가 | skills/integration-qa-checks | "설정 → 의견 → 뒤로 → 의견" 핑퐁 버그를 계기로 BackButton history 누적·노인 멘탈모델·PRD N9 가시점 점검을 QA 체크리스트에 상시 룰화. 라우팅/페이지 변경 시 항상 적용 |
+| 2026-06-01 | 카페 4종 시나리오 추가 (스타벅스/이디야/메가/일반카페) + Visual Mimicry First 룰 박음 | backend/app/seed + japangi/.../layouts + skills/scenario-patterns | 사용자 요구 "최대한 현재 키오스크 화면과 비슷해야 노인이 거리감 없게"를 단발 적용으로 끝내지 않고 scenario-patterns 7장에 의무 사항(색/헤더/버튼/로고/단말기 모사 + 자기 점검 4항목)으로 영구 룰화. 다음 시나리오부터 자동 강제 |
+
