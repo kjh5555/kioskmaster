@@ -1,6 +1,8 @@
 import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
+import { useBrandMenus } from "../../../../hooks/useKioskQueries";
+import type { ApiMenuCategoryRead } from "../../../../lib/api";
 import { idlePulse, type CustomLayoutProps } from "./types";
 
 const shakeKf = keyframes`
@@ -36,6 +38,12 @@ export function EdiyaMenu({
   const effectiveTab = viewTabId ?? activeCategoryId;
   const previewCategory = categories.find((c) => c.id === viewTabId);
   const onMenu = effectiveTab === activeCategoryId;
+  const brandSlug = scenario.id.split(":")[1] ?? "";
+  const { data: menusRaw } = useBrandMenus(brandSlug);
+  const menus = (menusRaw ?? []) as unknown as ApiMenuCategoryRead[];
+  const previewItems = !onMenu && viewTabId
+    ? menus.find((c) => c.slug === viewTabId)?.items ?? []
+    : [];
   return (
     <div
       css={css`
@@ -180,6 +188,64 @@ export function EdiyaMenu({
               </span>
             )}
           </button>
+        ))}
+      </div>
+      ) : previewItems.length > 0 ? (
+      <div
+        css={css`
+          flex: 1;
+          overflow-y: auto;
+          padding: 14px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 12px;
+          align-content: start;
+        `}
+      >
+        {previewItems.map((it) => (
+          <div
+            key={it.slug}
+            css={css`
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 8px;
+              padding: 14px 10px;
+              background: #ffffff;
+              border: 2px solid #c8d6e8;
+              border-radius: 16px;
+              color: #1a3e72;
+              min-height: 160px;
+              box-shadow: 0 3px 8px rgba(26, 62, 114, 0.06);
+              opacity: 0.85;
+            `}
+          >
+            {it.image_url ? (
+              <img
+                src={it.image_url}
+                alt={it.name}
+                css={css`
+                  width: 72px;
+                  height: 72px;
+                  object-fit: cover;
+                  border-radius: 50%;
+                  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+                `}
+              />
+            ) : (
+              <span style={{ fontSize: 44 }}>{it.emoji}</span>
+            )}
+            <span
+              css={css`
+                font-size: 13px;
+                font-weight: 800;
+                text-align: center;
+                line-height: 1.3;
+              `}
+            >
+              {it.name}
+            </span>
+          </div>
         ))}
       </div>
       ) : (
