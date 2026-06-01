@@ -22,11 +22,15 @@ function shakeWhen(rejected: string | null, id: string) {
 
 export function MegaMenu({
   step,
+  scenario,
   rejectedChoiceId,
   idleHintActive,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const correctId = step.correctChoiceId;
+  const categoryStep = scenario.steps.find((s) => s.id === "category");
+  const categories = categoryStep?.choices ?? [];
+  const activeCategoryId = categoryStep?.correctChoiceId;
   return (
     <div
       css={css`
@@ -43,21 +47,47 @@ export function MegaMenu({
         css={css`
           background: #000000;
           color: #ffc700;
-          padding: 12px 16px;
+          padding: 14px 12px 10px;
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 8px;
+          overflow-x: auto;
         `}
       >
-        <span style={{ fontSize: 22 }}>☕</span>
-        <span
+        <div
           css={css`
-            font-size: 17px;
-            font-weight: 900;
+            font-size: 14px;
+            font-weight: 800;
+            opacity: 0.85;
+            white-space: nowrap;
+            padding-right: 6px;
           `}
         >
-          음료
-        </span>
+          MENU
+        </div>
+        {categories.map((c) => {
+          const active = c.id === activeCategoryId;
+          return (
+            <div
+              key={c.id}
+              css={css`
+                padding: 12px 16px;
+                border-radius: 999px;
+                background: ${active ? "#ffc700" : "rgba(255, 199, 0, 0.18)"};
+                border: 1.5px solid
+                  ${active ? "#ffc700" : "rgba(255, 199, 0, 0.4)"};
+                color: ${active ? "#000000" : "#ffc700"};
+                font-size: 15px;
+                font-weight: 800;
+                white-space: nowrap;
+                flex-shrink: 0;
+                opacity: ${active ? 1 : 0.65};
+              `}
+            >
+              {c.emoji} {c.label}
+            </div>
+          );
+        })}
       </div>
       <div
         css={css`
