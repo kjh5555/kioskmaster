@@ -38,6 +38,26 @@ from app.seed.data.kfc_menu import (
     KFC_CATEGORY_ORDER,
     KFC_CATEGORY_ITEMS,
 )
+from app.seed.data.starbucks_menu import (
+    STARBUCKS_CATEGORY_TITLES,
+    STARBUCKS_CATEGORY_ORDER,
+    STARBUCKS_CATEGORY_ITEMS,
+)
+from app.seed.data.ediya_menu import (
+    EDIYA_CATEGORY_TITLES,
+    EDIYA_CATEGORY_ORDER,
+    EDIYA_CATEGORY_ITEMS,
+)
+from app.seed.data.mega_menu import (
+    MEGA_CATEGORY_TITLES,
+    MEGA_CATEGORY_ORDER,
+    MEGA_CATEGORY_ITEMS,
+)
+from app.seed.data.cafe_generic_menu import (
+    CAFE_GENERIC_CATEGORY_TITLES,
+    CAFE_GENERIC_CATEGORY_ORDER,
+    CAFE_GENERIC_CATEGORY_ITEMS,
+)
 
 
 def seed_categories(session: Session) -> dict[str, Category]:
@@ -221,6 +241,46 @@ def seed_kfc_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
     )
 
 
+def seed_starbucks_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
+    brand = slug_to_brand.get("starbucks")
+    if not brand:
+        print("Starbucks brand not found, skipping menu seed")
+        return
+    _seed_brand_menu(
+        session, brand, STARBUCKS_CATEGORY_ORDER, STARBUCKS_CATEGORY_TITLES, STARBUCKS_CATEGORY_ITEMS,
+    )
+
+
+def seed_ediya_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
+    brand = slug_to_brand.get("ediya")
+    if not brand:
+        print("Ediya brand not found, skipping menu seed")
+        return
+    _seed_brand_menu(
+        session, brand, EDIYA_CATEGORY_ORDER, EDIYA_CATEGORY_TITLES, EDIYA_CATEGORY_ITEMS,
+    )
+
+
+def seed_mega_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
+    brand = slug_to_brand.get("mega")
+    if not brand:
+        print("Mega Coffee brand not found, skipping menu seed")
+        return
+    _seed_brand_menu(
+        session, brand, MEGA_CATEGORY_ORDER, MEGA_CATEGORY_TITLES, MEGA_CATEGORY_ITEMS,
+    )
+
+
+def seed_cafe_generic_menu(session: Session, slug_to_brand: dict[str, Brand]) -> None:
+    brand = slug_to_brand.get("cafe-generic")
+    if not brand:
+        print("Generic cafe brand not found, skipping menu seed")
+        return
+    _seed_brand_menu(
+        session, brand, CAFE_GENERIC_CATEGORY_ORDER, CAFE_GENERIC_CATEGORY_TITLES, CAFE_GENERIC_CATEGORY_ITEMS,
+    )
+
+
 def run_seed() -> None:
     print("Initializing DB tables...")
     init_db()
@@ -243,6 +303,18 @@ def run_seed() -> None:
 
         print("Seeding KFC menu...")
         seed_kfc_menu(session, slug_to_brand)
+
+        print("Seeding Starbucks menu...")
+        seed_starbucks_menu(session, slug_to_brand)
+
+        print("Seeding Ediya menu...")
+        seed_ediya_menu(session, slug_to_brand)
+
+        print("Seeding Mega Coffee menu...")
+        seed_mega_menu(session, slug_to_brand)
+
+        print("Seeding generic cafe menu...")
+        seed_cafe_generic_menu(session, slug_to_brand)
 
         session.commit()
 

@@ -32,6 +32,43 @@ import { LotteriaReceiptPrompt } from "./LotteriaReceiptPrompt";
 import { LotteriaSetPopup } from "./LotteriaSetPopup";
 import { LotteriaSideSelect } from "./LotteriaSideSelect";
 import { LotteriaStart } from "./LotteriaStart";
+import { CafeGenericCardInsert } from "./CafeGenericCardInsert";
+import { CafeGenericCart } from "./CafeGenericCart";
+import { CafeGenericCategory } from "./CafeGenericCategory";
+import { CafeGenericDineMode } from "./CafeGenericDineMode";
+import { CafeGenericMenu } from "./CafeGenericMenu";
+import { CafeGenericOrderComplete } from "./CafeGenericOrderComplete";
+import { CafeGenericPayMethod } from "./CafeGenericPayMethod";
+import { CafeGenericSize } from "./CafeGenericSize";
+import { CafeGenericStart } from "./CafeGenericStart";
+import { MegaCardInsert } from "./MegaCardInsert";
+import { MegaCart } from "./MegaCart";
+import { MegaCategory } from "./MegaCategory";
+import { MegaDineMode } from "./MegaDineMode";
+import { MegaMenu } from "./MegaMenu";
+import { MegaOrderComplete } from "./MegaOrderComplete";
+import { MegaPayMethod } from "./MegaPayMethod";
+import { MegaSize } from "./MegaSize";
+import { MegaStart } from "./MegaStart";
+import { EdiyaCardInsert } from "./EdiyaCardInsert";
+import { EdiyaCart } from "./EdiyaCart";
+import { EdiyaCategory } from "./EdiyaCategory";
+import { EdiyaDineMode } from "./EdiyaDineMode";
+import { EdiyaMenu } from "./EdiyaMenu";
+import { EdiyaOrderComplete } from "./EdiyaOrderComplete";
+import { EdiyaPayMethod } from "./EdiyaPayMethod";
+import { EdiyaSize } from "./EdiyaSize";
+import { EdiyaStart } from "./EdiyaStart";
+import { StarbucksCardInsert } from "./StarbucksCardInsert";
+import { StarbucksCart } from "./StarbucksCart";
+import { StarbucksCategory } from "./StarbucksCategory";
+import { StarbucksDineMode } from "./StarbucksDineMode";
+import { StarbucksMenu } from "./StarbucksMenu";
+import { StarbucksOptions } from "./StarbucksOptions";
+import { StarbucksOrderComplete } from "./StarbucksOrderComplete";
+import { StarbucksPayMethod } from "./StarbucksPayMethod";
+import { StarbucksSize } from "./StarbucksSize";
+import { StarbucksStart } from "./StarbucksStart";
 import { McdonaldsCategory } from "./McdonaldsCategory";
 import { McdonaldsDineMode } from "./McdonaldsDineMode";
 import { McdonaldsSetSize } from "./McdonaldsSetSize";
@@ -97,6 +134,43 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "mcdonalds-table-service": McdonaldsTableService,
   "mcdonalds-pay-method": McdonaldsPayMethod,
   "mcdonalds-pay-processing": McdonaldsPayProcessing,
+  "starbucks-start": StarbucksStart,
+  "starbucks-dine-mode": StarbucksDineMode,
+  "starbucks-category": StarbucksCategory,
+  "starbucks-menu": StarbucksMenu,
+  "starbucks-size": StarbucksSize,
+  "starbucks-options": StarbucksOptions,
+  "starbucks-cart": StarbucksCart,
+  "starbucks-pay-method": StarbucksPayMethod,
+  "starbucks-card-insert": StarbucksCardInsert,
+  "starbucks-order-complete": StarbucksOrderComplete,
+  "ediya-start": EdiyaStart,
+  "ediya-dine-mode": EdiyaDineMode,
+  "ediya-category": EdiyaCategory,
+  "ediya-menu": EdiyaMenu,
+  "ediya-size": EdiyaSize,
+  "ediya-cart": EdiyaCart,
+  "ediya-pay-method": EdiyaPayMethod,
+  "ediya-card-insert": EdiyaCardInsert,
+  "ediya-order-complete": EdiyaOrderComplete,
+  "mega-start": MegaStart,
+  "mega-dine-mode": MegaDineMode,
+  "mega-category": MegaCategory,
+  "mega-menu": MegaMenu,
+  "mega-size": MegaSize,
+  "mega-cart": MegaCart,
+  "mega-pay-method": MegaPayMethod,
+  "mega-card-insert": MegaCardInsert,
+  "mega-order-complete": MegaOrderComplete,
+  "cafe-generic-start": CafeGenericStart,
+  "cafe-generic-dine-mode": CafeGenericDineMode,
+  "cafe-generic-category": CafeGenericCategory,
+  "cafe-generic-menu": CafeGenericMenu,
+  "cafe-generic-size": CafeGenericSize,
+  "cafe-generic-cart": CafeGenericCart,
+  "cafe-generic-pay-method": CafeGenericPayMethod,
+  "cafe-generic-card-insert": CafeGenericCardInsert,
+  "cafe-generic-order-complete": CafeGenericOrderComplete,
 };
 
 export function getCustomLayout(id: string): CustomLayoutComponent | undefined {
