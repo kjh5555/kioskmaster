@@ -1,4 +1,5 @@
 import { css, keyframes } from "@emotion/react";
+import { useState } from "react";
 
 import { idlePulse, type CustomLayoutProps } from "./types";
 
@@ -31,6 +32,10 @@ export function EdiyaMenu({
   const categoryStep = scenario.steps.find((s) => s.id === "category");
   const categories = categoryStep?.choices ?? [];
   const activeCategoryId = categoryStep?.correctChoiceId;
+  const [viewTabId, setViewTabId] = useState<string | null>(null);
+  const effectiveTab = viewTabId ?? activeCategoryId;
+  const previewCategory = categories.find((c) => c.id === viewTabId);
+  const onMenu = effectiveTab === activeCategoryId;
   return (
     <div
       css={css`
@@ -66,10 +71,12 @@ export function EdiyaMenu({
           MENU
         </div>
         {categories.map((c) => {
-          const active = c.id === activeCategoryId;
+          const active = c.id === effectiveTab;
           return (
-            <div
+            <button
               key={c.id}
+              type="button"
+              onClick={() => setViewTabId(c.id === activeCategoryId ? null : c.id)}
               css={css`
                 padding: 12px 16px;
                 border-radius: 999px;
@@ -77,18 +84,24 @@ export function EdiyaMenu({
                 border: 1.5px solid
                   ${active ? "#ffffff" : "rgba(255, 255, 255, 0.35)"};
                 color: ${active ? "#1a3e72" : "#ffffff"};
+                font-family: inherit;
                 font-size: 15px;
                 font-weight: 800;
                 white-space: nowrap;
                 flex-shrink: 0;
-                opacity: ${active ? 1 : 0.65};
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+                :active {
+                  transform: scale(0.97);
+                }
               `}
             >
               {c.emoji} {c.label}
-            </div>
+            </button>
           );
         })}
       </div>
+      {onMenu ? (
       <div
         css={css`
           flex: 1;
@@ -155,6 +168,33 @@ export function EdiyaMenu({
           </button>
         ))}
       </div>
+      ) : (
+      <div
+        css={css`
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+          text-align: center;
+          gap: 16px;
+        `}
+      >
+        <div style={{ fontSize: 56 }}>{previewCategory?.emoji}</div>
+        <div
+          css={css`
+            font-size: 18px;
+            font-weight: 800;
+            color: #1a3e72;
+            line-height: 1.4;
+          `}
+        >
+          <strong>{previewCategory?.label}</strong>는 오늘 연습에 없어요.<br />
+          위쪽에서 <strong>'음료'</strong>를 눌러주세요.
+        </div>
+      </div>
+      )}
     </div>
   );
 }
