@@ -143,7 +143,21 @@ export function CafeGenericMenu({
               idlePulse(idleHintActive, c.id === correctId),
             ]}
           >
-            <span style={{ fontSize: 44 }}>{c.emoji}</span>
+            {c.imageUrl ? (
+              <img
+                src={c.imageUrl}
+                alt={c.label}
+                css={css`
+                  width: 72px;
+                  height: 72px;
+                  object-fit: cover;
+                  border-radius: 50%;
+                  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+                `}
+              />
+            ) : (
+              <span style={{ fontSize: 44 }}>{c.emoji}</span>
+            )}
             <span
               css={css`
                 font-size: 14px;
