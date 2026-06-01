@@ -30,7 +30,8 @@ function FastfoodStepPage({
   scenario: ScenarioScript;
 }): React.ReactElement {
   const navigate = useNavigate();
-  const scenarioKey = `fastfood:${brandId}`;
+  // onboarding 식별자 — 카테고리별로 다른 brandId 가 있을 수 있으므로 카테고리 prefix.
+  const scenarioKey = `${categoryId}:${brandId}`;
   const [onboardingDone, setOnboardingDone] = useState(() =>
     wasOnboardingSeen(scenarioKey),
   );
@@ -318,7 +319,10 @@ export function ScenarioStepPage(): React.ReactElement {
     brandId: string;
   }>();
 
-  if (categoryId === "fastfood") {
+  // FastfoodStepPageLoader 는 이름과 달리 useDynamicGoal 로 카테고리 무관하게
+  // scenario_json 을 읽어 StepEngine 에 전달한다. 카페도 동일 path 사용.
+  // (병원/기차는 아직 시드 없음 → placeholder 유지)
+  if (categoryId === "fastfood" || categoryId === "cafe") {
     return <FastfoodStepPageLoader categoryId={categoryId} brandId={brandId} />;
   }
 
