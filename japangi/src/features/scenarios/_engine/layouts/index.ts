@@ -46,6 +46,7 @@ import { KtxTrainList } from "./KtxTrainList";
 import { KtxSeatSelect } from "./KtxSeatSelect";
 import { KtxPayment } from "./KtxPayment";
 import { KtxComplete } from "./KtxComplete";
+import { KtxReservation } from "./KtxReservation";
 import { GeneralComplete } from "./GeneralComplete";
 import { GeneralConfirm } from "./GeneralConfirm";
 import { GeneralDepartment } from "./GeneralDepartment";
@@ -215,6 +216,7 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "ktx-seat-select": KtxSeatSelect,
   "ktx-payment": KtxPayment,
   "ktx-complete": KtxComplete,
+  "ktx-reservation": KtxReservation,
 };
 
 export function getCustomLayout(id: string): CustomLayoutComponent | undefined {
