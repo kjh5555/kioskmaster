@@ -78,15 +78,16 @@ export function BrandSelectPage(): React.ReactElement {
         css={css`
           display: grid;
           grid-template-columns: 1fr 1fr;
-          /* 남은 세로 공간을 brand 개수에 맞춰 균등 분배 (HomePage 패턴).
-             min: 100px 보장으로 행 수가 많아져도 카드가 너무 작아지지 않게. */
-          grid-auto-rows: minmax(100px, 1fr);
+          /* 행 높이에 max 상한(180px)을 둠. brand 가 2개(train)일 때 1fr 로
+             세로를 꽉 채우면 카드가 비대해지는 문제 해결. brand 가 많아져
+             여러 행이 되더라도 카드 한 장 크기는 같은 시각 무게 유지. */
+          grid-auto-rows: minmax(110px, 180px);
           gap: clamp(8px, 3vw, 16px);
           flex: 1;
           min-height: 0;
           padding: clamp(8px, 2vw, 14px) clamp(12px, 4vw, 20px);
-          align-content: stretch;
-          overflow: hidden;
+          align-content: start;
+          overflow-y: auto;
         `}
       >
         {category.brands.map((brand) => (
