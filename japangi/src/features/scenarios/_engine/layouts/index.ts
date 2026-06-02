@@ -37,6 +37,9 @@ import { PaymentAmount } from "./PaymentAmount";
 import { PaymentAuth } from "./PaymentAuth";
 import { PaymentCardInsert } from "./PaymentCardInsert";
 import { PaymentComplete } from "./PaymentComplete";
+import { ParkingComplete } from "./ParkingComplete";
+import { ParkingInfo } from "./ParkingInfo";
+import { ParkingPlate } from "./ParkingPlate";
 import { GeneralComplete } from "./GeneralComplete";
 import { GeneralConfirm } from "./GeneralConfirm";
 import { GeneralDepartment } from "./GeneralDepartment";
@@ -197,6 +200,9 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "payment-amount": PaymentAmount,
   "payment-card-insert": PaymentCardInsert,
   "payment-complete": PaymentComplete,
+  "parking-plate": ParkingPlate,
+  "parking-info": ParkingInfo,
+  "parking-complete": ParkingComplete,
 };
 
 export function getCustomLayout(id: string): CustomLayoutComponent | undefined {
