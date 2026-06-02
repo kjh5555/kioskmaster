@@ -30,6 +30,12 @@ export function BrandSelectPage(): React.ReactElement {
     return <Navigate to="/" replace />;
   }
 
+  // brand 개수에 따라 행 정책 분기.
+  // - 1~2개 (train: KTX/SRT): max 180px 상한 — 한 행이 viewport 차지하지 않게
+  // - 3개 이상 (fastfood·cafe 4개, hospital 3개): 1fr — 2행이 viewport 적당히 채움
+  const brandCount = category.brands.length;
+  const rowSize = brandCount <= 2 ? "minmax(110px, 180px)" : "minmax(110px, 1fr)";
+
   return (
     <div
       css={css`
@@ -78,16 +84,13 @@ export function BrandSelectPage(): React.ReactElement {
         css={css`
           display: grid;
           grid-template-columns: 1fr 1fr;
-          /* 행 높이에 max 상한(180px)을 둠. brand 가 2개(train)일 때 1fr 로
-             세로를 꽉 채우면 카드가 비대해지는 문제 해결. brand 가 많아져
-             여러 행이 되더라도 카드 한 장 크기는 같은 시각 무게 유지. */
-          grid-auto-rows: minmax(110px, 180px);
+          grid-auto-rows: ${rowSize};
           gap: clamp(8px, 3vw, 16px);
           flex: 1;
           min-height: 0;
           padding: clamp(8px, 2vw, 14px) clamp(12px, 4vw, 20px);
-          align-content: start;
-          overflow-y: auto;
+          align-content: ${brandCount <= 2 ? "start" : "stretch"};
+          overflow: hidden;
         `}
       >
         {category.brands.map((brand) => (
