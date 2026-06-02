@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import { useEffect, useState } from "react";
 
+import { trainBrand } from "./_trainBrand";
 import { type CustomLayoutProps } from "./types";
 
 type Phase = "summary" | "card-type-modal" | "card-insert-modal";
@@ -9,8 +10,10 @@ type Phase = "summary" | "card-type-modal" | "card-insert-modal";
 // 카드 종류 선택 → 카드 삽입 안내 → 자동 다음 단계.
 export function KtxPayment({
   step,
+  scenario,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const brand = trainBrand(scenario.id);
   const home = step.choices.find((c) => c.id === "home");
   const pay = step.choices.find((c) => c.id === "pay") ?? step.choices[0]!;
   const [phase, setPhase] = useState<Phase>("summary");
@@ -77,7 +80,7 @@ export function KtxPayment({
               letter-spacing: 0.02em;
             `}
           >
-            KTX 802
+            {brand.trainNum2}
           </div>
         </div>
 

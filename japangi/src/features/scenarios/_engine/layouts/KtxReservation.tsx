@@ -1,6 +1,7 @@
 import { css, keyframes } from "@emotion/react";
 import { useEffect, useState } from "react";
 
+import { trainBrand } from "./_trainBrand";
 import { type CustomLayoutProps } from "./types";
 
 const pulse = keyframes`
@@ -47,8 +48,10 @@ const DONE_BODIES: Record<Mode, string> = {
 // 키오스크 일반 패턴: 예약번호 + 비밀번호 조회 → 예약 카드 → 액션 → 완료.
 export function KtxReservation({
   step,
+  scenario,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const brand = trainBrand(scenario.id);
   const home = step.choices.find((c) => c.id === "home");
   const done = step.choices.find((c) => c.id === "done") ?? step.choices[0]!;
   const mode = modeOf(step.id);
@@ -83,6 +86,9 @@ export function KtxReservation({
       {phase === "found" && (
         <ReservationCard
           mode={mode}
+          trainNum={brand.trainNum2}
+          origin={brand.originStation}
+          dest={brand.destStation}
           onAction={() => setPhase("done")}
         />
       )}
@@ -273,9 +279,15 @@ function LookupForm({
 
 function ReservationCard({
   mode,
+  trainNum,
+  origin,
+  dest,
   onAction,
 }: {
   mode: Mode;
+  trainNum: string;
+  origin: string;
+  dest: string;
   onAction: () => void;
 }): React.ReactElement {
   const actionStyle =
@@ -353,7 +365,7 @@ function ReservationCard({
                 letter-spacing: 0.04em;
               `}
             >
-              KTX 802
+              {trainNum}
             </div>
           </div>
 
@@ -366,14 +378,14 @@ function ReservationCard({
             `}
           >
             <div css={css`text-align: center;`}>
-              <div css={css`font-size: 12px; color: #5a7a92;`}>서울</div>
+              <div css={css`font-size: 12px; color: #5a7a92;`}>{origin}</div>
               <div css={css`font-size: 22px; font-weight: 900; color: #1a3d5c; font-variant-numeric: tabular-nums;`}>
                 10:20
               </div>
             </div>
             <div css={css`font-size: 22px; color: #2c6fc8;`}>→</div>
             <div css={css`text-align: center;`}>
-              <div css={css`font-size: 12px; color: #5a7a92;`}>오송</div>
+              <div css={css`font-size: 12px; color: #5a7a92;`}>{dest}</div>
               <div css={css`font-size: 22px; font-weight: 900; color: #1a3d5c; font-variant-numeric: tabular-nums;`}>
                 10:45
               </div>

@@ -1874,6 +1874,25 @@ KTX_SCENARIO = {
 }
 
 
+# SRT 시나리오 — KTX 와 step 구조 100% 동일. id 와 theme(보라 톤) 만 분기.
+# 컴포넌트 안에서 scenario.id ('train:srt') 로 brand 색상/열차번호/역 분기.
+import copy as _copy
+SRT_SCENARIO = _copy.deepcopy(KTX_SCENARIO)
+SRT_SCENARIO["id"] = "train:srt"
+SRT_SCENARIO["goalSummary"] = "SRT 발매기 둘러보기 — 원하는 메뉴를 눌러보세요"
+SRT_SCENARIO["theme"] = {
+    "name": "SRT",
+    "primary": "#5B1F5F",
+    "secondary": "#F2E6F4",
+    "onPrimary": "#FFFFFF",
+    "accent": "#8B248F",
+}
+SRT_SCENARIO["onboarding"] = [
+    {"emoji": "👋", "title": "안녕하세요!", "body": "SRT 발매기 연습이에요. SR(주식회사 에스알) 키오스크 — 수서·동탄에서 출발하는 고속열차예요."},
+    {"emoji": "🎫", "title": "오늘의 목표", "body": "둘러보면서 어떤 버튼이 무슨 역할인지 익혀볼게요."},
+]
+
+
 PARKING_KIOSK_SCENARIO = {
     "id": "hospital:parking",
     "goalSummary": "주차 등록기 둘러보기",
@@ -2104,6 +2123,6 @@ BRANDS = {
     ],
     "train": [
         {"slug": "ktx", "name": "KTX", "emoji": "🚄", "goal_summary": "KTX 발매기 둘러보기", "scenario_json": KTX_SCENARIO, "order": 0},
-        {"slug": "srt", "name": "SRT", "emoji": "🚅", "goal_summary": "", "scenario_json": None, "order": 1},
+        {"slug": "srt", "name": "SRT", "emoji": "🚅", "goal_summary": "SRT 발매기 둘러보기", "scenario_json": SRT_SCENARIO, "order": 1},
     ],
 }

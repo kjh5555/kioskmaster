@@ -1,6 +1,7 @@
 import { css } from "@emotion/react";
 import { useState } from "react";
 
+import { trainBrand } from "./_trainBrand";
 import { type CustomLayoutProps } from "./types";
 
 type Status = "unavailable" | "available" | "selected";
@@ -75,8 +76,10 @@ const SEAT_ROWS: { row: number; left: [Cell, Cell]; right: [Cell, Cell] }[] = [
 
 export function KtxSeatSelect({
   step,
+  scenario,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const brand = trainBrand(scenario.id);
   const home = step.choices.find((c) => c.id === "home");
   const back = step.choices.find((c) => c.id === "back");
   const next = step.choices.find((c) => c.id === "confirm") ?? step.choices[0]!;
@@ -131,7 +134,7 @@ export function KtxSeatSelect({
             letter-spacing: 0.04em;
           `}
         >
-          KTX 802
+          {brand.trainNum2}
         </div>
         <div
           css={css`

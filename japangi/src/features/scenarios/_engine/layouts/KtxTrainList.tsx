@@ -1,6 +1,7 @@
 import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
+import { trainBrand } from "./_trainBrand";
 import { type CustomLayoutProps } from "./types";
 
 const pulse = keyframes`
@@ -16,12 +17,14 @@ type Train = {
   soldOut: boolean;
 };
 
-const TRAINS: Train[] = [
-  { id: "ktx802-1003", num: "KTX 802", dep: "10:03", arr: "10:23", soldOut: false },
-  { id: "ktx802-1020", num: "KTX 802", dep: "10:20", arr: "10:45", soldOut: false },
-  { id: "ktx506", num: "KTX 506", dep: "매진", arr: "매진", soldOut: true },
-  { id: "ktx707", num: "KTX 707", dep: "매진", arr: "매진", soldOut: true },
-];
+function buildTrains(b: ReturnType<typeof trainBrand>): Train[] {
+  return [
+    { id: "t1-1003", num: b.trainNum1, dep: "10:03", arr: "10:23", soldOut: false },
+    { id: "t2-1020", num: b.trainNum2, dep: "10:20", arr: "10:45", soldOut: false },
+    { id: "sold1", num: b.trainNumSold1, dep: "매진", arr: "매진", soldOut: true },
+    { id: "sold2", num: b.trainNumSold2, dep: "매진", arr: "매진", soldOut: true },
+  ];
+}
 
 const GRADES = [
   { id: "general", label: "일반실" },
@@ -33,12 +36,15 @@ const GRADES = [
 // 기본 선택. 매진 행은 흐림 처리.
 export function KtxTrainList({
   step,
+  scenario,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const brand = trainBrand(scenario.id);
+  const trains = buildTrains(brand);
   const home = step.choices.find((c) => c.id === "home");
   const select =
     step.choices.find((c) => c.id === "select-seat") ?? step.choices[0]!;
-  const [selectedTrainId, setSelectedTrainId] = useState("ktx802-1020");
+  const [selectedTrainId, setSelectedTrainId] = useState("t2-1020");
   const [selectedGradeId, setSelectedGradeId] = useState("general");
 
   function pickGrade(trainId: string, gradeId: string) {
@@ -101,7 +107,7 @@ export function KtxTrainList({
           background: #ffffff;
         `}
       >
-        {TRAINS.map((t) => (
+        {trains.map((t) => (
           <div
             key={t.id}
             css={css`

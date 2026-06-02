@@ -1,6 +1,7 @@
 import { css, keyframes } from "@emotion/react";
 import { useState } from "react";
 
+import { trainBrand } from "./_trainBrand";
 import { type CustomLayoutProps } from "./types";
 
 const pulse = keyframes`
@@ -42,12 +43,14 @@ const HOURS = [
 // 출발/도착 박스 클릭 시 internal phase 로 역 선택 화면 노출.
 export function KtxBooking({
   step,
+  scenario,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const brand = trainBrand(scenario.id);
   const search = step.choices.find((c) => c.id === "search") ?? step.choices[0]!;
   const [phase, setPhase] = useState<Phase>("form");
-  const [origin, setOrigin] = useState("서울");
-  const [dest, setDest] = useState("오송");
+  const [origin, setOrigin] = useState(brand.originStation);
+  const [dest, setDest] = useState(brand.destStation);
   const [hourIdx, setHourIdx] = useState(4); // 09:00
   const [dateOffset, setDateOffset] = useState(0); // 0 = 06-02 (화)
   const [persons, setPersons] = useState(1);
@@ -101,10 +104,10 @@ export function KtxBooking({
         overflow: hidden;
       `}
     >
-      {/* 헤더 */}
+      {/* 헤더 — 브랜드 색 */}
       <div
         css={css`
-          background: #1a3d5c;
+          background: ${brand.primaryDark};
           color: #ffffff;
           padding: 12px 14px;
           display: flex;

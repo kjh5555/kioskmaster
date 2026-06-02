@@ -1,5 +1,6 @@
 import { css, keyframes } from "@emotion/react";
 
+import { trainBrand, type TrainBrand } from "./_trainBrand";
 import { type CustomLayoutProps } from "./types";
 
 const trainGlide = keyframes`
@@ -28,12 +29,15 @@ const QUICK_BUTTONS = [
   { id: "platform-ticket", label: "입장권", icon: "→" },
 ];
 
-// KTX 키오스크 첫 화면 — 코레일 발매기 메인 메뉴. 역 사진 헤더 + 4개 메인
-// 메뉴 + 우측 하단 3개 빠른 버튼 + 하단 KTX 열차 일러스트.
+// KTX / SRT 키오스크 첫 화면 — 발매기 메인 메뉴. 역 사진 헤더 + 4개 메인
+// 메뉴 + 우측 하단 3개 빠른 버튼 + 하단 열차 일러스트.
 export function KtxStart({
   step,
+  scenario,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
+  const brand = trainBrand(scenario.id);
+
   function pick(id: string) {
     const choice = step.choices.find((c) => c.id === id) ?? step.choices[0];
     if (choice) onChoice(choice.id);
@@ -53,7 +57,7 @@ export function KtxStart({
       `}
     >
       {/* 상단 역 사진 영역 (사진 placeholder — 빌딩 실루엣 그라데이션) */}
-      <StationHeader />
+      <StationHeader stationName={`${brand.originStation}역`} />
 
       {/* 본문 — 메인 메뉴(상) + 빠른 버튼(하·우측 정렬) grid 분리.
           이전엔 position: absolute 로 인해 viewport 작을 때 캡슐과 겹침. */}
@@ -77,7 +81,12 @@ export function KtxStart({
           `}
         >
           {MAIN_BUTTONS.map((b) => (
-            <MainButton key={b.id} btn={b} onClick={() => pick(b.id)} />
+            <MainButton
+              key={b.id}
+              btn={b}
+              brand={brand}
+              onClick={() => pick(b.id)}
+            />
           ))}
         </div>
 
@@ -94,19 +103,20 @@ export function KtxStart({
               key={b.id}
               label={b.label}
               icon={b.icon}
+              brand={brand}
               onClick={() => pick(b.id)}
             />
           ))}
         </div>
       </div>
 
-      {/* 하단 일러스트 — 산 / 풀밭 / KTX 열차 / 선로 */}
-      <Illustration />
+      {/* 하단 일러스트 — 산 / 풀밭 / 열차 / 선로 */}
+      <Illustration brand={brand} />
     </div>
   );
 }
 
-function StationHeader(): React.ReactElement {
+function StationHeader({ stationName }: { stationName: string }): React.ReactElement {
   return (
     <div
       css={css`
@@ -157,7 +167,7 @@ function StationHeader(): React.ReactElement {
           mix-blend-mode: screen;
         `}
       />
-      {/* '서울역' 라벨 */}
+      {/* 역 라벨 (브랜드별 출발역) */}
       <div
         css={css`
           position: absolute;
@@ -173,7 +183,7 @@ function StationHeader(): React.ReactElement {
           opacity: 0.85;
         `}
       >
-        🏛 서울역
+        🏛 {stationName}
       </div>
     </div>
   );
@@ -181,15 +191,17 @@ function StationHeader(): React.ReactElement {
 
 function MainButton({
   btn,
+  brand,
   onClick,
 }: {
   btn: Btn;
+  brand: TrainBrand;
   onClick: () => void;
 }): React.ReactElement {
   const bg = btn.primary
-    ? "linear-gradient(180deg, #4a8dd8 0%, #2c6fc8 100%)"
-    : "linear-gradient(180deg, #b9ceea 0%, #97b6dd 100%)";
-  const color = btn.primary ? "#ffffff" : "#1a3a6a";
+    ? `linear-gradient(180deg, ${brand.primary} 0%, ${brand.primaryDark} 100%)`
+    : `linear-gradient(180deg, ${brand.primaryLight} 0%, ${brand.primaryLight} 100%)`;
+  const color = btn.primary ? "#ffffff" : brand.primaryDark;
   const iconBg = btn.primary
     ? "rgba(255, 255, 255, 0.22)"
     : "rgba(255, 255, 255, 0.55)";
@@ -252,10 +264,12 @@ function MainButton({
 function QuickCircle({
   label,
   icon,
+  brand,
   onClick,
 }: {
   label: string;
   icon: string;
+  brand: TrainBrand;
   onClick: () => void;
 }): React.ReactElement {
   return (
@@ -282,7 +296,7 @@ function QuickCircle({
           width: 50px;
           height: 50px;
           border-radius: 50%;
-          background: linear-gradient(180deg, #4a8dd8 0%, #2c6fc8 100%);
+          background: linear-gradient(180deg, ${brand.primary} 0%, ${brand.primaryDark} 100%);
           border: 2px solid #ffffff;
           color: #ffffff;
           font-size: 18px;
@@ -298,7 +312,7 @@ function QuickCircle({
       <span
         css={css`
           font-size: 10px;
-          color: #1a3a6a;
+          color: ${brand.primaryDark};
           font-weight: 800;
           line-height: 1.2;
           text-align: center;
@@ -311,7 +325,7 @@ function QuickCircle({
   );
 }
 
-function Illustration(): React.ReactElement {
+function Illustration({ brand }: { brand: TrainBrand }): React.ReactElement {
   return (
     <div
       css={css`
@@ -412,7 +426,7 @@ function Illustration(): React.ReactElement {
             bottom: 4px;
             width: 152px;
             height: 18px;
-            background: linear-gradient(180deg, #4ea8d9 0%, #2a6fa6 100%);
+            background: linear-gradient(180deg, ${brand.trainBodyLight} 0%, ${brand.trainBodyDark} 100%);
             border-radius: 4px 4px 4px 4px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
           `}
@@ -425,7 +439,7 @@ function Illustration(): React.ReactElement {
             bottom: 4px;
             width: 36px;
             height: 18px;
-            background: linear-gradient(135deg, #2a6fa6 0%, #4ea8d9 100%);
+            background: linear-gradient(135deg, ${brand.trainBodyDark} 0%, ${brand.trainBodyLight} 100%);
             clip-path: polygon(0 100%, 60% 0, 100% 0, 100% 100%);
             border-radius: 4px 0 0 4px;
           `}
@@ -438,7 +452,7 @@ function Illustration(): React.ReactElement {
             bottom: 12px;
             width: 138px;
             height: 5px;
-            background: #1a3d5c;
+            background: ${brand.primaryDark};
             border-radius: 1px;
             opacity: 0.85;
           `}
