@@ -38,8 +38,11 @@ app = FastAPI(title="Kiosk Master API", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
-    allow_credentials=True,
+    # Apps in Toss WebView 에서 호출 시 Origin 헤더가 alot of values(null /
+    # https://app.toss.im / 등) 일 수 있어 regex 로 모두 허용. cookie/
+    # credential 인증 안 쓰므로 allow_credentials=False 로 두고 wildcard 안전.
+    allow_origin_regex=".*",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
