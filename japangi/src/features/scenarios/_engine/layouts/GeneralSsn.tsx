@@ -9,33 +9,74 @@ const slideUp = keyframes`
 `;
 
 type Mode = "ssn" | "phone";
+type Phase = "input" | "carrier" | "otp";
+type Carrier = { id: string; name: string; color: string; sub: string };
 
-// 본인 확인 키패드 — 실제 병원 무인 접수기처럼 [주민등록번호 / 핸드폰번호]
-// 두 가지 입력 방법을 상단 탭으로 전환. 탭 전환 시 입력은 초기화.
+const CARRIERS: Carrier[] = [
+  { id: "skt", name: "SKT", color: "#ea002c", sub: "SK텔레콤" },
+  { id: "kt", name: "KT", color: "#1a1a1a", sub: "올레 KT" },
+  { id: "lgu", name: "LG U+", color: "#a50034", sub: "LG유플러스" },
+  { id: "mvno", name: "알뜰폰", color: "#0f7b3a", sub: "MVNO / 헬로·SK7·KT M 등" },
+];
+
+// 본인 확인 키패드 — 실제 병원 무인 접수기처럼 [주민등록번호 / 핸드폰번호] 탭.
+// 핸드폰 경로: 11자리 → 통신사 선택 → 인증번호 6자리 → 자동 다음 단계.
 export function GeneralSsn({
   step,
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const next = step.choices.find((c) => c.id === "next")!;
   const [mode, setMode] = useState<Mode>("ssn");
+  const [phase, setPhase] = useState<Phase>("input");
   const [digits, setDigits] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [carrier, setCarrier] = useState<Carrier | null>(null);
 
-  const targetLen = mode === "ssn" ? 13 : 11;
+  // 키패드 활성 여부 + 현재 목표 길이
+  const targetLen =
+    mode === "ssn" ? 13 : phase === "input" ? 11 : phase === "otp" ? 6 : 0;
+  const keypadActive = targetLen > 0;
 
-  // 입력 완료 시 자동 다음 단계
+  // 자동 진행: 길이 충족 시 다음 phase 또는 step
   useEffect(() => {
-    if (digits.length === targetLen) {
-      const t = setTimeout(() => onChoice(next.id), 600);
-      return () => clearTimeout(t);
-    }
-  }, [digits, targetLen, next.id, onChoice]);
+    if (!keypadActive || digits.length !== targetLen) return;
+    const t = setTimeout(() => {
+      if (mode === "ssn") {
+        onChoice(next.id);
+      } else if (phase === "input") {
+        setPhoneNumber(digits);
+        setDigits("");
+        setPhase("carrier");
+      } else if (phase === "otp") {
+        onChoice(next.id);
+      }
+    }, 600);
+    return () => clearTimeout(t);
+  }, [digits, targetLen, keypadActive, mode, phase, next.id, onChoice]);
 
   function switchMode(m: Mode) {
     if (m === mode) return;
     setMode(m);
+    setPhase("input");
+    setDigits("");
+    setPhoneNumber("");
+    setCarrier(null);
+  }
+  function selectCarrier(c: Carrier) {
+    setCarrier(c);
+    setDigits("");
+    setPhase("otp");
+  }
+  function backToPhoneInput() {
+    setPhase("input");
+    setDigits(phoneNumber); // 다시 수정할 수 있게 복원
+  }
+  function backToCarrier() {
+    setPhase("carrier");
     setDigits("");
   }
   function press(n: string) {
+    if (!keypadActive) return;
     if (digits.length < targetLen) setDigits(digits + n);
   }
   function backspace() {
@@ -44,6 +85,15 @@ export function GeneralSsn({
   function reset() {
     setDigits("");
   }
+
+  // 핸드폰 번호 마스킹: 010-1234-**56 형식
+  const maskedPhone = (() => {
+    if (phoneNumber.length !== 11) return phoneNumber;
+    const p1 = phoneNumber.slice(0, 3);
+    const p2 = phoneNumber.slice(3, 7);
+    const p3 = phoneNumber.slice(7, 9) + "**";
+    return `${p1}-${p2}-${p3}`;
+  })();
 
   return (
     <div
@@ -57,7 +107,7 @@ export function GeneralSsn({
         overflow: hidden;
       `}
     >
-      {/* Header + 안전 안내 */}
+      {/* Header */}
       <div
         css={css`
           background: #0067a6;
@@ -89,7 +139,7 @@ export function GeneralSsn({
         </div>
       </div>
 
-      {/* 서브탭: 주민등록번호 / 핸드폰번호 */}
+      {/* 서브탭 */}
       <div
         css={css`
           display: grid;
@@ -106,36 +156,58 @@ export function GeneralSsn({
         </TabButton>
       </div>
 
-      {/* 입력 디스플레이 */}
-      {mode === "ssn" ? (
-        <SsnDisplay digits={digits} />
-      ) : (
-        <PhoneDisplay digits={digits} />
+      {/* Phase별 화면 */}
+      {mode === "ssn" && (
+        <>
+          <SsnDisplay digits={digits} />
+          <Keypad
+            onPress={press}
+            onBackspace={backspace}
+            onReset={reset}
+          />
+        </>
       )}
 
-      {/* 키패드 */}
-      <div
-        css={css`
-          flex: 1;
-          padding: 8px 12px;
-          display: grid;
-          grid-template-columns: 1fr 1fr 1fr;
-          gap: 8px;
-        `}
-      >
-        {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
-          <Key key={n} onClick={() => press(n)}>
-            {n}
-          </Key>
-        ))}
-        <SecondaryKey onClick={reset}>처음부터</SecondaryKey>
-        <Key onClick={() => press("0")}>0</Key>
-        <DangerKey onClick={backspace}>
-          한 글자
-          <br />
-          지우기
-        </DangerKey>
-      </div>
+      {mode === "phone" && phase === "input" && (
+        <>
+          <PhoneDisplay digits={digits} />
+          <Keypad
+            onPress={press}
+            onBackspace={backspace}
+            onReset={reset}
+          />
+        </>
+      )}
+
+      {mode === "phone" && phase === "carrier" && (
+        <CarrierSelect
+          phoneText={(() => {
+            const p1 = phoneNumber.slice(0, 3);
+            const p2 = phoneNumber.slice(3, 7);
+            const p3 = phoneNumber.slice(7, 11);
+            return `${p1}-${p2}-${p3}`;
+          })()}
+          onSelect={selectCarrier}
+          onBack={backToPhoneInput}
+        />
+      )}
+
+      {mode === "phone" && phase === "otp" && carrier && (
+        <>
+          <OtpHeader
+            carrierName={carrier.name}
+            carrierColor={carrier.color}
+            phoneMasked={maskedPhone}
+            digits={digits}
+            onBack={backToCarrier}
+          />
+          <Keypad
+            onPress={press}
+            onBackspace={backspace}
+            onReset={reset}
+          />
+        </>
+      )}
     </div>
   );
 }
@@ -175,7 +247,6 @@ function TabButton({
 }
 
 function SsnDisplay({ digits }: { digits: string }): React.ReactElement {
-  // 13자리: 앞 6 + 하이픈 + 뒷 7 (뒷자리 마스킹)
   const slots = Array.from({ length: 13 }, (_, i) => {
     const d = digits[i];
     if (i < 6) return d ?? "";
@@ -203,7 +274,6 @@ function SsnDisplay({ digits }: { digits: string }): React.ReactElement {
 }
 
 function PhoneDisplay({ digits }: { digits: string }): React.ReactElement {
-  // 11자리: 3 + 4 + 4 (마스킹 없음 — 핸드폰 번호는 본인 확인용 표시)
   const part1 = Array.from({ length: 3 }, (_, i) => digits[i] ?? "");
   const part2 = Array.from({ length: 4 }, (_, i) => digits[3 + i] ?? "");
   const part3 = Array.from({ length: 4 }, (_, i) => digits[7 + i] ?? "");
@@ -232,7 +302,296 @@ function PhoneDisplay({ digits }: { digits: string }): React.ReactElement {
   );
 }
 
-function Slot({ value, width }: { value: string; width: number }): React.ReactElement {
+function CarrierSelect({
+  phoneText,
+  onSelect,
+  onBack,
+}: {
+  phoneText: string;
+  onSelect: (c: Carrier) => void;
+  onBack: () => void;
+}): React.ReactElement {
+  return (
+    <div
+      css={css`
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 14px 14px;
+        gap: 12px;
+        overflow-y: auto;
+      `}
+    >
+      <div
+        css={css`
+          padding: 12px 14px;
+          background: #ffffff;
+          border: 2px solid #0067a6;
+          border-radius: 12px;
+          text-align: center;
+        `}
+      >
+        <div
+          css={css`
+            font-size: 12px;
+            color: #5a7a92;
+            margin-bottom: 4px;
+          `}
+        >
+          입력한 핸드폰 번호
+        </div>
+        <div
+          css={css`
+            font-size: 22px;
+            font-weight: 900;
+            color: #0067a6;
+            letter-spacing: 0.04em;
+          `}
+        >
+          {phoneText}
+        </div>
+        <button
+          type="button"
+          onClick={onBack}
+          css={css`
+            margin-top: 6px;
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid #aab8c2;
+            border-radius: 999px;
+            color: #5a7a92;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+          `}
+        >
+          ↺ 번호 다시 입력
+        </button>
+      </div>
+
+      <div
+        css={css`
+          font-size: 15px;
+          font-weight: 900;
+          color: #0d3b5a;
+          text-align: center;
+          padding: 2px 0;
+        `}
+      >
+        통신사를 골라주세요
+      </div>
+
+      <div
+        css={css`
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        `}
+      >
+        {CARRIERS.map((c) => (
+          <button
+            key={c.id}
+            type="button"
+            onClick={() => onSelect(c)}
+            css={css`
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              gap: 6px;
+              padding: 22px 10px;
+              background: #ffffff;
+              border: 3px solid ${c.color};
+              border-radius: 16px;
+              color: ${c.color};
+              font-family: inherit;
+              cursor: pointer;
+              min-height: 110px;
+              box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+              -webkit-tap-highlight-color: transparent;
+              :active {
+                background: ${c.color};
+                color: #ffffff;
+                transform: scale(0.98);
+              }
+            `}
+          >
+            <span
+              css={css`
+                font-size: 24px;
+                font-weight: 900;
+                letter-spacing: -0.02em;
+              `}
+            >
+              {c.name}
+            </span>
+            <span
+              css={css`
+                font-size: 11px;
+                color: #5a7a92;
+                text-align: center;
+                line-height: 1.3;
+              `}
+            >
+              {c.sub}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div
+        css={css`
+          padding: 10px 12px;
+          background: #fff8e6;
+          border: 1px solid #f5d97a;
+          border-radius: 10px;
+          font-size: 12px;
+          color: #5a4400;
+          line-height: 1.5;
+          text-align: center;
+        `}
+      >
+        💡 통신사를 모르시면 핸드폰 뒷면 스티커나 청구서를 확인해보세요.
+      </div>
+    </div>
+  );
+}
+
+function OtpHeader({
+  carrierName,
+  carrierColor,
+  phoneMasked,
+  digits,
+  onBack,
+}: {
+  carrierName: string;
+  carrierColor: string;
+  phoneMasked: string;
+  digits: string;
+  onBack: () => void;
+}): React.ReactElement {
+  const slots = Array.from({ length: 6 }, (_, i) => digits[i] ?? "");
+  return (
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+        padding: 10px 14px 8px;
+        gap: 10px;
+      `}
+    >
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 10px 14px;
+          background: #ffffff;
+          border: 2px solid #d1dee9;
+          border-radius: 12px;
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          `}
+        >
+          <span
+            css={css`
+              padding: 3px 10px;
+              background: ${carrierColor};
+              color: #ffffff;
+              border-radius: 999px;
+              font-size: 11px;
+              font-weight: 900;
+              letter-spacing: -0.02em;
+            `}
+          >
+            {carrierName}
+          </span>
+          <span
+            css={css`
+              font-size: 16px;
+              font-weight: 900;
+              color: #0d3b5a;
+              letter-spacing: 0.03em;
+            `}
+          >
+            {phoneMasked}
+          </span>
+        </div>
+        <button
+          type="button"
+          onClick={onBack}
+          css={css`
+            padding: 4px 10px;
+            background: transparent;
+            border: 1px solid #aab8c2;
+            border-radius: 999px;
+            color: #5a7a92;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+          `}
+        >
+          ↺ 변경
+        </button>
+      </div>
+
+      <div
+        css={css`
+          text-align: center;
+        `}
+      >
+        <div
+          css={css`
+            font-size: 14px;
+            color: #0d3b5a;
+            font-weight: 800;
+          `}
+        >
+          📩 인증번호 6자리를 문자로 보냈어요
+        </div>
+        <div
+          css={css`
+            font-size: 11px;
+            color: #5a7a92;
+            margin-top: 3px;
+          `}
+        >
+          연습이라 어떤 숫자든 6자리 누르시면 인증돼요
+        </div>
+      </div>
+
+      <div
+        css={css`
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        `}
+      >
+        {slots.map((d, i) => (
+          <Slot key={`otp${i}`} value={d} width={38} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Slot({
+  value,
+  width,
+}: {
+  value: string;
+  width: number;
+}): React.ReactElement {
   return (
     <div
       css={css`
@@ -266,6 +625,41 @@ function Dash(): React.ReactElement {
       `}
     >
       -
+    </div>
+  );
+}
+
+function Keypad({
+  onPress,
+  onBackspace,
+  onReset,
+}: {
+  onPress: (n: string) => void;
+  onBackspace: () => void;
+  onReset: () => void;
+}): React.ReactElement {
+  return (
+    <div
+      css={css`
+        flex: 1;
+        padding: 8px 12px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+      `}
+    >
+      {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
+        <Key key={n} onClick={() => onPress(n)}>
+          {n}
+        </Key>
+      ))}
+      <SecondaryKey onClick={onReset}>처음부터</SecondaryKey>
+      <Key onClick={() => onPress("0")}>0</Key>
+      <DangerKey onClick={onBackspace}>
+        한 글자
+        <br />
+        지우기
+      </DangerKey>
     </div>
   );
 }
