@@ -1839,16 +1839,16 @@ GENERAL_HOSPITAL_SCENARIO = {
         },
         {
             "id": "ssn",
-            "instruction": "주민등록번호 13자리를 모두 입력해요",
-            "helpText": "주민번호 앞 6자리(생년월일)와 뒤 7자리를 차례로 눌러주세요. 잘못 누르셨으면 큰 '한 글자 지우기'를 누르세요. 연습이라 저장되지 않아요. 13자리 다 입력하면 자동으로 넘어가요.",
+            "instruction": "본인 확인 — 주민등록번호 또는 핸드폰번호를 입력해요",
+            "helpText": "상단 '주민등록번호' 또는 '핸드폰번호' 탭을 골라요. 주민등록번호는 13자리(앞 6자리 생년월일 + 뒤 7자리), 핸드폰번호는 11자리예요. 잘못 누르셨으면 큰 '한 글자 지우기'를 누르세요. 연습이라 저장되지 않아요. 다 입력하면 자동으로 넘어가요.",
             "layout": "start",
             "customLayoutId": "general-ssn",
             "choices": [
                 {"id": "next", "label": "다음", "emoji": "▶️"},
             ],
             "correctChoiceId": "next",
-            "successMessage": "주민번호 입력 완료. 본인 확인할게요.",
-            "hintMessage": "키패드로 13자리를 모두 누르면 자동으로 넘어가요.",
+            "successMessage": "입력 완료. 본인 확인할게요.",
+            "hintMessage": "상단 탭으로 입력 방법을 고르고, 숫자를 모두 누르면 자동으로 넘어가요.",
         },
         {
             "id": "confirm",
