@@ -1953,9 +1953,7 @@ BRANDS = {
     "hospital": [
         {"slug": "general", "name": "진료 접수기", "emoji": "📋", "goal_summary": "진료 접수기 둘러보기", "scenario_json": GENERAL_HOSPITAL_SCENARIO, "order": 0},
         {"slug": "payment", "name": "수납·처방전", "emoji": "💳", "goal_summary": "수납·처방전 키오스크 둘러보기", "scenario_json": PAYMENT_KIOSK_SCENARIO, "order": 1},
-        {"slug": "cert", "name": "제증명 발급기", "emoji": "📄", "goal_summary": "제증명 발급기 둘러보기", "scenario_json": CERT_KIOSK_SCENARIO, "order": 2},
-        {"slug": "parking", "name": "주차 등록기", "emoji": "🚗", "goal_summary": "주차 등록기 둘러보기", "scenario_json": PARKING_KIOSK_SCENARIO, "order": 3},
-        {"slug": "clinic", "name": "동네 의원", "emoji": "🩺", "goal_summary": "", "scenario_json": None, "order": 4},
+        {"slug": "parking", "name": "주차 등록기", "emoji": "🚗", "goal_summary": "주차 등록기 둘러보기", "scenario_json": PARKING_KIOSK_SCENARIO, "order": 2},
     ],
     "train": [
         {"slug": "ktx", "name": "KTX", "emoji": "🚄", "goal_summary": "", "scenario_json": None, "order": 0},
