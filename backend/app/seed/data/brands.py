@@ -1560,6 +1560,22 @@ GENERAL_HOSPITAL_SCENARIO = {
     ],
     "steps": [
         {
+            "id": "kiosk-select",
+            "instruction": "'진료 접수기'를 골라요",
+            "helpText": "병원 로비에 가면 키오스크가 4종류 있어요. 진료를 받으려면 '진료 접수기' 앞으로 가셔야 해요. 수납·처방전은 진료 끝난 다음, 제증명은 서류 떼실 때, 주차는 차로 오셨을 때예요.",
+            "layout": "grid",
+            "customLayoutId": "general-kiosk-select",
+            "choices": [
+                {"id": "register", "label": "진료 접수기", "sublabel": "처음 오셨거나 진료받으실 분", "emoji": "📋"},
+                {"id": "payment", "label": "수납·처방전", "sublabel": "진료 끝나고 돈 내고 처방전 받으실 분", "emoji": "💳"},
+                {"id": "certificate", "label": "제증명 발급기", "sublabel": "진단서·소견서 같은 서류 떼실 분", "emoji": "📄"},
+                {"id": "parking", "label": "주차 등록기", "sublabel": "차 가지고 오신 분", "emoji": "🚗"},
+            ],
+            "correctChoiceId": "register",
+            "successMessage": "진료 접수기 앞으로 왔어요. 시작해볼게요.",
+            "hintMessage": "왼쪽 위 첫 번째 '진료 접수기' 카드를 눌러주세요.",
+        },
+        {
             "id": "start",
             "instruction": "접수를 시작하려면 화면을 눌러요",
             "helpText": "병원 무인 접수기는 처음에 안내 화면이 떠 있어요. 가운데 큰 '접수하기' 버튼을 한 번 눌러주세요.",

@@ -32,6 +32,7 @@ import { LotteriaReceiptPrompt } from "./LotteriaReceiptPrompt";
 import { LotteriaSetPopup } from "./LotteriaSetPopup";
 import { LotteriaSideSelect } from "./LotteriaSideSelect";
 import { LotteriaStart } from "./LotteriaStart";
+import { GeneralKioskSelect } from "./GeneralKioskSelect";
 import { GeneralComplete } from "./GeneralComplete";
 import { GeneralConfirm } from "./GeneralConfirm";
 import { GeneralDepartment } from "./GeneralDepartment";
@@ -179,6 +180,7 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "cafe-generic-pay-method": CafeGenericPayMethod,
   "cafe-generic-card-insert": CafeGenericCardInsert,
   "cafe-generic-order-complete": CafeGenericOrderComplete,
+  "general-kiosk-select": GeneralKioskSelect,
   "general-start": GeneralStart,
   "general-mode": GeneralMode,
   "general-ssn": GeneralSsn,
