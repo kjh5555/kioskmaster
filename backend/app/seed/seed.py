@@ -82,9 +82,11 @@ def seed_categories(session: Session) -> dict[str, Category]:
 
 def seed_brands(session: Session, slug_to_cat: dict[str, Category]) -> dict[str, Brand]:
     slug_to_brand: dict[str, Brand] = {}
+    valid_slugs: set[str] = set()
     for cat_slug, brand_list in BRANDS.items():
         cat = slug_to_cat[cat_slug]
         for data in brand_list:
+            valid_slugs.add(data["slug"])
             existing = session.exec(select(Brand).where(Brand.slug == data["slug"])).first()
             if existing:
                 existing.name = data["name"]
@@ -110,6 +112,27 @@ def seed_brands(session: Session, slug_to_cat: dict[str, Category]) -> dict[str,
                 session.add(brand)
                 session.flush()
                 slug_to_brand[data["slug"]] = brand
+
+    # Stale brand 정리 — 시드에서 빠진 brand 와 그 자식(MenuCategory + MenuItem) 삭제.
+    # 카테고리(예: hospital)에서 cert/clinic 같은 항목이 제거되면 BrandSelectPage 에서
+    # 즉시 사라지도록.
+    all_brands = session.exec(select(Brand)).all()
+    for b in all_brands:
+        if b.slug in valid_slugs:
+            continue
+        stale_cats = session.exec(
+            select(MenuCategory).where(MenuCategory.brand_id == b.id)
+        ).all()
+        for c in stale_cats:
+            stale_items = session.exec(
+                select(MenuItem).where(MenuItem.menu_category_id == c.id)
+            ).all()
+            for it in stale_items:
+                session.delete(it)
+            session.delete(c)
+        print(f"[seed] Removing stale brand: {b.slug}")
+        session.delete(b)
+
     session.flush()
     return slug_to_brand
 
