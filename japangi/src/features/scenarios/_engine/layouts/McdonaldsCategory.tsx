@@ -321,7 +321,8 @@ export function McdonaldsCategory({
       css={css`
         display: flex;
         flex-direction: row;
-        min-height: calc(100dvh - 80px);
+        min-height: 0;
+        height: 100%;
         width: 100%;
         overflow: hidden;
         font-family:

@@ -34,8 +34,10 @@ export function BurgerKingReceiptPopup({
         align-items: center;
         justify-content: center;
         background: rgba(0, 0, 0, 0.35);
-        padding: 16px;
-        min-height: calc(100dvh - 80px);
+        padding: 10px 12px;
+        min-height: 0;
+        height: 100%;
+        overflow-y: auto;
       `}
     >
       <div
