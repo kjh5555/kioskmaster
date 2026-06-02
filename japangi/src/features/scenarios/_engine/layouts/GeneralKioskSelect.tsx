@@ -1,4 +1,5 @@
 import { css, keyframes } from "@emotion/react";
+import { useState } from "react";
 
 import { idlePulse, type CustomLayoutProps } from "./types";
 
@@ -29,6 +30,15 @@ export function GeneralKioskSelect({
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const correctId = step.correctChoiceId;
+  // 비정답 클릭 시 거부하지 않고 그 키오스크 용도 안내. 정답만 진행.
+  const [previewId, setPreviewId] = useState<string | null>(null);
+  const previewChoice = step.choices.find((c) => c.id === previewId);
+  const correctChoice = step.choices.find((c) => c.id === correctId);
+
+  function handleClick(id: string) {
+    if (id === correctId) onChoice(id);
+    else setPreviewId(id);
+  }
 
   return (
     <div
@@ -85,11 +95,12 @@ export function GeneralKioskSelect({
       >
         {step.choices.map((c) => {
           const isCorrect = c.id === correctId;
+          const isPreviewed = c.id === previewId;
           return (
             <button
               key={c.id}
               type="button"
-              onClick={() => onChoice(c.id)}
+              onClick={() => handleClick(c.id)}
               css={[
                 css`
                   display: flex;
@@ -99,7 +110,7 @@ export function GeneralKioskSelect({
                   gap: 10px;
                   padding: 22px 12px;
                   background: #ffffff;
-                  border: 3px solid ${isCorrect ? "#0067a6" : "#aab8c2"};
+                  border: 3px solid ${isPreviewed ? "#f59e0b" : isCorrect ? "#0067a6" : "#aab8c2"};
                   border-radius: 18px;
                   color: ${isCorrect ? "#0067a6" : "#5a7a92"};
                   font-family: inherit;
@@ -141,6 +152,25 @@ export function GeneralKioskSelect({
           );
         })}
       </div>
+
+      {/* 비정답 미리보기 안내 (하단 고정) */}
+      {previewChoice && (
+        <div
+          css={css`
+            margin: 0 14px calc(env(safe-area-inset-bottom, 0px) + 14px);
+            padding: 14px 16px;
+            background: #fff8e6;
+            border: 2px solid #f59e0b;
+            border-radius: 14px;
+            font-size: 14px;
+            color: #5a4400;
+            line-height: 1.5;
+          `}
+        >
+          <strong>{previewChoice.label}</strong>는 {previewChoice.sublabel} 거예요.<br />
+          오늘 연습은 <strong>{correctChoice?.label}</strong> 이에요 — 위 카드를 눌러주세요.
+        </div>
+      )}
     </div>
   );
 }
