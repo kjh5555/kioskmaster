@@ -222,8 +222,16 @@ export interface ApiFeedback {
   updated_at: string;
 }
 
+export interface ApiRecommendation {
+  category_slug: string | null;
+  brand_slug: string | null;
+  reason: string;
+  used_gemini: boolean;
+}
+
 export const api = {
   getCategories: () => jget<ApiCategory[]>("/api/categories"),
+  getRecommendation: () => jget<ApiRecommendation>("/api/recommend"),
   getCategory: (slug: string) =>
     jget<ApiCategoryDetail>(`/api/categories/${slug}`),
   getBrands: () => jget<ApiBrand[]>("/api/brands"),

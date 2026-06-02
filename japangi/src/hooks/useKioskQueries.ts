@@ -4,6 +4,16 @@ import { api } from "../lib/api";
 export const useCategories = () =>
   useQuery({ queryKey: ["categories"], queryFn: api.getCategories });
 
+// Pro 모드 — LLM 추천 시나리오. enabled 가 false 면 fetch 안 함.
+// staleTime 30s 라 같은 세션에서 모드 토글 토글 해도 즉시 캐시 사용.
+export const useRecommendation = (enabled: boolean) =>
+  useQuery({
+    queryKey: ["recommendation"],
+    queryFn: api.getRecommendation,
+    enabled,
+    staleTime: 30_000,
+  });
+
 export const useCategory = (slug: string) =>
   useQuery({
     queryKey: ["category", slug],

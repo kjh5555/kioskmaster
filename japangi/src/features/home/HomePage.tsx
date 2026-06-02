@@ -9,6 +9,7 @@ import { useCurrentUser } from "../../hooks/useCurrentUser";
 import {
   useCategories,
   useParentFavorites,
+  useRecommendation,
   useUserStats,
 } from "../../hooks/useKioskQueries";
 import { usePracticeMode, type PracticeMode } from "../../hooks/usePracticeMode";
@@ -33,18 +34,25 @@ export function HomePage(): React.ReactElement {
   const { data: favorites = [] } = useParentFavorites(externalId);
   const primaryFav = favorites.find((f) => f.priority === 0) ?? favorites[0];
   const { mode, setMode } = usePracticeMode();
+  // Pro 모드 — Gemini LLM 추천. mode !== 'pro' 면 fetch 안 함(enabled=false).
+  const { data: recommendation, isLoading: recommendationLoading } =
+    useRecommendation(mode === "pro");
 
-  // Pro 모드: 첫 카테고리·첫 brand 를 추천 (실제 LLM 호출 대신 데모용 추천)
   const proRecommendation = (() => {
-    if (mode !== "pro" || !categories || categories.length === 0) return null;
-    const cat = categories[0];
-    if (!cat || !cat.brands || cat.brands.length === 0) return null;
-    const brand = cat.brands[0];
-    if (!brand) return null;
+    if (mode !== "pro") return null;
+    if (!recommendation || !categories) return null;
+    if (!recommendation.category_slug || !recommendation.brand_slug) return null;
+    const cat = categories.find((c) => c.slug === recommendation.category_slug);
+    const brand = cat?.brands?.find(
+      (b) => b.slug === recommendation.brand_slug,
+    );
+    if (!cat || !brand) return null;
     return {
       category: cat.slug,
       brand: brand.slug,
       label: `${brand.name} · ${cat.title}`,
+      reason: recommendation.reason,
+      usedGemini: recommendation.used_gemini,
     };
   })();
 
@@ -145,7 +153,25 @@ export function HomePage(): React.ReactElement {
         </div>
       </div>
 
-      {/* Pro 모드 — AI 가 추천하는 시나리오 카드 */}
+      {/* Pro 모드 — Gemini LLM 추천 시나리오 카드 */}
+      {mode === "pro" && recommendationLoading && (
+        <div
+          css={css`
+            margin: 0 clamp(12px, 4vw, 20px) 8px;
+            padding: 14px 16px;
+            background: ${adaptive.greyBackground};
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: ${adaptive.grey600};
+            font-size: 13px;
+          `}
+        >
+          <span style={{ fontSize: 28 }}>🤖</span>
+          <span>AI 가 오늘의 시나리오를 고르고 있어요…</span>
+        </div>
+      )}
       {proRecommendation && (
         <button
           type="button"
@@ -180,6 +206,7 @@ export function HomePage(): React.ReactElement {
               display: flex;
               flex-direction: column;
               gap: 2px;
+              min-width: 0;
             `}
           >
             <span
@@ -190,7 +217,7 @@ export function HomePage(): React.ReactElement {
                 letter-spacing: 0.04em;
               `}
             >
-              🤖 AI 추천 · Pro 모드
+              🤖 {proRecommendation.usedGemini ? "Gemini AI 추천" : "AI 추천"} · Pro 모드
             </span>
             <span
               css={css`
@@ -203,11 +230,12 @@ export function HomePage(): React.ReactElement {
             <span
               css={css`
                 font-size: 12px;
-                opacity: 0.9;
+                opacity: 0.92;
                 padding-top: 2px;
+                line-height: 1.4;
               `}
             >
-              오늘은 이걸로 연습해볼까요?
+              {proRecommendation.reason}
             </span>
           </div>
           <span style={{ fontSize: 22, opacity: 0.9 }}>›</span>

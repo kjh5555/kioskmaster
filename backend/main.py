@@ -15,6 +15,7 @@ from app.api.family import router as family_router
 from app.api.brand_requests import router as brand_requests_router
 from app.api.dev import router as dev_router
 from app.api.feedback import router as feedback_router
+from app.api.recommend import router as recommend_router
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -53,6 +54,7 @@ app.include_router(family_router, prefix="/api")
 app.include_router(brand_requests_router, prefix="/api")
 app.include_router(dev_router, prefix="/api")
 app.include_router(feedback_router, prefix="/api")
+app.include_router(recommend_router, prefix="/api")
 
 
 @app.get("/")
