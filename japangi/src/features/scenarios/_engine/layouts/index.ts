@@ -35,6 +35,8 @@ import { LotteriaStart } from "./LotteriaStart";
 import { GeneralKioskSelect } from "./GeneralKioskSelect";
 import { PaymentAmount } from "./PaymentAmount";
 import { PaymentAuth } from "./PaymentAuth";
+import { PaymentCardInsert } from "./PaymentCardInsert";
+import { PaymentComplete } from "./PaymentComplete";
 import { GeneralComplete } from "./GeneralComplete";
 import { GeneralConfirm } from "./GeneralConfirm";
 import { GeneralDepartment } from "./GeneralDepartment";
@@ -193,6 +195,8 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "general-complete": GeneralComplete,
   "payment-auth": PaymentAuth,
   "payment-amount": PaymentAmount,
+  "payment-card-insert": PaymentCardInsert,
+  "payment-complete": PaymentComplete,
 };
 
 export function getCustomLayout(id: string): CustomLayoutComponent | undefined {
