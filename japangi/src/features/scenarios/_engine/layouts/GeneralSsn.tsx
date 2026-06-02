@@ -460,6 +460,10 @@ function CarrierSelect({
   );
 }
 
+// 연습용 데모 인증번호. 노인 사용자가 "이 번호 누르면 되는구나" 인식하도록
+// 화면에 표시. 실제 검증은 어떤 6자리든 통과.
+const DEMO_OTP = "813462";
+
 function OtpHeader({
   carrierName,
   carrierColor,
@@ -550,23 +554,70 @@ function OtpHeader({
         </button>
       </div>
 
-      {/* 안내 + 슬롯 — 한 컨테이너에 합침 */}
+      {/* 📱 핸드폰 SMS 알림 모형 — 노인 사용자에게 "여기서 번호를 찾는다" 시각 단서 */}
+      <div
+        css={css`
+          background: #f4f6f9;
+          border-left: 4px solid ${carrierColor};
+          border-radius: 10px;
+          padding: 7px 10px 8px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        `}
+      >
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #5a7a92;
+            font-weight: 700;
+            margin-bottom: 3px;
+          `}
+        >
+          <span>📱 핸드폰 문자메시지 · {carrierName} 본인확인</span>
+          <span>방금</span>
+        </div>
+        <div
+          css={css`
+            font-size: 11px;
+            color: #5a7a92;
+          `}
+        >
+          [Web발신] 인증번호
+        </div>
+        <div
+          css={css`
+            font-size: 26px;
+            font-weight: 900;
+            color: #0d3b5a;
+            letter-spacing: 0.18em;
+            text-align: center;
+            padding: 2px 0;
+            font-variant-numeric: tabular-nums;
+          `}
+        >
+          {DEMO_OTP}
+        </div>
+      </div>
+
+      {/* 안내 + 슬롯 */}
       <div
         css={css`
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 4px;
           align-items: center;
         `}
       >
         <div
           css={css`
-            font-size: 12px;
+            font-size: 11px;
             color: #0d3b5a;
             font-weight: 800;
           `}
         >
-          📩 인증번호 6자리 — 연습은 아무 숫자나 OK
+          ⬆ 위 6자리를 아래에 눌러주세요 (연습은 아무 숫자나 OK)
         </div>
         <div
           css={css`
