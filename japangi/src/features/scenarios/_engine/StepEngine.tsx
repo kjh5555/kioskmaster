@@ -645,8 +645,13 @@ export function StepEngine({
         const branchTargetId = step.branchTo?.[choiceId];
         let nextIndex = stepIndex + 1;
         if (branchTargetId !== undefined) {
-          const idx = scenario.steps.findIndex((s) => s.id === branchTargetId);
-          if (idx >= 0) nextIndex = idx;
+          // sentinel "__complete__" → 분기된 흐름의 자연스러운 종료
+          if (branchTargetId === "__complete__") {
+            nextIndex = totalSteps;
+          } else {
+            const idx = scenario.steps.findIndex((s) => s.id === branchTargetId);
+            if (idx >= 0) nextIndex = idx;
+          }
         }
         if (nextIndex >= totalSteps) {
           onScenarioComplete();
