@@ -66,4 +66,11 @@ export interface ScenarioScript {
   onboarding: OnboardingStep[];
   steps: Step[];
   theme?: BrandTheme;
+  /**
+   * 자유 탐색 모드. true 면 StepEngine 이 정답 검사를 우회 — 모든 클릭이
+   * 다음 단계로 진행 (또는 step.branchTo 가 있으면 거기로). "오늘의 목표"
+   * 제약 없는 시나리오에 사용 (예: 병원 키오스크는 노인이 어떤 path 든
+   * 둘러보면서 익히는 게 본질).
+   */
+  freeExplore?: boolean;
 }

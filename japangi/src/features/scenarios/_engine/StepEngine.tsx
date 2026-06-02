@@ -634,7 +634,8 @@ export function StepEngine({
       return;
     }
 
-    if (choiceId === step.correctChoiceId) {
+    // freeExplore: 정답 검사 우회. 모든 클릭이 다음 단계로 진행 (branchTo 우선).
+    if (scenario.freeExplore === true || choiceId === step.correctChoiceId) {
       setLocked(true);
       sfx.playSuccess();
       confetti.burst();

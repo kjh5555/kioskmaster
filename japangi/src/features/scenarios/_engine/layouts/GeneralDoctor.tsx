@@ -33,8 +33,7 @@ export function GeneralDoctor({
   const correctChoice = step.choices.find((c) => c.id === correctId);
 
   function handleClick(id: string) {
-    if (id === correctId) onChoice(id);
-    else setPreviewId(id);
+    onChoice(id);
   }
 
   return (

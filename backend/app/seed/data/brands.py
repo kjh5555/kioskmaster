@@ -1544,7 +1544,8 @@ EDIYA_SCENARIO = {
 
 PAYMENT_KIOSK_SCENARIO = {
     "id": "hospital:payment",
-    "goalSummary": "진료 끝나고 수납·처방전 받아볼게요.",
+    "goalSummary": "수납·처방전 키오스크 둘러보기",
+    "freeExplore": True,
     "theme": {
         "name": "수납·처방전",
         "primary": "#0067A6",
@@ -1623,7 +1624,8 @@ PAYMENT_KIOSK_SCENARIO = {
 
 CERT_KIOSK_SCENARIO = {
     "id": "hospital:cert",
-    "goalSummary": "진단서를 떼볼게요.",
+    "goalSummary": "제증명 발급기 둘러보기",
+    "freeExplore": True,
     "theme": {
         "name": "제증명 발급기",
         "primary": "#0067A6",
@@ -1715,7 +1717,8 @@ CERT_KIOSK_SCENARIO = {
 
 PARKING_KIOSK_SCENARIO = {
     "id": "hospital:parking",
-    "goalSummary": "주차 등록 해볼게요.",
+    "goalSummary": "주차 등록기 둘러보기",
+    "freeExplore": True,
     "theme": {
         "name": "주차 등록기",
         "primary": "#0067A6",
@@ -1790,7 +1793,8 @@ PARKING_KIOSK_SCENARIO = {
 
 GENERAL_HOSPITAL_SCENARIO = {
     "id": "hospital:general",
-    "goalSummary": "오늘은 내과 진료를 접수해볼게요.",
+    "goalSummary": "진료 접수기 둘러보기 — 원하는 path 로 진행해보세요",
+    "freeExplore": True,
     "theme": {
         "name": "종합병원",
         "primary": "#0067A6",
@@ -1945,10 +1949,10 @@ BRANDS = {
          "image_url": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80"},
     ],
     "hospital": [
-        {"slug": "general", "name": "진료 접수기", "emoji": "📋", "goal_summary": "오늘은 내과 진료를 접수해볼게요.", "scenario_json": GENERAL_HOSPITAL_SCENARIO, "order": 0},
-        {"slug": "payment", "name": "수납·처방전", "emoji": "💳", "goal_summary": "진료 끝나고 수납·처방전 받아볼게요.", "scenario_json": PAYMENT_KIOSK_SCENARIO, "order": 1},
-        {"slug": "cert", "name": "제증명 발급기", "emoji": "📄", "goal_summary": "진단서를 떼볼게요.", "scenario_json": CERT_KIOSK_SCENARIO, "order": 2},
-        {"slug": "parking", "name": "주차 등록기", "emoji": "🚗", "goal_summary": "주차 등록 해볼게요.", "scenario_json": PARKING_KIOSK_SCENARIO, "order": 3},
+        {"slug": "general", "name": "진료 접수기", "emoji": "📋", "goal_summary": "진료 접수기 둘러보기", "scenario_json": GENERAL_HOSPITAL_SCENARIO, "order": 0},
+        {"slug": "payment", "name": "수납·처방전", "emoji": "💳", "goal_summary": "수납·처방전 키오스크 둘러보기", "scenario_json": PAYMENT_KIOSK_SCENARIO, "order": 1},
+        {"slug": "cert", "name": "제증명 발급기", "emoji": "📄", "goal_summary": "제증명 발급기 둘러보기", "scenario_json": CERT_KIOSK_SCENARIO, "order": 2},
+        {"slug": "parking", "name": "주차 등록기", "emoji": "🚗", "goal_summary": "주차 등록기 둘러보기", "scenario_json": PARKING_KIOSK_SCENARIO, "order": 3},
         {"slug": "clinic", "name": "동네 의원", "emoji": "🩺", "goal_summary": "", "scenario_json": None, "order": 4},
     ],
     "train": [

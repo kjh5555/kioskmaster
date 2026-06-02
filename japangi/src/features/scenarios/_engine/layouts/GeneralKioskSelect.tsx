@@ -35,9 +35,9 @@ export function GeneralKioskSelect({
   const previewChoice = step.choices.find((c) => c.id === previewId);
   const correctChoice = step.choices.find((c) => c.id === correctId);
 
+  // freeExplore 모드: 모든 클릭이 다음 단계로 진행 (StepEngine 이 처리).
   function handleClick(id: string) {
-    if (id === correctId) onChoice(id);
-    else setPreviewId(id);
+    onChoice(id);
   }
 
   return (
