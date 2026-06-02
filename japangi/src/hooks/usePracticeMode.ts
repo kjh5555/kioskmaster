@@ -6,9 +6,7 @@ import { useEffect, useState } from "react";
 //            (StepEngine 의 scenario.freeExplore 가 강제로 true 가 됨)
 // • guided — AI 가 정해준 메뉴를 따라가는 일반 모드(기본값).
 //            useDynamicGoal 의 selections 가 step.correctChoiceId 를 덮어씀.
-// • pro    — AI 가 시나리오 자체를 추천. 홈에서 추천 카드가 강조됨.
-//            시나리오 안의 흐름은 guided 와 동일.
-export type PracticeMode = "free" | "guided" | "pro";
+export type PracticeMode = "free" | "guided";
 
 const STORAGE_KEY = "japangi.practiceMode";
 const STORAGE_EVENT = "japangi.practiceMode.changed";
@@ -16,7 +14,8 @@ const STORAGE_EVENT = "japangi.practiceMode.changed";
 function read(): PracticeMode {
   if (typeof window === "undefined") return "guided";
   const v = window.localStorage.getItem(STORAGE_KEY);
-  if (v === "free" || v === "pro" || v === "guided") return v;
+  if (v === "free" || v === "guided") return v;
+  // 과거 'pro' 값이 저장되어 있던 사용자는 기본값(guided)으로 fallback
   return "guided";
 }
 
