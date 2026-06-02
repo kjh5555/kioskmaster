@@ -78,14 +78,15 @@ export function BrandSelectPage(): React.ReactElement {
         css={css`
           display: grid;
           grid-template-columns: 1fr 1fr;
-          grid-auto-rows: clamp(120px, 18dvh, 170px);
+          /* 남은 세로 공간을 brand 개수에 맞춰 균등 분배 (HomePage 패턴).
+             min: 100px 보장으로 행 수가 많아져도 카드가 너무 작아지지 않게. */
+          grid-auto-rows: minmax(100px, 1fr);
           gap: clamp(8px, 3vw, 16px);
           flex: 1;
           min-height: 0;
-          padding: clamp(12px, 4vw, 20px);
-          overflow-y: auto;
-          align-content: center;
-          justify-content: center;
+          padding: clamp(8px, 2vw, 14px) clamp(12px, 4vw, 20px);
+          align-content: stretch;
+          overflow: hidden;
         `}
       >
         {category.brands.map((brand) => (
@@ -99,13 +100,15 @@ export function BrandSelectPage(): React.ReactElement {
               flex-direction: column;
               align-items: center;
               justify-content: center;
-              gap: clamp(6px, 2vw, 12px);
+              gap: clamp(4px, 1.5vw, 8px);
               padding: clamp(10px, 3vw, 20px);
               background-color: ${adaptive.greyBackground};
               border: none;
               border-radius: clamp(14px, 4vw, 20px);
               cursor: pointer;
-              min-height: clamp(110px, 18dvh, 160px);
+              /* min-height 제거 — 부모 grid cell(minmax 100px,1fr)이 크기 책임. */
+              min-height: 0;
+              overflow: hidden;
               text-align: center;
               -webkit-tap-highlight-color: transparent;
               transition:
@@ -129,15 +132,15 @@ export function BrandSelectPage(): React.ReactElement {
                   if (sib !== null) sib.style.display = "inline-block";
                 }}
                 css={css`
-                  width: clamp(48px, 14vw, 72px);
-                  height: clamp(48px, 14vw, 72px);
+                  width: clamp(44px, 11vw, 72px);
+                  height: clamp(44px, 11vw, 72px);
                   object-fit: contain;
                 `}
               />
             ) : null}
             <span
               css={css`
-                font-size: clamp(40px, 12vw, 64px);
+                font-size: clamp(40px, 9vw, 64px);
                 line-height: 1;
                 display: ${brand.image_url != null && brand.image_url !== ""
                   ? "none"
