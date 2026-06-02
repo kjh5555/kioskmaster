@@ -1,5 +1,4 @@
 import { css, keyframes } from "@emotion/react";
-import { useState } from "react";
 
 import { idlePulse, type CustomLayoutProps } from "./types";
 
@@ -28,13 +27,6 @@ export function GeneralDepartment({
   onChoice,
 }: CustomLayoutProps): React.ReactElement {
   const correctId = step.correctChoiceId;
-  const [previewId, setPreviewId] = useState<string | null>(null);
-  const previewChoice = step.choices.find((c) => c.id === previewId);
-  const correctChoice = step.choices.find((c) => c.id === correctId);
-
-  function handleClick(id: string) {
-    onChoice(id);
-  }
 
   return (
     <div
@@ -76,7 +68,7 @@ export function GeneralDepartment({
           <button
             key={c.id}
             type="button"
-            onClick={() => handleClick(c.id)}
+            onClick={() => onChoice(c.id)}
             css={[
               css`
                 display: flex;
@@ -86,7 +78,7 @@ export function GeneralDepartment({
                 gap: 8px;
                 padding: 22px 12px;
                 background: #ffffff;
-                border: 3px solid ${c.id === previewId ? "#f59e0b" : "#0067a6"};
+                border: 3px solid #0067a6;
                 border-radius: 18px;
                 color: #0067a6;
                 font-family: inherit;
@@ -126,24 +118,6 @@ export function GeneralDepartment({
           </button>
         ))}
       </div>
-
-      {previewChoice && (
-        <div
-          css={css`
-            margin: 0 14px calc(env(safe-area-inset-bottom, 0px) + 14px);
-            padding: 14px 16px;
-            background: #fff8e6;
-            border: 2px solid #f59e0b;
-            border-radius: 14px;
-            font-size: 14px;
-            color: #5a4400;
-            line-height: 1.5;
-          `}
-        >
-          <strong>{previewChoice.label}</strong>는 {previewChoice.sublabel}을 보는 곳이에요.<br />
-          오늘 연습은 <strong>{correctChoice?.label}</strong>예요.
-        </div>
-      )}
     </div>
   );
 }
