@@ -107,36 +107,37 @@ export function GeneralSsn({
         overflow: hidden;
       `}
     >
-      {/* Header */}
+      {/* Header — 컴팩트 (안전 안내는 작게 인라인) */}
       <div
         css={css`
           background: #0067a6;
           color: #ffffff;
-          padding: 14px 16px;
+          padding: 9px 16px;
           text-align: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
         `}
       >
-        <div
+        <span
           css={css`
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 900;
           `}
         >
           본인 확인
-        </div>
-        <div
+        </span>
+        <span
           css={css`
-            font-size: 11px;
-            opacity: 0.92;
-            margin-top: 4px;
-            padding: 4px 10px;
+            font-size: 10px;
+            padding: 2px 8px;
             background: rgba(255, 255, 255, 0.18);
             border-radius: 999px;
-            display: inline-block;
           `}
         >
-          ⚠️ 연습이에요. 저장하지 않아요.
-        </div>
+          ⚠️ 저장 안 함
+        </span>
       </div>
 
       {/* 서브탭 */}
@@ -144,8 +145,8 @@ export function GeneralSsn({
         css={css`
           display: grid;
           grid-template-columns: 1fr 1fr;
-          padding: 10px 12px 4px;
-          gap: 8px;
+          padding: 6px 12px 2px;
+          gap: 6px;
         `}
       >
         <TabButton active={mode === "ssn"} onClick={() => switchMode("ssn")}>
@@ -226,13 +227,13 @@ function TabButton({
       type="button"
       onClick={onClick}
       css={css`
-        padding: 12px 0;
+        padding: 9px 0;
         background: ${active ? "#0067a6" : "#ffffff"};
         border: 2px solid #0067a6;
-        border-radius: 12px;
+        border-radius: 10px;
         color: ${active ? "#ffffff" : "#0067a6"};
         font-family: inherit;
-        font-size: 16px;
+        font-size: 15px;
         font-weight: 900;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
@@ -255,7 +256,7 @@ function SsnDisplay({ digits }: { digits: string }): React.ReactElement {
   return (
     <div
       css={css`
-        padding: 14px 12px 10px;
+        padding: 8px 12px 6px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -280,7 +281,7 @@ function PhoneDisplay({ digits }: { digits: string }): React.ReactElement {
   return (
     <div
       css={css`
-        padding: 14px 12px 10px;
+        padding: 8px 12px 6px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -478,47 +479,51 @@ function OtpHeader({
       css={css`
         display: flex;
         flex-direction: column;
-        padding: 10px 14px 8px;
-        gap: 10px;
+        padding: 6px 12px 4px;
+        gap: 6px;
       `}
     >
+      {/* 통신사 칩 + 번호 + 변경 — 한 줄 */}
       <div
         css={css`
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 10px 14px;
+          padding: 6px 10px;
           background: #ffffff;
-          border: 2px solid #d1dee9;
-          border-radius: 12px;
+          border: 1px solid #d1dee9;
+          border-radius: 10px;
         `}
       >
         <div
           css={css`
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            min-width: 0;
           `}
         >
           <span
             css={css`
-              padding: 3px 10px;
+              padding: 2px 8px;
               background: ${carrierColor};
               color: #ffffff;
               border-radius: 999px;
-              font-size: 11px;
+              font-size: 10px;
               font-weight: 900;
               letter-spacing: -0.02em;
+              flex-shrink: 0;
             `}
           >
             {carrierName}
           </span>
           <span
             css={css`
-              font-size: 16px;
+              font-size: 14px;
               font-weight: 900;
               color: #0d3b5a;
-              letter-spacing: 0.03em;
+              letter-spacing: 0.02em;
+              white-space: nowrap;
             `}
           >
             {phoneMasked}
@@ -528,58 +533,53 @@ function OtpHeader({
           type="button"
           onClick={onBack}
           css={css`
-            padding: 4px 10px;
+            padding: 3px 8px;
             background: transparent;
             border: 1px solid #aab8c2;
             border-radius: 999px;
             color: #5a7a92;
             font-family: inherit;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             cursor: pointer;
             -webkit-tap-highlight-color: transparent;
+            flex-shrink: 0;
           `}
         >
           ↺ 변경
         </button>
       </div>
 
+      {/* 안내 + 슬롯 — 한 컨테이너에 합침 */}
       <div
         css={css`
-          text-align: center;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          align-items: center;
         `}
       >
         <div
           css={css`
-            font-size: 14px;
+            font-size: 12px;
             color: #0d3b5a;
             font-weight: 800;
           `}
         >
-          📩 인증번호 6자리를 문자로 보냈어요
+          📩 인증번호 6자리 — 연습은 아무 숫자나 OK
         </div>
         <div
           css={css`
-            font-size: 11px;
-            color: #5a7a92;
-            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
           `}
         >
-          연습이라 어떤 숫자든 6자리 누르시면 인증돼요
+          {slots.map((d, i) => (
+            <Slot key={`otp${i}`} value={d} width={34} />
+          ))}
         </div>
-      </div>
-
-      <div
-        css={css`
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-        `}
-      >
-        {slots.map((d, i) => (
-          <Slot key={`otp${i}`} value={d} width={38} />
-        ))}
       </div>
     </div>
   );
@@ -596,14 +596,14 @@ function Slot({
     <div
       css={css`
         width: ${width}px;
-        height: 44px;
+        height: 38px;
         background: #ffffff;
         border: 2px solid ${value ? "#0067a6" : "#b8cfe2"};
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 22px;
+        font-size: 20px;
         font-weight: 900;
         color: #0067a6;
         animation: ${value ? slideUp : "none"} 120ms ease;
@@ -642,10 +642,12 @@ function Keypad({
     <div
       css={css`
         flex: 1;
-        padding: 8px 12px;
+        min-height: 0;
+        padding: 6px 10px 10px;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 8px;
+        grid-auto-rows: 1fr;
+        gap: 6px;
       `}
     >
       {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
@@ -676,16 +678,16 @@ function Key({
       type="button"
       onClick={onClick}
       css={css`
-        padding: 16px 0;
+        padding: 10px 0;
         background: #ffffff;
         border: 2px solid #0067a6;
-        border-radius: 14px;
+        border-radius: 12px;
         color: #0067a6;
         font-family: inherit;
-        font-size: 28px;
+        font-size: 24px;
         font-weight: 900;
         cursor: pointer;
-        min-height: 56px;
+        min-height: 44px;
         -webkit-tap-highlight-color: transparent;
         :active {
           background: #0067a6;
@@ -711,16 +713,16 @@ function SecondaryKey({
       type="button"
       onClick={onClick}
       css={css`
-        padding: 16px 0;
+        padding: 10px 0;
         background: #ffffff;
         border: 2px solid #aab8c2;
-        border-radius: 14px;
+        border-radius: 12px;
         color: #5a7a92;
         font-family: inherit;
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 800;
         cursor: pointer;
-        min-height: 56px;
+        min-height: 44px;
         -webkit-tap-highlight-color: transparent;
       `}
     >
@@ -741,16 +743,16 @@ function DangerKey({
       type="button"
       onClick={onClick}
       css={css`
-        padding: 16px 0;
+        padding: 10px 0;
         background: #fff4f4;
         border: 2px solid #d6a8a8;
-        border-radius: 14px;
+        border-radius: 12px;
         color: #c0392b;
         font-family: inherit;
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 800;
         cursor: pointer;
-        min-height: 56px;
+        min-height: 44px;
         -webkit-tap-highlight-color: transparent;
       `}
     >
