@@ -57,9 +57,19 @@ export function BrandSelectPage(): React.ReactElement {
         upperGap={0}
         title={
           <Top.TitleParagraph>
-            어떤 {category.title}에서
-            <br />
-            연습하시겠어요?
+            {categoryId === "hospital" ? (
+              <>
+                병원에서 어떤 접수를
+                <br />
+                연습해볼까요?
+              </>
+            ) : (
+              <>
+                어떤 {category.title}에서
+                <br />
+                연습하시겠어요?
+              </>
+            )}
           </Top.TitleParagraph>
         }
       />
