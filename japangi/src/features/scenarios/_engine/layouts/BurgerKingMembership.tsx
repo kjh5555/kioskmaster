@@ -43,25 +43,27 @@ export function BurgerKingMembership({
     <div
       css={css`
         flex: 1;
+        min-height: 0;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         background: rgba(0, 0, 0, 0.35);
-        padding: 16px;
-        min-height: calc(100dvh - 80px);
+        padding: 10px 12px;
+        overflow-y: auto;
       `}
     >
       <div
         css={css`
           background: #ffffff;
-          border-radius: 18px;
+          border-radius: 16px;
           width: 100%;
           max-width: 420px;
-          padding: 18px 18px 14px;
+          padding: 14px 14px 12px;
           position: relative;
           display: flex;
           flex-direction: column;
-          gap: 14px;
+          gap: 10px;
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
         `}
       >
@@ -96,13 +98,13 @@ export function BurgerKingMembership({
         <div
           css={css`
             text-align: center;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
             color: #2a1408;
             line-height: 1.35;
             letter-spacing: 0.01em;
-            margin-top: 6px;
-            padding: 0 16px;
+            margin-top: 4px;
+            padding: 0 28px;
           `}
         >
           멤버십 적립하고 매월 등급별
@@ -131,8 +133,8 @@ export function BurgerKingMembership({
             >
               <div
                 css={css`
-                  width: 48px;
-                  height: 48px;
+                  width: 40px;
+                  height: 40px;
                   border-radius: 50%;
                   background: ${t.color};
                   color: #ffffff;
@@ -140,7 +142,7 @@ export function BurgerKingMembership({
                   align-items: center;
                   justify-content: center;
                   font-weight: 900;
-                  font-size: 24px;
+                  font-size: 20px;
                   font-style: italic;
                   font-family: "Trebuchet MS", system-ui, sans-serif;
                   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
@@ -179,9 +181,9 @@ export function BurgerKingMembership({
         <div
           css={css`
             text-align: center;
-            font-size: 13px;
+            font-size: 12px;
             color: #2a1408;
-            line-height: 1.5;
+            line-height: 1.45;
             font-weight: 600;
             padding: 0 8px;
           `}
@@ -291,7 +293,7 @@ export function BurgerKingMembership({
             onClick={() => onChoice("guest")}
             css={[
               css`
-                height: 52px;
+                height: 46px;
                 background: #2a1408;
                 color: #ffffff;
                 border: none;
@@ -313,7 +315,7 @@ export function BurgerKingMembership({
             onClick={() => onChoice("member")}
             css={[
               css`
-                height: 52px;
+                height: 46px;
                 background: #e07a1a;
                 color: #ffffff;
                 border: none;
