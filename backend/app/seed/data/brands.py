@@ -1717,6 +1717,45 @@ CERT_KIOSK_SCENARIO = {
 }
 
 
+KTX_SCENARIO = {
+    "id": "train:ktx",
+    "goalSummary": "KTX 발매기 둘러보기 — 원하는 메뉴를 눌러보세요",
+    "freeExplore": True,
+    "theme": {
+        "name": "KTX",
+        "primary": "#2C6FC8",
+        "secondary": "#CEE3EE",
+        "onPrimary": "#FFFFFF",
+        "accent": "#2C6FC8",
+    },
+    "onboarding": [
+        {"emoji": "👋", "title": "안녕하세요!", "body": "KTX 발매기 연습이에요. 코레일 키오스크와 똑같이 만들었어요."},
+        {"emoji": "🎫", "title": "오늘의 목표", "body": "둘러보면서 어떤 버튼이 무슨 역할인지 익혀볼게요."},
+    ],
+    "steps": [
+        {
+            "id": "main",
+            "instruction": "원하는 메뉴를 눌러보세요",
+            "helpText": "가장 자주 쓰는 건 가운데 큰 '승차권 구매'예요. 이미 예약하셨으면 '예약표 찾기'. 환불은 '승차권 환불'. 우측 하단 작은 버튼은 영수증·입장권·빠른구매예요. 연습이라 어떤 버튼이든 눌러보세요.",
+            "layout": "start",
+            "customLayoutId": "ktx-start",
+            "choices": [
+                {"id": "buy", "label": "승차권 구매", "emoji": "🎫"},
+                {"id": "refund", "label": "승차권 환불", "emoji": "↩️"},
+                {"id": "find", "label": "예약표 찾기", "emoji": "🔍"},
+                {"id": "cancel", "label": "예약 취소", "emoji": "⊘"},
+                {"id": "quick-buy", "label": "빠른구매", "emoji": "⚡"},
+                {"id": "receipt", "label": "영수증 출력", "emoji": "🧾"},
+                {"id": "platform-ticket", "label": "입장권", "emoji": "🎟"},
+            ],
+            "correctChoiceId": "buy",
+            "successMessage": "다음 화면 준비 중이에요.",
+            "hintMessage": "가운데 큰 파란색 '승차권 구매' 를 눌러보세요.",
+        },
+    ],
+}
+
+
 PARKING_KIOSK_SCENARIO = {
     "id": "hospital:parking",
     "goalSummary": "주차 등록기 둘러보기",
@@ -1946,7 +1985,7 @@ BRANDS = {
         {"slug": "parking", "name": "주차 등록기", "emoji": "🚗", "goal_summary": "주차 등록기 둘러보기", "scenario_json": PARKING_KIOSK_SCENARIO, "order": 2},
     ],
     "train": [
-        {"slug": "ktx", "name": "KTX", "emoji": "🚄", "goal_summary": "", "scenario_json": None, "order": 0},
+        {"slug": "ktx", "name": "KTX", "emoji": "🚄", "goal_summary": "KTX 발매기 둘러보기", "scenario_json": KTX_SCENARIO, "order": 0},
         {"slug": "srt", "name": "SRT", "emoji": "🚅", "goal_summary": "", "scenario_json": None, "order": 1},
     ],
 }
