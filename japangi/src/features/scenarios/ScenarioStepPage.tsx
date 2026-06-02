@@ -11,6 +11,7 @@ import { HelpOverlay } from "../../components/HelpOverlay";
 import { LoadingScreen } from "../../components/LoadingScreen";
 import { PracticeBadge } from "../../components/PracticeBadge";
 import { useBrand, useDynamicGoal } from "../../hooks/useKioskQueries";
+import { usePracticeMode } from "../../hooks/usePracticeMode";
 import { queryClient } from "../../lib/queryClient";
 import { OnboardingTour } from "./_engine/OnboardingTour";
 import {
@@ -105,6 +106,7 @@ function FastfoodStepPageLoader({
     isLoading: goalLoading,
     error: goalError,
   } = useDynamicGoal(brandId);
+  const { mode } = usePracticeMode();
 
   const scenario = useMemo(() => {
     if (!goal) return undefined;
@@ -171,7 +173,7 @@ function FastfoodStepPageLoader({
       stepsWithGoal.splice(setOrSingleIdx + 1, 0, singleStep);
     }
 
-    return {
+    const built = {
       ...raw,
       goalSummary: goal.goal_summary,
       onboarding: raw.onboarding.map((o, i, arr) =>
@@ -179,7 +181,12 @@ function FastfoodStepPageLoader({
       ),
       steps: stepsWithGoal,
     };
-  }, [goal]);
+    // 연습 모드(free): 정답 검사 우회. 시나리오 단위 freeExplore 가 이미 true 면 그대로.
+    if (mode === "free") {
+      return { ...built, freeExplore: true };
+    }
+    return built;
+  }, [goal, mode]);
 
   if (goalLoading) return <LoadingScreen />;
   if (goalError !== null)

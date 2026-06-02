@@ -11,7 +11,19 @@ import {
   useParentFavorites,
   useUserStats,
 } from "../../hooks/useKioskQueries";
+import { usePracticeMode, type PracticeMode } from "../../hooks/usePracticeMode";
 import { queryClient } from "../../lib/queryClient";
+
+const MODE_OPTIONS: {
+  id: PracticeMode;
+  label: string;
+  short: string;
+  hint: string;
+}[] = [
+  { id: "free", label: "연습 모드", short: "연습", hint: "자유롭게 둘러봐요" },
+  { id: "guided", label: "일반 모드", short: "일반", hint: "AI 가 정해준 메뉴 따라하기" },
+  { id: "pro", label: "Pro 모드", short: "Pro", hint: "AI 가 시나리오까지 추천" },
+];
 
 export function HomePage(): React.ReactElement {
   const navigate = useNavigate();
@@ -20,6 +32,21 @@ export function HomePage(): React.ReactElement {
   const { data: stats } = useUserStats(externalId);
   const { data: favorites = [] } = useParentFavorites(externalId);
   const primaryFav = favorites.find((f) => f.priority === 0) ?? favorites[0];
+  const { mode, setMode } = usePracticeMode();
+
+  // Pro 모드: 첫 카테고리·첫 brand 를 추천 (실제 LLM 호출 대신 데모용 추천)
+  const proRecommendation = (() => {
+    if (mode !== "pro" || !categories || categories.length === 0) return null;
+    const cat = categories[0];
+    if (!cat || !cat.brands || cat.brands.length === 0) return null;
+    const brand = cat.brands[0];
+    if (!brand) return null;
+    return {
+      category: cat.slug,
+      brand: brand.slug,
+      label: `${brand.name} · ${cat.title}`,
+    };
+  })();
 
   if (isLoading) return <LoadingScreen />;
   if (error !== null)
@@ -58,6 +85,134 @@ export function HomePage(): React.ReactElement {
           </Top.RightButton>
         }
       />
+
+      {/* 모드 선택 — 연습 / 일반 / Pro */}
+      <div
+        css={css`
+          margin: 0 clamp(12px, 4vw, 20px) 8px;
+          padding: 10px 12px;
+          background: ${adaptive.greyBackground};
+          border-radius: 12px;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        `}
+      >
+        <div
+          css={css`
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+          `}
+        >
+          {MODE_OPTIONS.map((opt) => {
+            const isActive = mode === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setMode(opt.id)}
+                css={css`
+                  padding: 9px 0;
+                  background: ${isActive ? adaptive.blue700 : "#ffffff"};
+                  border: 2px solid ${isActive ? adaptive.blue700 : adaptive.grey200};
+                  border-radius: 10px;
+                  color: ${isActive ? "#ffffff" : adaptive.grey900};
+                  font-family: inherit;
+                  font-size: 14px;
+                  font-weight: 900;
+                  cursor: pointer;
+                  -webkit-tap-highlight-color: transparent;
+                  :active {
+                    transform: scale(0.98);
+                  }
+                `}
+              >
+                {opt.short}
+              </button>
+            );
+          })}
+        </div>
+        <div
+          css={css`
+            font-size: 12px;
+            color: ${adaptive.grey600};
+            text-align: center;
+            line-height: 1.4;
+          `}
+        >
+          {MODE_OPTIONS.find((o) => o.id === mode)?.hint}
+        </div>
+      </div>
+
+      {/* Pro 모드 — AI 가 추천하는 시나리오 카드 */}
+      {proRecommendation && (
+        <button
+          type="button"
+          onClick={() =>
+            navigate(
+              `/scenario/${proRecommendation.category}/${proRecommendation.brand}/intro`,
+            )
+          }
+          css={css`
+            margin: 0 clamp(12px, 4vw, 20px) 8px;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #5b1f5f 0%, #8b248f 100%);
+            border: none;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: left;
+            color: #ffffff;
+            -webkit-tap-highlight-color: transparent;
+            :active {
+              transform: scale(0.99);
+            }
+          `}
+        >
+          <span style={{ fontSize: 36 }}>🤖</span>
+          <div
+            css={css`
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              gap: 2px;
+            `}
+          >
+            <span
+              css={css`
+                font-size: 11px;
+                font-weight: 800;
+                opacity: 0.9;
+                letter-spacing: 0.04em;
+              `}
+            >
+              🤖 AI 추천 · Pro 모드
+            </span>
+            <span
+              css={css`
+                font-size: var(--font-button);
+                font-weight: 900;
+              `}
+            >
+              {proRecommendation.label}
+            </span>
+            <span
+              css={css`
+                font-size: 12px;
+                opacity: 0.9;
+                padding-top: 2px;
+              `}
+            >
+              오늘은 이걸로 연습해볼까요?
+            </span>
+          </div>
+          <span style={{ fontSize: 22, opacity: 0.9 }}>›</span>
+        </button>
+      )}
 
       {!primaryFav && (!stats || stats.total_attempts === 0) && (
         <div
