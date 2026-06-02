@@ -8,7 +8,15 @@ const pulse = keyframes`
   50%     { opacity: 1;    transform: scale(1.05); }
 `;
 
-type Phase = "form" | "pick-origin" | "pick-dest";
+type Phase = "form" | "pick-origin" | "pick-dest" | "pick-datetime";
+
+const DAYS = ["일", "월", "화", "수", "목", "금", "토"];
+// 기준 날짜: 2026년 06월 02일 (화) = 화요일 (DAYS index 2)
+function fmtDate(offset: number): string {
+  const day = 2 + offset;
+  const dayLabel = DAYS[(2 + offset) % 7];
+  return `2026년 06월 ${String(day).padStart(2, "0")}일 (${dayLabel})`;
+}
 
 // 코레일 KTX 발매기 — 주요역 (실제 노선 순서)
 const STATIONS = [
@@ -41,6 +49,7 @@ export function KtxBooking({
   const [origin, setOrigin] = useState("서울");
   const [dest, setDest] = useState("오송");
   const [hourIdx, setHourIdx] = useState(4); // 09:00
+  const [dateOffset, setDateOffset] = useState(0); // 0 = 06-02 (화)
   const [persons, setPersons] = useState(1);
 
   // station picker 내에서 임시 선택 (확인 누르기 전)
@@ -61,8 +70,17 @@ export function KtxBooking({
     setPhase("form");
     setPendingStation(null);
   }
-  function cycleHour() {
-    setHourIdx((i) => (i + 1) % HOURS.length);
+  function incHour() {
+    setHourIdx((i) => Math.min(HOURS.length - 1, i + 1));
+  }
+  function decHour() {
+    setHourIdx((i) => Math.max(0, i - 1));
+  }
+  function incDate() {
+    setDateOffset((d) => Math.min(29, d + 1));
+  }
+  function decDate() {
+    setDateOffset((d) => Math.max(0, d - 1));
   }
   function incPersons() {
     setPersons((p) => Math.min(9, p + 1));
@@ -124,20 +142,23 @@ export function KtxBooking({
         </button>
       </div>
 
-      {phase === "form" ? (
+      {phase === "form" && (
         <BookingForm
           origin={origin}
           dest={dest}
+          dateText={fmtDate(dateOffset)}
           hour={HOURS[hourIdx]!}
           persons={persons}
           onPickOrigin={openOriginPicker}
           onPickDest={openDestPicker}
-          onCycleHour={cycleHour}
+          onPickDatetime={() => setPhase("pick-datetime")}
           onIncPersons={incPersons}
           onDecPersons={decPersons}
           onSearch={() => onChoice(search.id)}
         />
-      ) : (
+      )}
+
+      {(phase === "pick-origin" || phase === "pick-dest") && (
         <StationPicker
           origin={origin}
           dest={dest}
@@ -151,6 +172,22 @@ export function KtxBooking({
           }}
         />
       )}
+
+      {phase === "pick-datetime" && (
+        <DateTimePicker
+          dateText={fmtDate(dateOffset)}
+          hour={HOURS[hourIdx]!}
+          canDecDate={dateOffset > 0}
+          canIncDate={dateOffset < 29}
+          canDecHour={hourIdx > 0}
+          canIncHour={hourIdx < HOURS.length - 1}
+          onDecDate={decDate}
+          onIncDate={incDate}
+          onDecHour={decHour}
+          onIncHour={incHour}
+          onConfirm={() => setPhase("form")}
+        />
+      )}
     </div>
   );
 }
@@ -158,22 +195,24 @@ export function KtxBooking({
 function BookingForm({
   origin,
   dest,
+  dateText,
   hour,
   persons,
   onPickOrigin,
   onPickDest,
-  onCycleHour,
+  onPickDatetime,
   onIncPersons,
   onDecPersons,
   onSearch,
 }: {
   origin: string;
   dest: string;
+  dateText: string;
   hour: string;
   persons: number;
   onPickOrigin: () => void;
   onPickDest: () => void;
-  onCycleHour: () => void;
+  onPickDatetime: () => void;
   onIncPersons: () => void;
   onDecPersons: () => void;
   onSearch: () => void;
@@ -250,7 +289,7 @@ function BookingForm({
         {/* 출발일 + 시간 */}
         <button
           type="button"
-          onClick={onCycleHour}
+          onClick={onPickDatetime}
           css={css`
             background: #ffffff;
             border: none;
@@ -389,6 +428,244 @@ function BookingForm({
         열차 조회하기
       </button>
     </div>
+  );
+}
+
+function DateTimePicker({
+  dateText,
+  hour,
+  canDecDate,
+  canIncDate,
+  canDecHour,
+  canIncHour,
+  onDecDate,
+  onIncDate,
+  onDecHour,
+  onIncHour,
+  onConfirm,
+}: {
+  dateText: string;
+  hour: string;
+  canDecDate: boolean;
+  canIncDate: boolean;
+  canDecHour: boolean;
+  canIncHour: boolean;
+  onDecDate: () => void;
+  onIncDate: () => void;
+  onDecHour: () => void;
+  onIncHour: () => void;
+  onConfirm: () => void;
+}): React.ReactElement {
+  return (
+    <div
+      css={css`
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+      `}
+    >
+      {/* 안내 바 */}
+      <div
+        css={css`
+          background: #c4d3e2;
+          padding: 14px 12px;
+          text-align: center;
+          font-size: 13px;
+          color: #1a3d5c;
+          font-weight: 700;
+        `}
+      >
+        출발일과 시간을 골라주세요
+      </div>
+
+      <div
+        css={css`
+          flex: 1;
+          min-height: 0;
+          overflow-y: auto;
+          padding: 24px 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+        `}
+      >
+        {/* 날짜 */}
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+          `}
+        >
+          <span
+            css={css`
+              font-size: 12px;
+              color: #5a7a92;
+              font-weight: 700;
+            `}
+          >
+            출발일
+          </span>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              gap: 14px;
+            `}
+          >
+            <StepButton onClick={onDecDate} disabled={!canDecDate}>
+              −
+            </StepButton>
+            <span
+              css={css`
+                min-width: 220px;
+                text-align: center;
+                font-size: 19px;
+                font-weight: 900;
+                color: #1a3d5c;
+                font-variant-numeric: tabular-nums;
+                letter-spacing: 0.02em;
+              `}
+            >
+              {dateText}
+            </span>
+            <StepButton onClick={onIncDate} disabled={!canIncDate}>
+              +
+            </StepButton>
+          </div>
+        </div>
+
+        {/* 시간 */}
+        <div
+          css={css`
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+          `}
+        >
+          <span
+            css={css`
+              font-size: 12px;
+              color: #5a7a92;
+              font-weight: 700;
+            `}
+          >
+            출발 시간
+          </span>
+          <div
+            css={css`
+              display: flex;
+              align-items: center;
+              gap: 14px;
+            `}
+          >
+            <StepButton onClick={onDecHour} disabled={!canDecHour}>
+              −
+            </StepButton>
+            <span
+              css={css`
+                min-width: 90px;
+                text-align: center;
+                font-size: 32px;
+                font-weight: 900;
+                color: #1a3d5c;
+                font-variant-numeric: tabular-nums;
+                letter-spacing: 0.04em;
+              `}
+            >
+              {hour}
+            </span>
+            <StepButton onClick={onIncHour} disabled={!canIncHour}>
+              +
+            </StepButton>
+          </div>
+        </div>
+
+        <div
+          css={css`
+            padding: 8px 14px;
+            margin: 6px 8px 0;
+            background: #fff8e6;
+            border: 1px solid #f5d97a;
+            border-radius: 10px;
+            font-size: 11px;
+            color: #5a4400;
+            text-align: center;
+            line-height: 1.4;
+          `}
+        >
+          💡 ± 버튼으로 날짜는 하루씩, 시간은 한 시간씩 바뀌어요
+        </div>
+      </div>
+
+      {/* 확인 버튼 */}
+      <button
+        type="button"
+        onClick={onConfirm}
+        css={css`
+          width: 100%;
+          padding: 16px 0 calc(env(safe-area-inset-bottom, 0px) + 16px);
+          background: #1a3d5c;
+          border: none;
+          color: #ffffff;
+          font-family: inherit;
+          font-size: 18px;
+          font-weight: 900;
+          letter-spacing: 0.04em;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+          :active {
+            background: #14304a;
+          }
+        `}
+      >
+        확인
+      </button>
+    </div>
+  );
+}
+
+function StepButton({
+  onClick,
+  disabled,
+  children,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+}): React.ReactElement {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      css={css`
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: ${disabled ? "#c4cfdb" : "#2c6fc8"};
+        border: none;
+        color: #ffffff;
+        font-family: inherit;
+        font-size: 26px;
+        font-weight: 900;
+        cursor: ${disabled ? "default" : "pointer"};
+        opacity: ${disabled ? 0.5 : 1};
+        -webkit-tap-highlight-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        :active {
+          transform: ${disabled ? "none" : "scale(0.95)"};
+        }
+      `}
+    >
+      {children}
+    </button>
   );
 }
 
