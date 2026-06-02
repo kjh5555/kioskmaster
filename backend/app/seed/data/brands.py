@@ -1542,6 +1542,252 @@ EDIYA_SCENARIO = {
 }
 
 
+PAYMENT_KIOSK_SCENARIO = {
+    "id": "hospital:payment",
+    "goalSummary": "진료 끝나고 수납·처방전 받아볼게요.",
+    "theme": {
+        "name": "수납·처방전",
+        "primary": "#0067A6",
+        "secondary": "#E8F2FA",
+        "onPrimary": "#FFFFFF",
+        "accent": "#0067A6",
+    },
+    "onboarding": [
+        {"emoji": "👋", "title": "안녕하세요!", "body": "수납·처방전 키오스크 연습이에요. 진료 끝나신 다음 쓰는 거예요."},
+        {"emoji": "💳", "title": "오늘의 목표", "body": "카드로 수납하고 처방전을 받아볼게요."},
+    ],
+    "steps": [
+        {
+            "id": "start",
+            "instruction": "'수납·처방전'을 시작해요",
+            "helpText": "큰 '시작하기' 버튼을 한 번 눌러주세요.",
+            "layout": "start",
+            "choices": [{"id": "go", "label": "시작하기", "emoji": "💳"}],
+            "correctChoiceId": "go",
+            "successMessage": "잘하셨어요!",
+            "hintMessage": "큰 '시작하기' 버튼을 눌러주세요.",
+        },
+        {
+            "id": "auth",
+            "instruction": "'진료카드'를 골라요",
+            "helpText": "본인 확인 방법을 골라요. 오늘은 진료카드로 인증할게요.",
+            "layout": "duo",
+            "choices": [
+                {"id": "card", "label": "진료카드", "emoji": "💳"},
+                {"id": "ssn", "label": "주민번호", "emoji": "🔢"},
+            ],
+            "correctChoiceId": "card",
+            "successMessage": "진료카드 인식 완료.",
+            "hintMessage": "왼쪽 '진료카드'를 눌러주세요.",
+        },
+        {
+            "id": "amount",
+            "instruction": "수납 금액 확인 후 '결제'를 눌러요",
+            "helpText": "오늘 진료비를 확인해요. 맞으면 '결제'를 눌러주세요.",
+            "layout": "duo",
+            "choices": [
+                {"id": "pay", "label": "결제하기", "emoji": "💳"},
+                {"id": "later", "label": "나중에", "emoji": "↺"},
+            ],
+            "correctChoiceId": "pay",
+            "successMessage": "결제 수단을 골라봐요.",
+            "hintMessage": "왼쪽 큰 '결제하기' 버튼을 눌러주세요.",
+        },
+        {
+            "id": "method",
+            "instruction": "'신용/체크카드'를 골라요",
+            "helpText": "결제 수단을 골라요. 오늘은 카드로 할게요. 연습이라 진짜 돈은 안 나가요.",
+            "layout": "duo",
+            "choices": [
+                {"id": "card", "label": "신용/체크카드", "emoji": "💳"},
+                {"id": "cash", "label": "현금", "emoji": "💵"},
+                {"id": "mobile", "label": "모바일페이", "emoji": "📱"},
+            ],
+            "correctChoiceId": "card",
+            "successMessage": "카드 결제로 진행해요.",
+            "hintMessage": "위쪽 큰 '신용/체크카드'를 눌러주세요.",
+        },
+        {
+            "id": "complete",
+            "instruction": "처방전과 영수증을 챙겨요",
+            "helpText": "결제가 끝나고 처방전·영수증이 출력돼요. 챙기시면 끝이에요. 약국 가실 때 처방전 꼭 챙기세요.",
+            "layout": "start",
+            "choices": [{"id": "done", "label": "완료", "emoji": "✅"}],
+            "correctChoiceId": "done",
+            "successMessage": "수납 완료! 잘하셨어요 🎉",
+            "hintMessage": "처방전·영수증 챙기고 완료 누르세요.",
+        },
+    ],
+}
+
+
+CERT_KIOSK_SCENARIO = {
+    "id": "hospital:cert",
+    "goalSummary": "진단서를 떼볼게요.",
+    "theme": {
+        "name": "제증명 발급기",
+        "primary": "#0067A6",
+        "secondary": "#E8F2FA",
+        "onPrimary": "#FFFFFF",
+        "accent": "#0067A6",
+    },
+    "onboarding": [
+        {"emoji": "👋", "title": "안녕하세요!", "body": "제증명 발급기 연습이에요. 진단서·소견서 같은 서류 떼는 곳이에요."},
+        {"emoji": "📄", "title": "오늘의 목표", "body": "진단서 한 부 떼볼게요."},
+    ],
+    "steps": [
+        {
+            "id": "start",
+            "instruction": "'제증명 발급'을 시작해요",
+            "helpText": "큰 '시작하기' 버튼을 한 번 눌러주세요.",
+            "layout": "start",
+            "choices": [{"id": "go", "label": "시작하기", "emoji": "📄"}],
+            "correctChoiceId": "go",
+            "successMessage": "시작할게요.",
+            "hintMessage": "큰 '시작하기' 버튼을 눌러주세요.",
+        },
+        {
+            "id": "doc-type",
+            "instruction": "'진단서'를 골라요",
+            "helpText": "어떤 서류를 떼실 건가요? 오늘은 '진단서'를 골라요. 진단서는 보험 청구나 회사 제출용으로 쓰여요.",
+            "layout": "grid",
+            "choices": [
+                {"id": "diagnosis", "label": "진단서", "sublabel": "보험·회사 제출용", "emoji": "🩺"},
+                {"id": "opinion", "label": "소견서", "sublabel": "다른 병원 가실 때", "emoji": "📋"},
+                {"id": "receipt", "label": "진료비 영수증", "sublabel": "지난 영수증 다시 받기", "emoji": "🧾"},
+                {"id": "prescription", "label": "처방전 사본", "sublabel": "약국 가실 때 또 필요하면", "emoji": "💊"},
+            ],
+            "correctChoiceId": "diagnosis",
+            "successMessage": "진단서로 골랐어요.",
+            "hintMessage": "왼쪽 위 첫 번째 '진단서' 카드를 눌러주세요.",
+        },
+        {
+            "id": "auth",
+            "instruction": "주민번호 13자리를 입력해요",
+            "helpText": "본인 확인이 필요해요. 주민번호 13자리를 키패드로 누르세요. 연습이라 저장 안 돼요.",
+            "layout": "start",
+            "customLayoutId": "general-ssn",
+            "choices": [{"id": "next", "label": "다음", "emoji": "▶️"}],
+            "correctChoiceId": "next",
+            "successMessage": "본인 확인 완료.",
+            "hintMessage": "13자리를 모두 누르면 자동 진행돼요.",
+        },
+        {
+            "id": "qty",
+            "instruction": "'1부'를 골라요",
+            "helpText": "몇 부 떼실 건가요? 오늘은 1부만 필요해요.",
+            "layout": "duo",
+            "choices": [
+                {"id": "one", "label": "1부", "emoji": "1️⃣"},
+                {"id": "two", "label": "2부", "emoji": "2️⃣"},
+                {"id": "three", "label": "3부", "emoji": "3️⃣"},
+            ],
+            "correctChoiceId": "one",
+            "successMessage": "1부로 골랐어요.",
+            "hintMessage": "왼쪽 '1부'를 눌러주세요.",
+        },
+        {
+            "id": "pay",
+            "instruction": "수수료 '카드'로 결제해요",
+            "helpText": "진단서 수수료 1만원을 결제해요. 카드로 할게요. 연습이라 진짜 돈은 안 나가요.",
+            "layout": "duo",
+            "choices": [
+                {"id": "card", "label": "신용/체크카드", "emoji": "💳"},
+                {"id": "cash", "label": "현금", "emoji": "💵"},
+            ],
+            "correctChoiceId": "card",
+            "successMessage": "결제 완료.",
+            "hintMessage": "왼쪽 '신용/체크카드'를 눌러주세요.",
+        },
+        {
+            "id": "complete",
+            "instruction": "진단서를 받으면 끝이에요",
+            "helpText": "프린터에서 진단서가 출력돼요. 받으시면 끝.",
+            "layout": "start",
+            "choices": [{"id": "done", "label": "완료", "emoji": "✅"}],
+            "correctChoiceId": "done",
+            "successMessage": "진단서 발급 완료! 잘하셨어요 🎉",
+            "hintMessage": "진단서 받고 완료 누르세요.",
+        },
+    ],
+}
+
+
+PARKING_KIOSK_SCENARIO = {
+    "id": "hospital:parking",
+    "goalSummary": "주차 등록 해볼게요.",
+    "theme": {
+        "name": "주차 등록기",
+        "primary": "#0067A6",
+        "secondary": "#E8F2FA",
+        "onPrimary": "#FFFFFF",
+        "accent": "#0067A6",
+    },
+    "onboarding": [
+        {"emoji": "👋", "title": "안녕하세요!", "body": "주차 등록기 연습이에요. 진료받은 사람은 주차 할인 받을 수 있어요."},
+        {"emoji": "🚗", "title": "오늘의 목표", "body": "차량 번호 입력하고 주차 할인 받아볼게요."},
+    ],
+    "steps": [
+        {
+            "id": "start",
+            "instruction": "'주차 등록'을 시작해요",
+            "helpText": "큰 '시작하기' 버튼을 한 번 눌러주세요.",
+            "layout": "start",
+            "choices": [{"id": "go", "label": "시작하기", "emoji": "🚗"}],
+            "correctChoiceId": "go",
+            "successMessage": "시작할게요.",
+            "hintMessage": "큰 '시작하기' 버튼을 눌러주세요.",
+        },
+        {
+            "id": "type",
+            "instruction": "'진료 환자'를 골라요",
+            "helpText": "오늘 진료받으셨으면 '진료 환자'예요. 면회나 행사로 오셨으면 '일반 방문'.",
+            "layout": "duo",
+            "choices": [
+                {"id": "patient", "label": "진료 환자", "sublabel": "오늘 진료 받으신 분", "emoji": "🩺"},
+                {"id": "visitor", "label": "일반 방문", "sublabel": "면회·행사", "emoji": "👥"},
+            ],
+            "correctChoiceId": "patient",
+            "successMessage": "진료 환자로 골랐어요.",
+            "hintMessage": "왼쪽 '진료 환자'를 눌러주세요.",
+        },
+        {
+            "id": "car-number",
+            "instruction": "차량번호 뒤 4자리를 눌러요",
+            "helpText": "내 차 번호판 뒤 4자리만 누르면 돼요. 예: 12가1234 면 '1234'를 눌러요.",
+            "layout": "start",
+            "choices": [{"id": "next", "label": "다음", "emoji": "▶️"}],
+            "correctChoiceId": "next",
+            "successMessage": "차량번호 입력 완료.",
+            "hintMessage": "키패드로 4자리를 모두 누르면 다음으로 가요.",
+        },
+        {
+            "id": "confirm",
+            "instruction": "내 차가 맞으면 '맞아요'",
+            "helpText": "화면에 내 차량 정보가 나와요. 맞으면 '맞아요'를 누르세요.",
+            "layout": "duo",
+            "choices": [
+                {"id": "yes", "label": "맞아요", "emoji": "✅"},
+                {"id": "no", "label": "다시 입력", "emoji": "↺"},
+            ],
+            "correctChoiceId": "yes",
+            "successMessage": "차량 확인 완료.",
+            "hintMessage": "왼쪽 초록 '맞아요'를 누르세요.",
+        },
+        {
+            "id": "complete",
+            "instruction": "주차 등록 완료!",
+            "helpText": "진료 환자는 주차료 할인이 자동 적용돼요. 출차 시 별도 결제 없어요. 끝이에요!",
+            "layout": "start",
+            "choices": [{"id": "done", "label": "완료", "emoji": "✅"}],
+            "correctChoiceId": "done",
+            "successMessage": "주차 등록 완료! 잘하셨어요 🎉",
+            "hintMessage": "완료 누르세요.",
+        },
+    ],
+}
+
+
 GENERAL_HOSPITAL_SCENARIO = {
     "id": "hospital:general",
     "goalSummary": "오늘은 내과 진료를 접수해볼게요.",
@@ -1559,22 +1805,7 @@ GENERAL_HOSPITAL_SCENARIO = {
         {"emoji": "🩺", "title": "오늘의 목표", "body": "내과 진료를 접수해볼게요. 시작!"},
     ],
     "steps": [
-        {
-            "id": "kiosk-select",
-            "instruction": "'진료 접수기'를 골라요",
-            "helpText": "병원 로비에 가면 키오스크가 4종류 있어요. 진료를 받으려면 '진료 접수기' 앞으로 가셔야 해요. 수납·처방전은 진료 끝난 다음, 제증명은 서류 떼실 때, 주차는 차로 오셨을 때예요.",
-            "layout": "grid",
-            "customLayoutId": "general-kiosk-select",
-            "choices": [
-                {"id": "register", "label": "진료 접수기", "sublabel": "처음 오셨거나 진료받으실 분", "emoji": "📋"},
-                {"id": "payment", "label": "수납·처방전", "sublabel": "진료 끝나고 돈 내고 처방전 받으실 분", "emoji": "💳"},
-                {"id": "certificate", "label": "제증명 발급기", "sublabel": "진단서·소견서 같은 서류 떼실 분", "emoji": "📄"},
-                {"id": "parking", "label": "주차 등록기", "sublabel": "차 가지고 오신 분", "emoji": "🚗"},
-            ],
-            "correctChoiceId": "register",
-            "successMessage": "진료 접수기 앞으로 왔어요. 시작해볼게요.",
-            "hintMessage": "왼쪽 위 첫 번째 '진료 접수기' 카드를 눌러주세요.",
-        },
+        # 키오스크 선택 단계는 4개 brand 카드(BrandSelectPage)가 같은 역할 — 시드 제거.
         {
             "id": "start",
             "instruction": "접수를 시작하려면 화면을 눌러요",
@@ -1714,8 +1945,11 @@ BRANDS = {
          "image_url": "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=400&q=80"},
     ],
     "hospital": [
-        {"slug": "general", "name": "종합병원", "emoji": "🏥", "goal_summary": "오늘은 내과 진료를 접수해볼게요.", "scenario_json": GENERAL_HOSPITAL_SCENARIO, "order": 0},
-        {"slug": "clinic", "name": "동네 의원", "emoji": "🩺", "goal_summary": "", "scenario_json": None, "order": 1},
+        {"slug": "general", "name": "진료 접수기", "emoji": "📋", "goal_summary": "오늘은 내과 진료를 접수해볼게요.", "scenario_json": GENERAL_HOSPITAL_SCENARIO, "order": 0},
+        {"slug": "payment", "name": "수납·처방전", "emoji": "💳", "goal_summary": "진료 끝나고 수납·처방전 받아볼게요.", "scenario_json": PAYMENT_KIOSK_SCENARIO, "order": 1},
+        {"slug": "cert", "name": "제증명 발급기", "emoji": "📄", "goal_summary": "진단서를 떼볼게요.", "scenario_json": CERT_KIOSK_SCENARIO, "order": 2},
+        {"slug": "parking", "name": "주차 등록기", "emoji": "🚗", "goal_summary": "주차 등록 해볼게요.", "scenario_json": PARKING_KIOSK_SCENARIO, "order": 3},
+        {"slug": "clinic", "name": "동네 의원", "emoji": "🩺", "goal_summary": "", "scenario_json": None, "order": 4},
     ],
     "train": [
         {"slug": "ktx", "name": "KTX", "emoji": "🚄", "goal_summary": "", "scenario_json": None, "order": 0},
