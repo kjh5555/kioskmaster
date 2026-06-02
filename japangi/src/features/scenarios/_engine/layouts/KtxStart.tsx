@@ -55,33 +55,38 @@ export function KtxStart({
       {/* 상단 역 사진 영역 (사진 placeholder — 빌딩 실루엣 그라데이션) */}
       <StationHeader />
 
-      {/* 메인 메뉴 4개 + 빠른 버튼 3개 — 일러스트 배경 위에 floating */}
+      {/* 본문 — 메인 메뉴(상) + 빠른 버튼(하·우측 정렬) grid 분리.
+          이전엔 position: absolute 로 인해 viewport 작을 때 캡슐과 겹침. */}
       <div
         css={css`
           flex: 1;
           min-height: 0;
-          position: relative;
-          padding: 18px 16px 0;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          align-items: center;
+          display: grid;
+          grid-template-rows: 1fr auto;
+          padding: 16px 14px 10px;
           z-index: 2;
         `}
       >
-        {MAIN_BUTTONS.map((b) => (
-          <MainButton key={b.id} btn={b} onClick={() => pick(b.id)} />
-        ))}
-
-        {/* 우측 하단 3개 원형 빠른 버튼 */}
         <div
           css={css`
-            position: absolute;
-            right: 12px;
-            bottom: 12px;
             display: flex;
-            gap: 8px;
-            z-index: 3;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+          `}
+        >
+          {MAIN_BUTTONS.map((b) => (
+            <MainButton key={b.id} btn={b} onClick={() => pick(b.id)} />
+          ))}
+        </div>
+
+        <div
+          css={css`
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding-top: 10px;
           `}
         >
           {QUICK_BUTTONS.map((b) => (
