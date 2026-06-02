@@ -1749,8 +1749,21 @@ KTX_SCENARIO = {
                 {"id": "platform-ticket", "label": "입장권", "emoji": "🎟"},
             ],
             "correctChoiceId": "buy",
-            "successMessage": "다음 화면 준비 중이에요.",
+            "successMessage": "승차권 예매로 들어갈게요.",
             "hintMessage": "가운데 큰 파란색 '승차권 구매' 를 눌러보세요.",
+        },
+        {
+            "id": "booking",
+            "instruction": "출발역·도착역·날짜·인원을 고르고 '열차 조회하기'를 눌러요",
+            "helpText": "위쪽 큰 '출발' / '도착' 박스를 누르면 역 선택 화면이 나와요. 주요역 리스트에서 원하는 역을 누르고 '확인'을 누르면 돌아와요. 가운데에서 출발 시간을 누르면 1시간씩 바뀌고, 인원 옆 +/- 로 인원을 조절해요. 다 고르면 하단 진한 네이비 '열차 조회하기' 버튼을 눌러주세요.",
+            "layout": "start",
+            "customLayoutId": "ktx-booking",
+            "choices": [
+                {"id": "search", "label": "열차 조회하기", "emoji": "🔍"},
+            ],
+            "correctChoiceId": "search",
+            "successMessage": "열차 조회 결과를 보여드릴게요.",
+            "hintMessage": "하단 진한 네이비 '열차 조회하기' 버튼을 눌러주세요.",
         },
     ],
 }

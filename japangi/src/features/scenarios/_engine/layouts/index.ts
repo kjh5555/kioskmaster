@@ -41,6 +41,7 @@ import { ParkingComplete } from "./ParkingComplete";
 import { ParkingInfo } from "./ParkingInfo";
 import { ParkingPlate } from "./ParkingPlate";
 import { KtxStart } from "./KtxStart";
+import { KtxBooking } from "./KtxBooking";
 import { GeneralComplete } from "./GeneralComplete";
 import { GeneralConfirm } from "./GeneralConfirm";
 import { GeneralDepartment } from "./GeneralDepartment";
@@ -205,6 +206,7 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "parking-info": ParkingInfo,
   "parking-complete": ParkingComplete,
   "ktx-start": KtxStart,
+  "ktx-booking": KtxBooking,
 };
 
 export function getCustomLayout(id: string): CustomLayoutComponent | undefined {
