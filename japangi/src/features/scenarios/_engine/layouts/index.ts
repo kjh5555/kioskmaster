@@ -33,6 +33,8 @@ import { LotteriaSetPopup } from "./LotteriaSetPopup";
 import { LotteriaSideSelect } from "./LotteriaSideSelect";
 import { LotteriaStart } from "./LotteriaStart";
 import { GeneralKioskSelect } from "./GeneralKioskSelect";
+import { PaymentAmount } from "./PaymentAmount";
+import { PaymentAuth } from "./PaymentAuth";
 import { GeneralComplete } from "./GeneralComplete";
 import { GeneralConfirm } from "./GeneralConfirm";
 import { GeneralDepartment } from "./GeneralDepartment";
@@ -189,6 +191,8 @@ export const CUSTOM_LAYOUTS: Record<string, CustomLayoutComponent> = {
   "general-doctor": GeneralDoctor,
   "general-summary": GeneralSummary,
   "general-complete": GeneralComplete,
+  "payment-auth": PaymentAuth,
+  "payment-amount": PaymentAmount,
 };
 
 export function getCustomLayout(id: string): CustomLayoutComponent | undefined {
