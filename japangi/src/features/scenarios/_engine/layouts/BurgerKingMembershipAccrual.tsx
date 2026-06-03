@@ -39,6 +39,8 @@ export function BurgerKingMembershipAccrual({
           -apple-system,
           sans-serif;
         min-height: 100%;
+        max-height: 100%;
+        overflow-y: auto;
       `}
     >
       {/* Title row */}
