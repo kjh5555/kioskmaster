@@ -117,6 +117,9 @@ export function BurgerKingMenu({
         display: flex;
         flex-direction: column;
         width: 100%;
+        height: 100%;
+        max-height: 100%;
+        overflow-y: auto;
         background: #ffffff;
         font-family:
           system-ui,

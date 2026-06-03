@@ -81,6 +81,9 @@ export function BurgerKingCartAdd({
     <div
       css={css`
         flex: 1;
+        min-height: 0;
+        max-height: 100%;
+        overflow-y: auto;
         background: #ffffff;
         padding: 18px 18px 8px;
         display: flex;
